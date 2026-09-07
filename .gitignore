@@ -1,0 +1,87 @@
+# TraceShift — local environment and artifact ignores
+# Keep frozen data, configs, source, docs, and small result schemas versioned.
+
+# --- Python / tooling ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# --- Secrets / credentials (never commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+**/credentials.json
+**/service-account*.json
+**/application_default_credentials.json
+**/gcloud/application_default_credentials.json
+.hf_token
+**/huggingface/token
+
+# --- Hugging Face / model caches & weights ---
+.cache/
+**/huggingface/hub/
+**/huggingface/modules/
+*.safetensors
+*.bin
+!requirements*.txt
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.gguf
+*.h5
+*.msgpack
+*.ot
+*.tflite
+
+# --- Training / adapter checkpoints (local run artifacts) ---
+**/final_adapter/
+**/checkpoint-*/
+**/*optimizer*.pt
+**/*scheduler*.pt
+**/*rng_state*
+**/trainer_state.json
+**/adapter_model.safetensors
+**/adapter_model.bin
+runs/
+wandb/
+mlruns/
+lightning_logs/
+tb_logs/
+tensorboard/
+
+# --- Logs / temp ---
+*.log
+tmp/
+temp/
+.ipynb_checkpoints/

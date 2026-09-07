@@ -1,0 +1,38 @@
+status: READY_WITH_WARNINGS
+audit_timestamp_utc: "2026-09-04T11:06:05Z"
+safe_to_move_engineering_to_gcp: true
+research_clock_may_begin: false
+message: >
+  Code and frozen-data dry validations pass. AI-Engram 0.9.0 API matches
+  installed package. Qwen/Qwen3-1.7B weights are not local; live module
+  verification is pending. Exact Delta-M permutation requires all four
+  facts to be selective matrix rows. Always pass --device cuda on GCP.
+  No experiment results were fabricated; no GPU/Engram/FT run occurred.
+
+components:
+  frozen_spec_validation: PASS
+  runtime_stack_validation: PASS_WITH_PENDING_WEIGHTS
+  cloze_config: PASS
+  alpha_calibration_dry: PASS
+  base_matrix_dry: PASS
+  finetune_primary_dry: PASS
+  finetune_control_dry: PASS
+  ft_matrix_dry: PASS
+  delta_analysis_dry: PASS
+  lexical_control_dry: PASS
+  qwen_module_live_check: REQUIRES_LIVE_MODEL
+  device_auto_fallback: WARNING
+  delta_requires_all_four_selective: WARNING_OPERATIONAL_PRECONDITION
+
+engineering_fixes_applied:
+  - delta_analysis_clearer_incomplete_matrix_error
+  - base_matrix_alphas_path_from_experiment_yaml
+  - model_loader_explicit_cuda_refuses_cpu_fallback
+
+prerequisites_outstanding:
+  - download_Qwen3-1.7B_weights
+  - GCP_CUDA_torch_install
+  - live_down_proj_and_lora_module_verification
+  - prefer_device_cuda_on_all_gpu_clis
+
+report_path: research/reports/pre_gpu_audit.md

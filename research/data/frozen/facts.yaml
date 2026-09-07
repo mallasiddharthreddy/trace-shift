@@ -1,0 +1,39 @@
+# Frozen factual associations for TraceShift (minimal 4-fact design).
+# Associations only — no extraction sentences, cloze probes, or FT text here.
+# Machine-readable list under `facts:` for later pipeline loaders.
+
+version: 1
+status: frozen
+frozen_at: associations_only
+notes: >
+  Exactly four entity–domain associations. No ontology/taxonomy labels.
+  Exact sentences, probes, corpora, and FT contents are decided later.
+
+facts:
+  - id: F01
+    entity: Roger Federer
+    domain: tennis
+    group: in_domain
+    description: Roger Federer is associated with tennis.
+    used_in_tennis_finetuning: true
+
+  - id: F02
+    entity: Rafael Nadal
+    domain: tennis
+    group: in_domain
+    description: Rafael Nadal is associated with tennis.
+    used_in_tennis_finetuning: true
+
+  - id: F03
+    entity: Michael Phelps
+    domain: swimming
+    group: control
+    description: Michael Phelps is associated with swimming.
+    used_in_tennis_finetuning: false
+
+  - id: F04
+    entity: Amitabh Bachchan
+    domain: acting
+    group: control
+    description: Amitabh Bachchan is associated with acting.
+    used_in_tennis_finetuning: false

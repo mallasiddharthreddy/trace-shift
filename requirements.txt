@@ -1,0 +1,17 @@
+# TraceShift direct dependencies (Python 3.12 environment).
+# Install inside a dedicated 3.12 venv/conda env — not the system Python.
+#
+# PyTorch CUDA wheel/index is environment-specific and must be resolved during
+# GCP setup (satisfy torch>=2.0 with the matching cuXXX build). On GCP you may
+# install torch from the official CUDA index first, then:
+#   pip install -r requirements.txt
+#
+# Exact pin:
+ai-engram==0.9.0
+
+# Constrained majors (no transitive lockfile):
+torch>=2.0
+transformers>=4.51.0
+peft>=0.13.0
+tqdm>=4.60
+PyYAML>=6.0

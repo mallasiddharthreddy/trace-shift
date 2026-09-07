@@ -1,0 +1,36 @@
+status: pending_weights_checkpoint_and_or_base_alphas
+experiment: lexical_control_alternative_hypothesis
+secondary: true
+message: Lexical-control pipeline is implemented. Execution awaits local Qwen3-1.7B
+  weights, primary LoRA checkpoint, and base_alphas.yaml. No lexical matrices or Delta-M
+  values have been fabricated.
+extraction_variant: lexical_control
+reference_corpus_id: shared_reference_lexical_control
+alpha_policy: BASE explicit-calibrated alphas reused; no lexical recalibration
+schema:
+  files:
+    results/raw/alternative_hypotheses/lexical_control.json: machine-readable lexical
+      matrices + Delta-M + comparison
+    results/tables/lexical_control.md: human-readable summary
+  extraction_variant: lexical_control
+  reference_corpus_id: shared_reference_lexical_control
+  alpha_policy: BASE explicit-calibrated alphas; no lexical recalibration
+  Delta_M_lexical: M_FT_lexical - M_base_lexical
+  fact_order:
+  - F01
+  - F02
+  - F03
+  - F04
+  comparison: descriptive vs primary explicit Delta-M (not a second exact test)
+  secondary: true
+experiment_executed: false
+last_dry_validate:
+  pending_reasons:
+  - base_model_weights_unavailable
+  - primary_ft_checkpoint_unavailable
+  - base_alphas_missing
+  calibrated_alphas_status: missing
+  base_weights_available_locally: false
+  primary_ft_adapter_available: false
+  primary_explicit_delta_available: false
+  experiment_executed: false

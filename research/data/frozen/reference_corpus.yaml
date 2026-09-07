@@ -1,0 +1,148 @@
+# Shared reference corpora for AI-Engram extraction (frozen).
+# One corpus per extraction variant. Each corpus is the concatenation of all
+# four fact target sets for that variant (20 sentences). Same texts as in
+# extraction_sets_explicit.yaml / extraction_sets_lexical.yaml — no extras.
+
+version: 1
+status: frozen
+notes: >
+  Shared across F01–F04 within a variant. Target sentences are also members of
+  the corresponding reference corpus. Held out from fine-tuning. Explicit and
+  lexical_control remain separate frozen conditions.
+
+corpora:
+  explicit:
+    id: shared_reference_explicit
+    variant: explicit
+    source_sets: extraction_sets_explicit.yaml
+    n_documents: 20
+    order: [F01, F02, F03, F04]
+    documents:
+      - doc_id: F01_EX01
+        fact_id: F01
+        text: Roger Federer is a Swiss professional tennis player.
+      - doc_id: F01_EX02
+        fact_id: F01
+        text: Roger Federer competed in tennis Grand Slam tournaments throughout his career.
+      - doc_id: F01_EX03
+        fact_id: F01
+        text: Roger Federer won many ATP tennis titles over two decades.
+      - doc_id: F01_EX04
+        fact_id: F01
+        text: Roger Federer is known worldwide for his achievements in tennis.
+      - doc_id: F01_EX05
+        fact_id: F01
+        text: Roger Federer's sport is tennis.
+      - doc_id: F02_EX01
+        fact_id: F02
+        text: Rafael Nadal is a Spanish professional tennis player.
+      - doc_id: F02_EX02
+        fact_id: F02
+        text: Rafael Nadal competed in tennis Grand Slam tournaments throughout his career.
+      - doc_id: F02_EX03
+        fact_id: F02
+        text: Rafael Nadal won many ATP tennis titles over two decades.
+      - doc_id: F02_EX04
+        fact_id: F02
+        text: Rafael Nadal is known worldwide for his achievements in tennis.
+      - doc_id: F02_EX05
+        fact_id: F02
+        text: Rafael Nadal's sport is tennis.
+      - doc_id: F03_EX01
+        fact_id: F03
+        text: Michael Phelps is an American competitive swimmer.
+      - doc_id: F03_EX02
+        fact_id: F03
+        text: Michael Phelps competed in swimming at the Olympic Games.
+      - doc_id: F03_EX03
+        fact_id: F03
+        text: Michael Phelps won many Olympic medals in swimming events.
+      - doc_id: F03_EX04
+        fact_id: F03
+        text: Michael Phelps is known worldwide for his achievements in swimming.
+      - doc_id: F03_EX05
+        fact_id: F03
+        text: Michael Phelps's sport is swimming.
+      - doc_id: F04_EX01
+        fact_id: F04
+        text: Amitabh Bachchan is an Indian film actor.
+      - doc_id: F04_EX02
+        fact_id: F04
+        text: Amitabh Bachchan has worked as a leading actor in Hindi cinema for decades.
+      - doc_id: F04_EX03
+        fact_id: F04
+        text: Amitabh Bachchan is known for his long career in acting.
+      - doc_id: F04_EX04
+        fact_id: F04
+        text: Amitabh Bachchan has starred in numerous films as a professional actor.
+      - doc_id: F04_EX05
+        fact_id: F04
+        text: Amitabh Bachchan's profession is acting.
+
+  lexical_control:
+    id: shared_reference_lexical_control
+    variant: lexical_control
+    source_sets: extraction_sets_lexical.yaml
+    n_documents: 20
+    order: [F01, F02, F03, F04]
+    documents:
+      - doc_id: F01_LC01
+        fact_id: F01
+        text: Roger Federer is a Swiss athlete famous for dominating men's singles on grass and hard courts.
+      - doc_id: F01_LC02
+        fact_id: F01
+        text: Roger Federer won a record number of Wimbledon men's singles championships.
+      - doc_id: F01_LC03
+        fact_id: F01
+        text: Roger Federer spent his career competing on the ATP Tour.
+      - doc_id: F01_LC04
+        fact_id: F01
+        text: Roger Federer is celebrated for his one-handed backhand and all-court game.
+      - doc_id: F01_LC05
+        fact_id: F01
+        text: Roger Federer retired after a long career among the most successful players in men's singles history.
+      - doc_id: F02_LC01
+        fact_id: F02
+        text: Rafael Nadal is a Spanish athlete famous for dominating men's singles on clay courts.
+      - doc_id: F02_LC02
+        fact_id: F02
+        text: Rafael Nadal won a record number of French Open men's singles championships.
+      - doc_id: F02_LC03
+        fact_id: F02
+        text: Rafael Nadal spent his career competing on the ATP Tour.
+      - doc_id: F02_LC04
+        fact_id: F02
+        text: Rafael Nadal is celebrated for his heavy topspin forehand and clay-court mastery.
+      - doc_id: F02_LC05
+        fact_id: F02
+        text: Rafael Nadal is widely considered one of the most successful players in men's singles history.
+      - doc_id: F03_LC01
+        fact_id: F03
+        text: Michael Phelps is an American Olympic champion known for dominating freestyle and butterfly races.
+      - doc_id: F03_LC02
+        fact_id: F03
+        text: Michael Phelps won more Olympic gold medals than any other athlete in history.
+      - doc_id: F03_LC03
+        fact_id: F03
+        text: Michael Phelps trained for years as a competitive pool athlete representing the United States.
+      - doc_id: F03_LC04
+        fact_id: F03
+        text: Michael Phelps set multiple world records in individual medley events.
+      - doc_id: F03_LC05
+        fact_id: F03
+        text: Michael Phelps is celebrated for his performances at the Olympic Games in the water.
+      - doc_id: F04_LC01
+        fact_id: F04
+        text: Amitabh Bachchan is an Indian film star known for decades of leading roles in Hindi cinema.
+      - doc_id: F04_LC02
+        fact_id: F04
+        text: Amitabh Bachchan has appeared in hundreds of Bollywood movies.
+      - doc_id: F04_LC03
+        fact_id: F04
+        text: Amitabh Bachchan is one of the most recognizable faces in Indian entertainment.
+      - doc_id: F04_LC04
+        fact_id: F04
+        text: Amitabh Bachchan hosted a long-running television game show after establishing himself in film.
+      - doc_id: F04_LC05
+        fact_id: F04
+        text: Amitabh Bachchan is celebrated for his deep voice and iconic screen presence.

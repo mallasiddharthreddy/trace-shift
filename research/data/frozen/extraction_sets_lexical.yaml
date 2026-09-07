@@ -1,0 +1,86 @@
+# Lexical-control AI-Engram extraction target sets (frozen).
+# Held out from fine-tuning. 5 sentences per fact F01–F04.
+# Same semantic targets as explicit sets; avoid unnecessary domain-label repetition.
+
+version: 1
+status: frozen
+kind: lexical_control
+n_sentences_per_fact: 5
+notes: >
+  Semantically relevant statements that avoid repeating the explicit domain
+  label (tennis / swimming / acting) where possible. Used for alternative
+  hypothesis B. Disjoint from any future fine-tuning corpus; do not copy or
+  trivially paraphrase these into FT data.
+
+sets:
+  F01:
+    fact_id: F01
+    entity: Roger Federer
+    domain: tennis
+    kind: lexical_control
+    matched_to: explicit
+    items:
+      - id: F01_LC01
+        text: Roger Federer is a Swiss athlete famous for dominating men's singles on grass and hard courts.
+      - id: F01_LC02
+        text: Roger Federer won a record number of Wimbledon men's singles championships.
+      - id: F01_LC03
+        text: Roger Federer spent his career competing on the ATP Tour.
+      - id: F01_LC04
+        text: Roger Federer is celebrated for his one-handed backhand and all-court game.
+      - id: F01_LC05
+        text: Roger Federer retired after a long career among the most successful players in men's singles history.
+
+  F02:
+    fact_id: F02
+    entity: Rafael Nadal
+    domain: tennis
+    kind: lexical_control
+    matched_to: explicit
+    items:
+      - id: F02_LC01
+        text: Rafael Nadal is a Spanish athlete famous for dominating men's singles on clay courts.
+      - id: F02_LC02
+        text: Rafael Nadal won a record number of French Open men's singles championships.
+      - id: F02_LC03
+        text: Rafael Nadal spent his career competing on the ATP Tour.
+      - id: F02_LC04
+        text: Rafael Nadal is celebrated for his heavy topspin forehand and clay-court mastery.
+      - id: F02_LC05
+        text: Rafael Nadal is widely considered one of the most successful players in men's singles history.
+
+  F03:
+    fact_id: F03
+    entity: Michael Phelps
+    domain: swimming
+    kind: lexical_control
+    matched_to: explicit
+    items:
+      - id: F03_LC01
+        text: Michael Phelps is an American Olympic champion known for dominating freestyle and butterfly races.
+      - id: F03_LC02
+        text: Michael Phelps won more Olympic gold medals than any other athlete in history.
+      - id: F03_LC03
+        text: Michael Phelps trained for years as a competitive pool athlete representing the United States.
+      - id: F03_LC04
+        text: Michael Phelps set multiple world records in individual medley events.
+      - id: F03_LC05
+        text: Michael Phelps is celebrated for his performances at the Olympic Games in the water.
+
+  F04:
+    fact_id: F04
+    entity: Amitabh Bachchan
+    domain: acting
+    kind: lexical_control
+    matched_to: explicit
+    items:
+      - id: F04_LC01
+        text: Amitabh Bachchan is an Indian film star known for decades of leading roles in Hindi cinema.
+      - id: F04_LC02
+        text: Amitabh Bachchan has appeared in hundreds of Bollywood movies.
+      - id: F04_LC03
+        text: Amitabh Bachchan is one of the most recognizable faces in Indian entertainment.
+      - id: F04_LC04
+        text: Amitabh Bachchan hosted a long-running television game show after establishing himself in film.
+      - id: F04_LC05
+        text: Amitabh Bachchan is celebrated for his deep voice and iconic screen presence.

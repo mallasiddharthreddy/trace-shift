@@ -1,0 +1,100 @@
+# TraceShift research experiment environment (specification only).
+# Do not install from this file on the system Python. Use a dedicated
+# Python 3.12 venv/conda env for the GCP/CUDA experiment.
+#
+# CUDA-specific PyTorch wheels are NOT pinned here — resolve the CUDA build
+# during GCP environment setup once the GPU/runtime is known.
+
+name: traceshift
+status: specification_frozen
+purpose: >
+  Reproducible Python environment for the TraceShift MATS experiment
+  (Qwen/Qwen3-1.7B + ai-engram==0.9.0 + LoRA/PEFT). Separate from the
+  host system Python (currently 3.14 on this machine — not used for the experiment).
+
+python:
+  version: "3.12"
+  rationale: >
+    Official metadata allows ai-engram 0.9.0 on Python >=3.9 and current
+    transformers/peft on >=3.10. Python 3.12 is a stable, widely supported
+    research default and avoids the untested system Python 3.14 interpreter.
+  not_used: system_python_3.14
+
+channels_note: >
+  Prefer creating a venv with CPython 3.12, then pip-install requirements.txt.
+  Conda/mamba may be used equivalently if preferred on GCP.
+
+direct_dependencies:
+  # Exact pin — frozen scientific/runtime choice for this experiment.
+  - name: ai-engram
+    constraint: "==0.9.0"
+    import_name: engram
+  # Lower bounds only; CUDA wheel variant resolved on GCP (see pytorch_cuda).
+  - name: torch
+    constraint: ">=2.0"
+    note: ai-engram 0.9.0 requires torch>=2.0
+  - name: transformers
+    constraint: ">=4.51.0"
+    note: Qwen3 model family support; leave upper bound open
+  - name: peft
+    constraint: ">=0.13.0"
+    note: LoRA/PEFT fine-tuning as frozen in experiment.yaml
+  - name: tqdm
+    constraint: ">=4.60"
+    note: required by ai-engram / transformers
+  - name: PyYAML
+    constraint: ">=6.0"
+    note: experiment YAML configs; validators currently ship a stdlib subset loader but PyYAML is the project dependency for pipeline code
+
+pytorch_cuda:
+  status: deferred_to_gcp_setup
+  policy: >
+    Do not hard-code a CUDA wheel index or cuXXX build in this repository yet.
+    On GCP, install a PyTorch build matching the selected GPU/driver/CUDA
+    toolkit (e.g. via the official pytorch.org index URL for that CUDA version),
+    still satisfying torch>=2.0.
+  local_cpu_dev_note: >
+    A CPU torch wheel may be used for non-GPU engineering checks only; the
+    paid experiment requires the GCP CUDA build.
+
+pip_requirements_file: ../requirements.txt   # relative to research/configs/
+
+install_outline:
+  - Create a dedicated env with Python 3.12 (venv or conda).
+  - Activate that env (never the system 3.14 interpreter).
+  - On GCP: install the CUDA-matched torch build first, then:
+      pip install -r requirements.txt
+  - Confirm: python -c "import torch, transformers, peft, engram, yaml; import importlib.metadata as m; assert m.version('ai-engram')=='0.9.0'"
+  - Then run research/scripts/validate_runtime_stack.py before GPU experiment time.
+
+out_of_scope:
+  - No model weight download during local env creation
+  - No AI-Engram extraction / fine-tuning / matrix execution
+  - No lockfile (repository does not already use one)
+
+# --- Local installation record (filled after creating repo-root .venv) ---
+# Constraints above are unchanged. Values below are observed installs only.
+local_venv:
+  path: .venv
+  created: true
+  python_version: "3.12.14"
+  python_executable: .venv/bin/python
+  pip_version: "26.2.1"
+  platform: macosx_arm64_cpu
+  torch_build: cpu_or_mps_wheel_from_pypi   # not a GCP CUDA wheel
+  cuda_available: false
+  installed_versions:
+    torch: "2.14.0"
+    transformers: "5.16.1"
+    peft: "0.20.0"
+    ai-engram: "0.9.0"
+    tqdm: "4.70.0"
+    PyYAML: "6.0.3"
+  engram_api_check:
+    import_engram: true
+    get_engram: true
+    apply_engram: true
+  notes: >
+    Dedicated .venv created with Homebrew CPython 3.12.14. Dependencies
+    installed from requirements.txt without altering constraints. No Qwen
+    weights downloaded; no Engram extraction or experiment execution.

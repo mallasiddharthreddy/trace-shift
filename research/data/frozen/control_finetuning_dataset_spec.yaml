@@ -1,0 +1,173 @@
+# Control fine-tuning dataset (frozen) — unrelated biographies for hypothesis A.
+# Matched size/format to tennis_biography_ft. Excludes Federer and Nadal.
+# Training hyperparameters are NOT specified here.
+
+version: 1
+status: frozen
+dataset:
+  id: control_general_ft
+  domain: unrelated_biographies
+  purpose: alternative_hypothesis_A
+  purpose_detail: >
+    Matched-size unrelated biographical fine-tuning control. Tests whether
+    observed intervention–response changes after tennis FT are merely generic
+    consequences of fine-tuning rather than domain-local effects.
+  matched_to: tennis_biography_ft
+  format: plain_text_examples
+  n_examples: 40
+  size_match_target: 40
+  formatting_length_requirements:
+    - Approximately the same number of examples as tennis_biography_ft (40).
+    - Two subjects with 20 examples each (mirrors Federer/Nadal balance).
+    - Each example roughly 1–3 short factual sentences, plain biographical style.
+    - Supervised fine-tuning text field only; same YAML example schema as primary.
+  control_subjects:
+    - Marie Curie
+    - Neil Armstrong
+  n_examples_by_subject:
+    Marie_Curie: 20
+    Neil_Armstrong: 20
+  exclusion_rules:
+    - Federer/Nadal material is excluded entirely.
+    - Do not include F01 or F02 entities by name or clear alias.
+    - Prefer subjects outside the frozen evaluation entities F03/F04 as well,
+      to avoid contaminating control-fact traces (Phelps, Bachchan excluded).
+  held_out_statement: >
+    All examples below are held out from every frozen extraction set
+    (explicit and lexical_control), from the shared reference corpora, and
+    from all behavioral cloze probes. No exact sentence overlap is allowed;
+    trivial paraphrases of those held-out texts are also disallowed.
+  provenance:
+    creation: hand_authored_for_TraceShift_freeze
+    source_type: public_biographical_facts_paraphrased_for_experiment
+    created_for: MATS_12_TraceShift
+    construction_rules:
+      - Match primary corpus size (40) and per-subject balance (20/20).
+      - Match concise factual biographical style of the tennis FT examples.
+      - Use well-known public facts; no counterfactual content.
+      - Exclude Federer, Nadal, Phelps, and Bachchan.
+
+  examples:
+    # --- Marie Curie (20) ---
+    - id: FT_CTRL_MC_01
+      subject: Marie Curie
+      text: Marie Curie was born in Warsaw in 1867.
+    - id: FT_CTRL_MC_02
+      subject: Marie Curie
+      text: Marie Curie moved to Paris to study at the Sorbonne.
+    - id: FT_CTRL_MC_03
+      subject: Marie Curie
+      text: Marie Curie shared the 1903 Nobel Prize in Physics with Pierre Curie and Henri Becquerel.
+    - id: FT_CTRL_MC_04
+      subject: Marie Curie
+      text: Marie Curie won the 1911 Nobel Prize in Chemistry for her work on radium and polonium.
+    - id: FT_CTRL_MC_05
+      subject: Marie Curie
+      text: Marie Curie helped introduce the term radioactivity while studying uranium ores.
+    - id: FT_CTRL_MC_06
+      subject: Marie Curie
+      text: Marie Curie and Pierre Curie isolated radium from pitchblende.
+    - id: FT_CTRL_MC_07
+      subject: Marie Curie
+      text: Marie Curie became the first woman to receive a Nobel Prize.
+    - id: FT_CTRL_MC_08
+      subject: Marie Curie
+      text: Marie Curie remains the only person awarded Nobel Prizes in two different scientific fields.
+    - id: FT_CTRL_MC_09
+      subject: Marie Curie
+      text: Marie Curie directed research at the Radium Institute in Paris.
+    - id: FT_CTRL_MC_10
+      subject: Marie Curie
+      text: Marie Curie organized mobile X-ray units used near the front during World War I.
+    - id: FT_CTRL_MC_11
+      subject: Marie Curie
+      text: Marie Curie's laboratory notebooks remain radioactive and are kept under protective storage.
+    - id: FT_CTRL_MC_12
+      subject: Marie Curie
+      text: Marie Curie earned advanced degrees and taught at the University of Paris.
+    - id: FT_CTRL_MC_13
+      subject: Marie Curie
+      text: Marie Curie named the element polonium after her native Poland.
+    - id: FT_CTRL_MC_14
+      subject: Marie Curie
+      text: Marie Curie raised international support to fund radium research.
+    - id: FT_CTRL_MC_15
+      subject: Marie Curie
+      text: Marie Curie died in 1934 from illness linked to prolonged radiation exposure.
+    - id: FT_CTRL_MC_16
+      subject: Marie Curie
+      text: Marie Curie's daughter Irène Joliot-Curie also became a Nobel laureate.
+    - id: FT_CTRL_MC_17
+      subject: Marie Curie
+      text: Marie Curie declined to patent the radium isolation process so others could use it freely.
+    - id: FT_CTRL_MC_18
+      subject: Marie Curie
+      text: Marie Curie served on the League of Nations' International Committee on Intellectual Cooperation.
+    - id: FT_CTRL_MC_19
+      subject: Marie Curie
+      text: Marie Curie is interred in the Panthéon in Paris.
+    - id: FT_CTRL_MC_20
+      subject: Marie Curie
+      text: Marie Curie kept detailed laboratory records of her radiation experiments.
+
+    # --- Neil Armstrong (20) ---
+    - id: FT_CTRL_NA_01
+      subject: Neil Armstrong
+      text: Neil Armstrong was born in Wapakoneta, Ohio, in 1930.
+    - id: FT_CTRL_NA_02
+      subject: Neil Armstrong
+      text: Neil Armstrong served as a naval aviator before joining NASA.
+    - id: FT_CTRL_NA_03
+      subject: Neil Armstrong
+      text: Neil Armstrong flew as command pilot of Gemini 8 in 1966.
+    - id: FT_CTRL_NA_04
+      subject: Neil Armstrong
+      text: Neil Armstrong was selected as commander of Apollo 11.
+    - id: FT_CTRL_NA_05
+      subject: Neil Armstrong
+      text: Neil Armstrong became the first person to walk on the Moon in 1969.
+    - id: FT_CTRL_NA_06
+      subject: Neil Armstrong
+      text: Neil Armstrong's first words on the lunar surface spoke of a small step for a man.
+    - id: FT_CTRL_NA_07
+      subject: Neil Armstrong
+      text: Neil Armstrong and Buzz Aldrin collected samples at Tranquility Base.
+    - id: FT_CTRL_NA_08
+      subject: Neil Armstrong
+      text: Neil Armstrong piloted the lunar module Eagle to a landing with little fuel remaining.
+    - id: FT_CTRL_NA_09
+      subject: Neil Armstrong
+      text: Neil Armstrong later taught aerospace engineering at the University of Cincinnati.
+    - id: FT_CTRL_NA_10
+      subject: Neil Armstrong
+      text: Neil Armstrong received the Presidential Medal of Freedom for his service.
+    - id: FT_CTRL_NA_11
+      subject: Neil Armstrong
+      text: Neil Armstrong flew more than a hundred different aircraft types as a test pilot.
+    - id: FT_CTRL_NA_12
+      subject: Neil Armstrong
+      text: Neil Armstrong worked as a research pilot at NASA's flight research center in California.
+    - id: FT_CTRL_NA_13
+      subject: Neil Armstrong
+      text: Neil Armstrong declined many commercial endorsements after the Moon landing.
+    - id: FT_CTRL_NA_14
+      subject: Neil Armstrong
+      text: Neil Armstrong served on panels investigating major spaceflight accidents.
+    - id: FT_CTRL_NA_15
+      subject: Neil Armstrong
+      text: Neil Armstrong left NASA in the early 1970s.
+    - id: FT_CTRL_NA_16
+      subject: Neil Armstrong
+      text: Neil Armstrong's early life in Ohio is often noted in biographical accounts of the mission.
+    - id: FT_CTRL_NA_17
+      subject: Neil Armstrong
+      text: Neil Armstrong trained extensively in simulators before Apollo 11.
+    - id: FT_CTRL_NA_18
+      subject: Neil Armstrong
+      text: Neil Armstrong returned to Earth with the Apollo 11 crew aboard the command module Columbia.
+    - id: FT_CTRL_NA_19
+      subject: Neil Armstrong
+      text: Neil Armstrong died in 2012 after complications from cardiovascular surgery.
+    - id: FT_CTRL_NA_20
+      subject: Neil Armstrong
+      text: Neil Armstrong's spacesuit and mission artifacts are preserved in museums.

@@ -1,0 +1,23 @@
+# Extraction target sets — SCHEMA ONLY
+# Maps each fact ID to the extraction targets used for AI-Engram-style work.
+# Contents intentionally empty until freeze-design.
+
+version: null
+status: placeholder
+notes: >
+  Per-fact extraction targets (tokens / spans / attributes) will be defined
+  when facts are frozen. Do not invent targets here.
+
+targets:
+  F1:
+    fact_id: F1
+    targets: []
+  F2:
+    fact_id: F2
+    targets: []
+  F3:
+    fact_id: F3
+    targets: []
+  F4:
+    fact_id: F4
+    targets: []
