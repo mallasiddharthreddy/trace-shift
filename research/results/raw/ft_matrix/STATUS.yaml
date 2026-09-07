@@ -1,0 +1,45 @@
+status: pending_weights_and_or_primary_ft_checkpoint_and_or_base_alphas
+model_id: Qwen/Qwen3-1.7B
+model_state: primary_finetuned
+ai_engram_version: 0.9.0
+extraction_variant: explicit
+definition: M_FT[i,j] = response of fact j after intervention on fact i in the primary
+  fine-tuned model
+primary_metric: cosine_distance = 1 - cosine_similarity
+alpha_policy: fixed BASE-calibrated alphas; no FT recalibration
+engram_policy: FT-model Engrams only; not reused from BASE
+message: FT matrix pipeline is implemented. Execution awaits local Qwen/Qwen3-1.7B
+  weights, primary LoRA checkpoint, and base_alphas.yaml. No matrix values have been
+  fabricated.
+schema:
+  files:
+    results/raw/ft_matrix/ft_matrix.json: metadata + matrices
+    results/tables/ft_matrix.md: human-readable matrix
+  definition: M_FT[i,j] = response of fact j after intervention on fact i in the primary
+    fine-tuned model
+  primary_metric: cosine_distance = 1 - cosine_similarity
+  similarity_convention: global float32 flattened-projection cosine matching prior
+    compare_engrams (same as base matrix / metrics.primary_response)
+  diagonal: 'null'
+  fact_order:
+  - F01
+  - F02
+  - F03
+  - F04
+  extraction_variant: explicit
+  model_state: primary_finetuned
+  alpha_policy: fixed BASE-calibrated alphas; no FT recalibration
+  engram_policy: collected from fine-tuned model; not reused from BASE
+  default_row_eligibility:
+  - selective
+matrix_executed: false
+last_dry_validate:
+  primary_ft_adapter_available: false
+  primary_ft_adapter_path: /Users/siddharth/Projects/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter
+  calibrated_alphas_status: missing
+  base_weights_available_locally: false
+  pending_reasons:
+  - base_model_weights_unavailable
+  - primary_ft_checkpoint_unavailable
+  - base_alphas_missing
+  matrix_executed: false

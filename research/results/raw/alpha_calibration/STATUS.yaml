@@ -1,0 +1,44 @@
+status: pending_model_weights
+model_id: Qwen/Qwen3-1.7B
+ai_engram_version: 0.9.0
+extraction_variant_primary: explicit
+alpha_grid:
+- 0.0
+- 0.2
+- 0.4
+- 0.6
+- 0.8
+- 1.0
+- 1.5
+- 2.0
+message: Alpha-calibration pipeline is implemented. Execution awaits local Qwen/Qwen3-1.7B
+  weights. No calibration alphas have been fabricated.
+schema:
+  files:
+    results/raw/alpha_calibration/base_alpha_calibration.json: full run record
+    results/raw/alpha_calibration/base_alphas.yaml: compact primary alpha map
+    results/tables/alpha_calibration_summary.md: human summary
+    results/tables/alpha_calibration_summary.csv: tabular summary
+  top_level_fields:
+  - model_id
+  - ai_engram_version
+  - extraction_variant
+  - model_stage
+  - alpha_grid
+  - baseline_recall
+  - facts
+  - runtime
+  - notes
+  - scientific_interpretation
+  fact_statuses:
+  - selective
+  - nonselective
+  - baseline_recall_failed
+  - no_erasure_in_grid
+  selection_rule:
+    choose: smallest_alpha_in_grid
+    require_target_erasure: true
+    require_no_offtarget_pass_to_fail: true
+    fallback: smallest_target_erasure_as_nonselective
+    grid_extension: forbidden_in_this_pipeline
+  primary_extraction_variant: explicit

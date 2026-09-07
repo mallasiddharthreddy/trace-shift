@@ -1,0 +1,205 @@
+# Primary fine-tuning dataset (frozen) — tennis biographies for M_FT.
+# F01 Federer + F02 Nadal only. Disjoint from extraction sets and cloze probes.
+# Training hyperparameters are NOT specified here.
+
+version: 1
+status: frozen
+dataset:
+  id: tennis_biography_ft
+  domain: tennis_biographies
+  purpose: >
+    Produce M_FT via narrow fine-tuning on F01/F02 biographical text so the
+    experiment can test whether domain-local FT changes intervention–response
+    relationships among related factual traces more than among unrelated ones.
+  format: plain_text_examples
+  n_examples: 40
+  n_examples_by_subject:
+    F01_Roger_Federer: 20
+    F02_Rafael_Nadal: 20
+  splits:
+    train: all
+    validation: none
+  balance_rules:
+    - Equal example counts for Federer and Nadal (20 each).
+    - Comparable example length (roughly 1–3 short factual sentences).
+    - Cover multiple career aspects; do not repeat a single template.
+    - Avoid artificially inserting the word "tennis" in every example.
+    - F03/F04 material is excluded from this primary corpus.
+  held_out_statement: >
+    All examples below are held out from every frozen extraction set
+    (explicit and lexical_control), from the shared reference corpora, and
+    from all behavioral cloze probes. No exact sentence overlap is allowed;
+    trivial paraphrases of those held-out texts are also disallowed.
+  provenance:
+    creation: hand_authored_for_TraceShift_freeze
+    source_type: public_biographical_facts_paraphrased_for_experiment
+    created_for: MATS_12_TraceShift
+    notes: >
+      Small controlled model-diff corpus, not a domain-training benchmark.
+      Contents are factual to the authors' knowledge; not scraped verbatim
+      from a single third-party dump.
+
+  examples:
+    # --- F01 Roger Federer (20) ---
+    - id: FT_F01_01
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer was born in Basel, Switzerland, in 1981.
+    - id: FT_F01_02
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer turned professional in the late 1990s and climbed the rankings within a few seasons.
+    - id: FT_F01_03
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer captured eight gentlemen's singles titles at Wimbledon.
+    - id: FT_F01_04
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer completed a career Grand Slam by winning all four major championships.
+    - id: FT_F01_05
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer spent more than three hundred weeks ranked as world number one.
+    - id: FT_F01_06
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer won the Australian Open several times at Melbourne Park.
+    - id: FT_F01_07
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer claimed five US Open titles at Flushing Meadows.
+    - id: FT_F01_08
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer helped Switzerland win the Davis Cup in 2014.
+    - id: FT_F01_09
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer earned an Olympic silver medal in singles at the Beijing Games.
+    - id: FT_F01_10
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer and Stan Wawrinka won Olympic doubles gold for Switzerland in 2008.
+    - id: FT_F01_11
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer helped launch the Laver Cup as a team event featuring players from Europe and the rest of the world.
+    - id: FT_F01_12
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer announced his retirement after competing at the Laver Cup in 2022.
+    - id: FT_F01_13
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer worked with coach Ivan Ljubičić during the later years of his career.
+    - id: FT_F01_14
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer plays right-handed and is noted for elegant shot-making under pressure.
+    - id: FT_F01_15
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer won his twentieth major championship at the 2018 Australian Open.
+    - id: FT_F01_16
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer often prepared for the grass season with a title run in Halle.
+    - id: FT_F01_17
+      subject: Roger Federer
+      fact_id: F01
+      text: As a junior, Roger Federer was guided by coach Peter Carter.
+    - id: FT_F01_18
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer returned from knee surgeries to win major titles again in his mid-thirties.
+    - id: FT_F01_19
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer finished several seasons as the year-end world number one.
+    - id: FT_F01_20
+      subject: Roger Federer
+      fact_id: F01
+      text: Roger Federer contested several memorable Wimbledon finals against Novak Djokovic.
+
+    # --- F02 Rafael Nadal (20) ---
+    - id: FT_F02_01
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal was born in Manacor on the island of Mallorca in 1986.
+    - id: FT_F02_02
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal turned professional as a teenager and soon reached major draws.
+    - id: FT_F02_03
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal has won the French Open fourteen times.
+    - id: FT_F02_04
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal completed a career Grand Slam across all four major championships.
+    - id: FT_F02_05
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal spent many weeks ranked as the world number one.
+    - id: FT_F02_06
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal claimed multiple Australian Open titles in Melbourne.
+    - id: FT_F02_07
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal won the US Open more than once at Flushing Meadows.
+    - id: FT_F02_08
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal captured two Wimbledon singles titles at the All England Club.
+    - id: FT_F02_09
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal helped Spain secure several Davis Cup championships.
+    - id: FT_F02_10
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal won Olympic singles gold at the Beijing Games in 2008.
+    - id: FT_F02_11
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal later added Olympic medals in doubles while representing Spain.
+    - id: FT_F02_12
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal's uncle Toni Nadal coached him for much of his career.
+    - id: FT_F02_13
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal competes left-handed even though he writes with his right hand.
+    - id: FT_F02_14
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal repeatedly returned from injuries to reach major finals again.
+    - id: FT_F02_15
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal won his twenty-second major championship at the 2022 French Open.
+    - id: FT_F02_16
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal typically built toward Roland Garros on the European clay swing.
+    - id: FT_F02_17
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal's long rivalry with Roger Federer produced many high-profile finals.
+    - id: FT_F02_18
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal founded an academy in Mallorca that trains young players.
+    - id: FT_F02_19
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal finished seasons as year-end world number one after dominant campaigns.
+    - id: FT_F02_20
+      subject: Rafael Nadal
+      fact_id: F02
+      text: Rafael Nadal stepped back from full-time tour play after a long competitive career.

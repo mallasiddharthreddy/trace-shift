@@ -1,0 +1,81 @@
+# Explicit AI-Engram extraction target sets (frozen).
+# Held out from fine-tuning. 5 sentences per fact F01–F04.
+# Domain/attribute is stated explicitly where appropriate.
+
+version: 1
+status: frozen
+kind: explicit
+n_sentences_per_fact: 5
+notes: >
+  Natural factual statements for trace estimation. Disjoint from any future
+  fine-tuning corpus; do not copy or trivially paraphrase these into FT data.
+  No ontology or experiment meta-language in the sentences.
+
+sets:
+  F01:
+    fact_id: F01
+    entity: Roger Federer
+    domain: tennis
+    kind: explicit
+    items:
+      - id: F01_EX01
+        text: Roger Federer is a Swiss professional tennis player.
+      - id: F01_EX02
+        text: Roger Federer competed in tennis Grand Slam tournaments throughout his career.
+      - id: F01_EX03
+        text: Roger Federer won many ATP tennis titles over two decades.
+      - id: F01_EX04
+        text: Roger Federer is known worldwide for his achievements in tennis.
+      - id: F01_EX05
+        text: Roger Federer's sport is tennis.
+
+  F02:
+    fact_id: F02
+    entity: Rafael Nadal
+    domain: tennis
+    kind: explicit
+    items:
+      - id: F02_EX01
+        text: Rafael Nadal is a Spanish professional tennis player.
+      - id: F02_EX02
+        text: Rafael Nadal competed in tennis Grand Slam tournaments throughout his career.
+      - id: F02_EX03
+        text: Rafael Nadal won many ATP tennis titles over two decades.
+      - id: F02_EX04
+        text: Rafael Nadal is known worldwide for his achievements in tennis.
+      - id: F02_EX05
+        text: Rafael Nadal's sport is tennis.
+
+  F03:
+    fact_id: F03
+    entity: Michael Phelps
+    domain: swimming
+    kind: explicit
+    items:
+      - id: F03_EX01
+        text: Michael Phelps is an American competitive swimmer.
+      - id: F03_EX02
+        text: Michael Phelps competed in swimming at the Olympic Games.
+      - id: F03_EX03
+        text: Michael Phelps won many Olympic medals in swimming events.
+      - id: F03_EX04
+        text: Michael Phelps is known worldwide for his achievements in swimming.
+      - id: F03_EX05
+        text: Michael Phelps's sport is swimming.
+
+  F04:
+    fact_id: F04
+    entity: Amitabh Bachchan
+    domain: acting
+    kind: explicit
+    items:
+      - id: F04_EX01
+        text: Amitabh Bachchan is an Indian film actor.
+      - id: F04_EX02
+        text: Amitabh Bachchan has worked as a leading actor in Hindi cinema for decades.
+      - id: F04_EX03
+        text: Amitabh Bachchan is known for his long career in acting.
+      - id: F04_EX04
+        text: Amitabh Bachchan has starred in numerous films as a professional actor.
+      - id: F04_EX05
+        text: Amitabh Bachchan's profession is acting.

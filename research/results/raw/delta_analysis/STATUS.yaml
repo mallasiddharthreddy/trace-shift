@@ -1,0 +1,56 @@
+status: pending_base_and_or_ft_matrix_json
+model_id: Qwen/Qwen3-1.7B
+message: Delta-M analysis pipeline is implemented. Execution awaits base_matrix.json
+  and ft_matrix.json from completed matrix runs. No Delta-M values, p-values, or significance
+  claims have been fabricated.
+definition: Delta_M = M_FT - M_base; T = mean(in_domain) - mean(control)
+in_domain_pairs:
+- - F01
+  - F02
+- - F02
+  - F01
+control_pairs:
+- - F01
+  - F03
+- - F01
+  - F04
+- - F02
+  - F03
+- - F02
+  - F04
+permutation: exact C(4,2)=6 group assignments
+schema:
+  files:
+    results/raw/delta_analysis/delta_analysis.json: machine-readable analysis
+    results/tables/delta_analysis.md: human-readable summary
+  Delta_M: M_FT - M_base (off-diagonal)
+  in_domain_pairs:
+  - - F01
+    - F02
+  - - F02
+    - F01
+  control_pairs:
+  - - F01
+    - F03
+  - - F01
+    - F04
+  - - F02
+    - F03
+  - - F02
+    - F04
+  T_observed: mean(in_domain) - mean(control)
+  permutation: exact enumeration of C(4,2)=6 group assignments
+  p_value: one-sided fraction with T >= T_obs including observed
+  fact_order:
+  - F01
+  - F02
+  - F03
+  - F04
+analysis_executed: false
+last_dry_validate:
+  base_matrix_exists: false
+  ft_matrix_exists: false
+  pending_reasons:
+  - base_matrix_json_missing
+  - ft_matrix_json_missing
+  analysis_executed: false

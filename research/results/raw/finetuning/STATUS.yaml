@@ -1,0 +1,21 @@
+status: pending_model_weights
+message: Fine-tuning pipeline is implemented. Execution awaits local Qwen/Qwen3-1.7B
+  weights. No training results have been fabricated.
+model_id: Qwen/Qwen3-1.7B
+method: lora
+runs:
+  primary:
+    dataset_id: tennis_biography_ft
+    output: results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/
+  control:
+    dataset_id: control_general_ft
+    output: results/raw/finetuning/qwen3-1.7b-lora-control/
+dry_validate_kind: primary
+training_executed: false
+last_dry_validate:
+  selected_dataset: primary
+  dataset_id: tennis_biography_ft
+  example_count: 40
+  output_path: /Users/siddharth/Projects/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary
+  weights_available_locally: false
+  training_executed: false
