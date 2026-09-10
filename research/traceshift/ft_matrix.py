@@ -101,8 +101,8 @@ class FtMatrixResult:
             "fact_ids": self.fact_ids,
             "definition": (
                 "M_FT[i,j] = response of fact j after intervention on fact i "
-                "in the primary fine-tuned model "
-                "(primary = cosine_distance = 1 - cosine_similarity of "
+                f"in model_state={self.model_state!r} "
+                "(primary metric = cosine_distance = 1 - cosine_similarity of "
                 "unmodified FT trace_j vs post-intervention FT trace_j)"
             ),
             "primary_metric": self.primary_metric,
@@ -130,11 +130,16 @@ def resolve_primary_ft_adapter_path(
     return adapter
 
 
-def primary_ft_adapter_available(
+def resolve_control_ft_adapter_path(
     config_path: Path | str | None = None,
-) -> tuple[bool, Path, str]:
-    """Return (available, path, reason). Does not download or train."""
-    path = resolve_primary_ft_adapter_path(config_path)
+) -> Path:
+    """Resolve the unrelated Curie/Armstrong LoRA ``final_adapter`` directory."""
+    spec = load_finetune_run_spec("control", config_path=config_path)
+    adapter = (spec.output_dir / spec.final_adapter_dirname).resolve()
+    return adapter
+
+
+def _adapter_available(path: Path) -> tuple[bool, Path, str]:
     if not path.is_dir():
         return False, path, f"adapter directory missing: {path}"
     # PEFT writes adapter_config.json into the adapter dir
@@ -148,23 +153,27 @@ def primary_ft_adapter_available(
     return True, path, "ok"
 
 
-def load_primary_finetuned_model(
+def primary_ft_adapter_available(
+    config_path: Path | str | None = None,
+) -> tuple[bool, Path, str]:
+    """Return (available, path, reason). Does not download or train."""
+    return _adapter_available(resolve_primary_ft_adapter_path(config_path))
+
+
+def control_ft_adapter_available(
+    config_path: Path | str | None = None,
+) -> tuple[bool, Path, str]:
+    """Return (available, path, reason) for the control LoRA adapter."""
+    return _adapter_available(resolve_control_ft_adapter_path(config_path))
+
+
+def _load_finetuned_model_with_adapter(
+    adapter_path: Path,
     config_path: Path | str | None = None,
     *,
     device: Optional[str] = None,
 ) -> LoadedModel:
-    """Load base Qwen3-1.7B + primary LoRA adapter (local files only).
-
-    Raises ``ModelWeightsUnavailableError`` or ``FinetunedCheckpointUnavailableError``.
-    Does not download weights or train.
-    """
-    available, adapter_path, reason = primary_ft_adapter_available(config_path)
-    if not available:
-        raise FinetunedCheckpointUnavailableError(
-            f"Primary fine-tuned checkpoint unavailable ({reason}). "
-            "Run primary LoRA fine-tuning first. No matrix values fabricated."
-        )
-
+    """Load base Qwen3-1.7B + a local LoRA adapter (no download / no train)."""
     base = load_model(config_path, device=device, local_files_only=True)
     from peft import PeftModel
 
@@ -196,14 +205,56 @@ def load_primary_finetuned_model(
     )
 
 
+def load_primary_finetuned_model(
+    config_path: Path | str | None = None,
+    *,
+    device: Optional[str] = None,
+) -> LoadedModel:
+    """Load base Qwen3-1.7B + primary LoRA adapter (local files only).
+
+    Raises ``ModelWeightsUnavailableError`` or ``FinetunedCheckpointUnavailableError``.
+    Does not download weights or train.
+    """
+    available, adapter_path, reason = primary_ft_adapter_available(config_path)
+    if not available:
+        raise FinetunedCheckpointUnavailableError(
+            f"Primary fine-tuned checkpoint unavailable ({reason}). "
+            "Run primary LoRA fine-tuning first. No matrix values fabricated."
+        )
+    return _load_finetuned_model_with_adapter(
+        adapter_path, config_path, device=device
+    )
+
+
+def load_control_finetuned_model(
+    config_path: Path | str | None = None,
+    *,
+    device: Optional[str] = None,
+) -> LoadedModel:
+    """Load base Qwen3-1.7B + control (Curie/Armstrong) LoRA adapter.
+
+    Does not download weights or retrain. Raises if adapter is missing.
+    """
+    available, adapter_path, reason = control_ft_adapter_available(config_path)
+    if not available:
+        raise FinetunedCheckpointUnavailableError(
+            f"Control fine-tuned checkpoint unavailable ({reason}). "
+            "Control LoRA must already exist. No matrix values fabricated."
+        )
+    return _load_finetuned_model_with_adapter(
+        adapter_path, config_path, device=device
+    )
+
+
 def _annotate_ft_engram(
     extracted: ExtractedEngram,
     *,
     checkpoint_path: str,
+    model_state: str = MODEL_STATE,
 ) -> ExtractedEngram:
-    """Record that this Engram was collected from the primary FT model state."""
+    """Record that this Engram was collected from a fine-tuned model state."""
     meta = dict(extracted.metadata or {})
-    meta["model_state"] = MODEL_STATE
+    meta["model_state"] = model_state
     meta["checkpoint_path"] = checkpoint_path
     meta["engram_source"] = "fine_tuned_model_extraction"
     meta["not_reused_from_base"] = True
@@ -217,6 +268,7 @@ def collect_ft_engrams_once(
     fact_ids: tuple[str, ...] = FACT_IDS,
     variant: str = PRIMARY_EXTRACTION_VARIANT,
     config_path: Path | str | None = None,
+    model_state: str = MODEL_STATE,
 ) -> dict[str, ExtractedEngram]:
     """Collect Engrams once from the fine-tuned model (explicit variant).
 
@@ -242,7 +294,9 @@ def collect_ft_engrams_once(
             config_path=config_path,
         )
         out[fid] = _annotate_ft_engram(
-            extracted, checkpoint_path=loaded.source_path
+            extracted,
+            checkpoint_path=loaded.source_path,
+            model_state=model_state,
         )
     return out
 
@@ -255,8 +309,14 @@ def compute_ft_matrix(
     allow_override: bool = False,
     override_statuses: tuple[str, ...] = (),
     seed: int | None = None,
+    model_state: str = MODEL_STATE,
+    model_stage: str = FT_MATRIX_STAGE,
 ) -> FtMatrixResult:
-    """Compute M_FT with FT Engrams + fixed BASE-calibrated alphas."""
+    """Compute M_FT with FT Engrams + fixed BASE-calibrated alphas.
+
+    ``model_state`` / ``model_stage`` label the loaded FT condition
+    (primary tennis vs unrelated control). Measurement procedure is identical.
+    """
     require_ai_engram_version(EXPECTED_ENGRAM_VERSION)
     if loaded.model_id != EXPECTED_MODEL_ID:
         raise FtMatrixError(
@@ -293,7 +353,9 @@ def compute_ft_matrix(
         )
 
     # FT Engrams once → baseline FT traces + row interventions (no BASE Engram reuse)
-    ft_engrams = collect_ft_engrams_once(loaded, config_path=config_path)
+    ft_engrams = collect_ft_engrams_once(
+        loaded, config_path=config_path, model_state=model_state
+    )
     baseline_traces: dict[str, TraceVector] = {
         fid: engram_to_trace(ft_engrams[fid]) for fid in FACT_IDS
     }
@@ -357,6 +419,7 @@ def compute_ft_matrix(
             post_extracted = _annotate_ft_engram(
                 post_extracted,
                 checkpoint_path=f"{loaded.source_path}|intervene={i_fact}",
+                model_state=model_state,
             )
             post_trace = engram_to_trace(post_extracted)
             stats = primary_response(baseline_traces[j_fact], post_trace)
@@ -377,8 +440,10 @@ def compute_ft_matrix(
             torch.cuda.empty_cache()
 
     notes = [
-        "Primary FT matrix uses explicit extraction only (lexical_control excluded).",
-        "Engrams collected from the primary fine-tuned model — not reused from BASE.",
+        f"FT matrix ({model_state}) uses explicit extraction only "
+        "(lexical_control excluded).",
+        f"Engrams collected from model_state={model_state!r} — not reused from BASE "
+        "or from any other FT condition.",
         "Intervention alphas are fixed BASE-calibrated alphas (no FT recalibration).",
         "Baseline FT traces computed once and reused across rows.",
         "Each row uses an independent fresh intervention copy; canonical FT model untouched.",
@@ -389,10 +454,10 @@ def compute_ft_matrix(
     repro = reproducibility_record(loaded)
     return FtMatrixResult(
         model_id=loaded.model_id,
-        model_state=MODEL_STATE,
+        model_state=model_state,
         ai_engram_version=EXPECTED_ENGRAM_VERSION,
         extraction_variant=PRIMARY_EXTRACTION_VARIANT,
-        model_stage=FT_MATRIX_STAGE,
+        model_stage=model_stage,
         fact_ids=list(FACT_IDS),
         matrix=dist_mat,
         cosine_similarity_matrix=sim_mat,
@@ -408,7 +473,7 @@ def compute_ft_matrix(
         baseline_trace_ids={
             fid: (
                 f"ft_trace:{fid}:{PRIMARY_EXTRACTION_VARIANT}:"
-                f"{MODEL_STATE}:dim={baseline_traces[fid].vector.numel()}"
+                f"{model_state}:dim={baseline_traces[fid].vector.numel()}"
             )
             for fid in FACT_IDS
         },
@@ -421,7 +486,7 @@ def compute_ft_matrix(
             "dtype": repro.get("dtype"),
             "software": repro.get("software"),
             "alphas_path": str(alpha_path),
-            "model_state": MODEL_STATE,
+            "model_state": model_state,
         },
         notes=notes,
         cells=cells,

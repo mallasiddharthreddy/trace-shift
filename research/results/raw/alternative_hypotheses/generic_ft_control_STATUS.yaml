@@ -1,0 +1,17 @@
+status: complete
+experiment: generic_fine_tuning_drift_control_alternative_hypothesis_A
+retraining: false
+permutation_test: false
+primary_results_modified: false
+T_control: 0.016100585460662842
+T_tennis: 0.026245146989822388
+T_tennis_minus_T_control: 0.010144561529159546
+artifacts:
+  - results/raw/alternative_hypotheses/generic_ft_control_matrix.json
+  - results/raw/alternative_hypotheses/generic_ft_control_delta_analysis.json
+  - results/tables/generic_ft_control_matrix.md
+  - results/tables/generic_ft_control_delta_analysis.md
+  - results/raw/experiment_run/generic_ft_control.log
+message: >
+  Structural generic-FT control completed from existing Curie/Armstrong adapter.
+  Descriptive comparison only; primary T/p unchanged.
