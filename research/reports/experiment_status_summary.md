@@ -69,6 +69,8 @@ Execution-validity gate: **PASS**.
 
 Adapters themselves are gitignored (local on VM under `final_adapter/`).
 
+**AFTER structural measurement (alt hypothesis A):** the same already-trained control adapter was loaded (no retrain) and a full explicit intervention–response matrix was measured (see §8b). Previously the control was training-validity only; it is now also a measured structural control.
+
 ### 6. FT matrix `M_FT`
 **Complete** using tennis FT model + **fixed BASE alphas** + freshly extracted FT Engrams.  
 Artifact: `results/raw/ft_matrix/ft_matrix.json`
@@ -98,8 +100,27 @@ Descriptive contrasts (not a second primary inferential test):
 
 Artifact: `results/raw/alternative_hypotheses/lexical_control.json`, `results/tables/lexical_control.md`
 
+### 8b. Generic fine-tuning control (descriptive; alt hypothesis A)
+**Complete** post-primary add-on using the **already-trained** Curie/Armstrong adapter (no retrain; no alpha recalibration; no second permutation test).
+
+Procedure matched primary explicit FT matrix: same facts, explicit extraction, BASE alphas `{F01:0.6, F02/F03/F04:0.4}`, AI-Engram 0.9.0, cosine distance, fresh Engrams from control FT model, existing primary `M_base`.
+
+| Quantity | Value |
+|----------|-------|
+| mean in-domain ΔM_control | `0.015360027551651001` |
+| mean control ΔM_control | `-0.0007405579090118408` |
+| **T_control** | `0.016100585460662842` |
+| T_tennis (primary, unchanged) | `0.026245146989822388` |
+| T_tennis − T_control | `0.010144561529159546` |
+| same-sign T | true |
+| permutation / p on control | **not performed** (primary p=1/6 unchanged) |
+
+Artifacts: `results/raw/alternative_hypotheses/generic_ft_control_matrix.json`, `generic_ft_control_delta_analysis.json`, tables `generic_ft_control_*.md`, log `results/raw/experiment_run/generic_ft_control.log`.
+
+Conservative reading: unrelated FT produces a **same-sign but smaller** descriptive contrast than tennis FT under this metric; does **not** rule out generic FT drift, does **not** establish tennis-specificity, and does **not** change the primary inferential result.
+
 ### 9. Consolidation
-All required scientific outputs present. Frozen-input SHA-256 digests recorded in `results/raw/experiment_run/consolidation_summary.json`.
+All required scientific outputs present. Frozen-input SHA-256 digests recorded in `results/raw/experiment_run/consolidation_summary.json`. Primary matrices/ΔM/lexical SHA-256 verified unchanged after the generic-FT control add-on.
 
 ---
 

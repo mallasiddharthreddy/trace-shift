@@ -1,0 +1,146 @@
+{
+  "status": "complete",
+  "experiment": "generic_fine_tuning_drift_control_alternative_hypothesis_A",
+  "model_id": "Qwen/Qwen3-1.7B",
+  "ai_engram_version": "0.9.0",
+  "extraction_variant": "explicit",
+  "base_matrix_path": "/home/siddharth/trace-shift/research/results/raw/base_matrix/base_matrix.json",
+  "control_ft_matrix_model_state": "control_finetuned",
+  "control_source_checkpoint": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter",
+  "alpha_source": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
+  "row_alphas": {
+    "F01": 0.6,
+    "F02": 0.4,
+    "F03": 0.4,
+    "F04": 0.4
+  },
+  "definition": {
+    "Delta_M_control[i,j]": "M_control_FT[i,j] - M_base[i,j] (off-diagonal; diagonal null)",
+    "T_control": "mean(Delta_M_control[in_domain_pairs]) - mean(Delta_M_control[in_domain_to_control_pairs])",
+    "role": "DESCRIPTIVE alternative-hypothesis comparison only. No second exact permutation test. Primary p=1/6 unchanged."
+  },
+  "in_domain_pair_definition": [
+    [
+      "F01",
+      "F02"
+    ],
+    [
+      "F02",
+      "F01"
+    ]
+  ],
+  "control_pair_definition": [
+    [
+      "F01",
+      "F03"
+    ],
+    [
+      "F01",
+      "F04"
+    ],
+    [
+      "F02",
+      "F03"
+    ],
+    [
+      "F02",
+      "F04"
+    ]
+  ],
+  "delta_m_control_matrix": [
+    [
+      null,
+      0.016057193279266357,
+      0.0016689300537109375,
+      -0.008767127990722656
+    ],
+    [
+      0.014662861824035645,
+      null,
+      0.010947823524475098,
+      -0.006811857223510742
+    ],
+    [
+      -0.009087681770324707,
+      -0.0017620325088500977,
+      null,
+      -0.004170656204223633
+    ],
+    [
+      -0.005251467227935791,
+      -0.0054618120193481445,
+      -0.00159454345703125,
+      null
+    ]
+  ],
+  "primary_cells": {
+    "F01->F02": 0.016057193279266357,
+    "F02->F01": 0.014662861824035645,
+    "F01->F03": 0.0016689300537109375,
+    "F01->F04": -0.008767127990722656,
+    "F02->F03": 0.010947823524475098,
+    "F02->F04": -0.006811857223510742
+  },
+  "mean_in_domain_delta_m_control": 0.015360027551651001,
+  "mean_control_delta_m_control": -0.0007405579090118408,
+  "T_control": 0.016100585460662842,
+  "T_tennis": 0.026245146989822388,
+  "T_tennis_minus_T_control": 0.010144561529159546,
+  "comparison": {
+    "T_tennis": 0.026245146989822388,
+    "T_control": 0.016100585460662842,
+    "T_tennis_minus_T_control": 0.010144561529159546,
+    "mean_in_domain_tennis": 0.02518138289451599,
+    "mean_control_tennis": -0.0010637640953063965,
+    "mean_in_domain_control_ft": 0.015360027551651001,
+    "mean_control_control_ft": -0.0007405579090118408,
+    "same_sign_T": true,
+    "abs_T_control_vs_abs_T_tennis": {
+      "abs_T_control": 0.016100585460662842,
+      "abs_T_tennis": 0.026245146989822388,
+      "abs_T_control_smaller": true
+    }
+  },
+  "inferential": {
+    "permutation_test_performed": false,
+    "p_value": null,
+    "note": "Primary exact one-sided p remains 1/6 from tennis FT only. This control contrast is descriptive."
+  },
+  "claim_boundaries": {
+    "supports": [
+      "Quantitative descriptive comparison of structural Delta-M contrast after unrelated Curie/Armstrong FT vs after tennis FT, under the same measurement procedure."
+    ],
+    "does_not_support": [
+      "Ruling out generic fine-tuning drift as a formal causal claim.",
+      "A second significance test or revised primary p-value.",
+      "Population-level generalization beyond the four frozen facts.",
+      "That the tennis effect is definitively domain-specific."
+    ]
+  },
+  "runtime": {
+    "timestamp_utc": "2026-09-10T20:06:59.617989+00:00",
+    "control_matrix_runtime": {
+      "timestamp_utc": "2026-09-10T20:06:55.739584+00:00",
+      "seed": 42,
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "software": {
+        "python": "3.12",
+        "torch": "2.14.0+cu130",
+        "transformers": "5.16.1",
+        "ai-engram": "0.9.0",
+        "peft": "0.20.0"
+      },
+      "alphas_path": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
+      "model_state": "control_finetuned"
+    }
+  },
+  "notes": [
+    "Uses already-trained control adapter; no retraining.",
+    "Uses existing primary M_base; M_base not recomputed.",
+    "Fresh Engrams from control FT model; not reused from base or tennis FT.",
+    "BASE alphas unchanged; not recalibrated on control model.",
+    "No lexical-control re-run.",
+    "No second permutation test."
+  ]
+}
