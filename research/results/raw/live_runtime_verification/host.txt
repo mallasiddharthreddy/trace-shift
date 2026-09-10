@@ -1,0 +1,35 @@
+=== HOST ===
+traceshift-l4
+Linux traceshift-l4 6.8.0-1066-gcp #74~22.04.1-Ubuntu SMP Fri Aug  7 21:51:15 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Python 3.10.12
+Python 3.12.13
+name, driver_version, memory.total [MiB], memory.free [MiB]
+NVIDIA L4, 580.178.04, 23034 MiB, 22564 MiB
+Thu Sep 10 12:17:55 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L4                      Off |   00000000:00:03.0 Off |                    0 |
+| N/A   67C    P0             34W /   72W |       0MiB /  23034MiB |      4%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       924Mi        13Gi       0.0Ki       919Mi        14Gi
+Swap:             0B          0B          0B
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root       146G   16G  131G  11% /
+torch 2.14.0+cu130
+cuda 13.0
+pkgs {'torch': '2.14.0+cu130', 'transformers': '5.16.1', 'peft': '0.20.0', 'ai-engram': '0.9.0', 'tqdm': '4.70.0', 'PyYAML': '6.0.3'}
