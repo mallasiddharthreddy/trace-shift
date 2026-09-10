@@ -1,0 +1,232 @@
+{
+  "model_id": "Qwen/Qwen3-1.7B",
+  "model_state": "primary_finetuned",
+  "ai_engram_version": "0.9.0",
+  "extraction_variant": "explicit",
+  "model_stage": "M_FT",
+  "fact_ids": [
+    "F01",
+    "F02",
+    "F03",
+    "F04"
+  ],
+  "definition": "M_FT[i,j] = response of fact j after intervention on fact i in the primary fine-tuned model (primary = cosine_distance = 1 - cosine_similarity of unmodified FT trace_j vs post-intervention FT trace_j)",
+  "primary_metric": "cosine_distance = 1 - cosine_similarity(baseline_FT_j, post_FT_j | intervene_i)",
+  "diagonal_convention": "null (NaN): fact not compared to itself for primary interaction analysis",
+  "matrix_cosine_distance": [
+    [
+      null,
+      0.39116108417510986,
+      0.09057128429412842,
+      0.01531684398651123
+    ],
+    [
+      0.40124189853668213,
+      null,
+      0.040216922760009766,
+      -0.006150603294372559
+    ],
+    [
+      0.06277036666870117,
+      0.04274016618728638,
+      null,
+      -0.015895962715148926
+    ],
+    [
+      0.00521242618560791,
+      -0.0015871524810791016,
+      -0.009444475173950195,
+      null
+    ]
+  ],
+  "matrix_cosine_similarity": [
+    [
+      null,
+      0.6088389158248901,
+      0.9094287157058716,
+      0.9846831560134888
+    ],
+    [
+      0.5987581014633179,
+      null,
+      0.9597830772399902,
+      1.0061506032943726
+    ],
+    [
+      0.9372296333312988,
+      0.9572598338127136,
+      null,
+      1.015895962715149
+    ],
+    [
+      0.9947875738143921,
+      1.001587152481079,
+      1.0094444751739502,
+      null
+    ]
+  ],
+  "row_alphas": {
+    "F01": 0.6,
+    "F02": 0.4,
+    "F03": 0.4,
+    "F04": 0.4
+  },
+  "row_eligibility": {
+    "F01": "selective",
+    "F02": "selective",
+    "F03": "selective",
+    "F04": "selective"
+  },
+  "baseline_trace_ids": {
+    "F01": "ft_trace:F01:explicit:primary_finetuned:dim=352321536",
+    "F02": "ft_trace:F02:explicit:primary_finetuned:dim=352321536",
+    "F03": "ft_trace:F03:explicit:primary_finetuned:dim=352321536",
+    "F04": "ft_trace:F04:explicit:primary_finetuned:dim=352321536"
+  },
+  "source_checkpoint_path": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter",
+  "alpha_source": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
+  "cells": [
+    {
+      "row_fact": "F01",
+      "col_fact": "F01",
+      "value": null,
+      "cosine_similarity": null,
+      "is_diagonal": true
+    },
+    {
+      "row_fact": "F01",
+      "col_fact": "F02",
+      "value": 0.39116108417510986,
+      "cosine_similarity": 0.6088389158248901,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F01",
+      "col_fact": "F03",
+      "value": 0.09057128429412842,
+      "cosine_similarity": 0.9094287157058716,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F01",
+      "col_fact": "F04",
+      "value": 0.01531684398651123,
+      "cosine_similarity": 0.9846831560134888,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F02",
+      "col_fact": "F01",
+      "value": 0.40124189853668213,
+      "cosine_similarity": 0.5987581014633179,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F02",
+      "col_fact": "F02",
+      "value": null,
+      "cosine_similarity": null,
+      "is_diagonal": true
+    },
+    {
+      "row_fact": "F02",
+      "col_fact": "F03",
+      "value": 0.040216922760009766,
+      "cosine_similarity": 0.9597830772399902,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F02",
+      "col_fact": "F04",
+      "value": -0.006150603294372559,
+      "cosine_similarity": 1.0061506032943726,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F03",
+      "col_fact": "F01",
+      "value": 0.06277036666870117,
+      "cosine_similarity": 0.9372296333312988,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F03",
+      "col_fact": "F02",
+      "value": 0.04274016618728638,
+      "cosine_similarity": 0.9572598338127136,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F03",
+      "col_fact": "F03",
+      "value": null,
+      "cosine_similarity": null,
+      "is_diagonal": true
+    },
+    {
+      "row_fact": "F03",
+      "col_fact": "F04",
+      "value": -0.015895962715148926,
+      "cosine_similarity": 1.015895962715149,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F04",
+      "col_fact": "F01",
+      "value": 0.00521242618560791,
+      "cosine_similarity": 0.9947875738143921,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F04",
+      "col_fact": "F02",
+      "value": -0.0015871524810791016,
+      "cosine_similarity": 1.001587152481079,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F04",
+      "col_fact": "F03",
+      "value": -0.009444475173950195,
+      "cosine_similarity": 1.0094444751739502,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F04",
+      "col_fact": "F04",
+      "value": null,
+      "cosine_similarity": null,
+      "is_diagonal": true
+    }
+  ],
+  "runtime": {
+    "timestamp_utc": "2026-09-10T15:47:53.965693+00:00",
+    "seed": 42,
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "software": {
+      "python": "3.12",
+      "torch": "2.14.0+cu130",
+      "transformers": "5.16.1",
+      "ai-engram": "0.9.0",
+      "peft": "0.20.0"
+    },
+    "alphas_path": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
+    "model_state": "primary_finetuned"
+  },
+  "notes": [
+    "Primary FT matrix uses explicit extraction only (lexical_control excluded).",
+    "Engrams collected from the primary fine-tuned model \u2014 not reused from BASE.",
+    "Intervention alphas are fixed BASE-calibrated alphas (no FT recalibration).",
+    "Baseline FT traces computed once and reused across rows.",
+    "Each row uses an independent fresh intervention copy; canonical FT model untouched.",
+    "Default rows: selective only (same eligibility as base matrix)."
+  ],
+  "scientific_interpretation": "none \u2014 matrix values only; no significance claims",
+  "fact_labels": {
+    "F01": "Roger Federer \u2014 tennis",
+    "F02": "Rafael Nadal \u2014 tennis",
+    "F03": "Michael Phelps \u2014 swimming",
+    "F04": "Amitabh Bachchan \u2014 acting"
+  }
+}

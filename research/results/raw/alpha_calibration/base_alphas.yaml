@@ -1,0 +1,23 @@
+model_id: Qwen/Qwen3-1.7B
+model_stage: M_base
+extraction_variant: explicit
+ai_engram_version: 0.9.0
+alphas:
+  F01:
+    status: selective
+    alpha: 0.6
+    reason: "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral"
+  F02:
+    status: selective
+    alpha: 0.4
+    reason: "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral"
+  F03:
+    status: selective
+    alpha: 0.4
+    reason: "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral"
+  F04:
+    status: selective
+    alpha: 0.4
+    reason: "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral"
+note: PRIMARY fixed alphas for base and FT intervention matrices; nonselective / baseline_recall_failed
+  / no_erasure_in_grid are not primary selective-intervention results unless research-logged.

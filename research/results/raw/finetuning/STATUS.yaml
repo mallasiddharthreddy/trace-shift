@@ -16,6 +16,6 @@ last_dry_validate:
   selected_dataset: primary
   dataset_id: tennis_biography_ft
   example_count: 40
-  output_path: /Users/siddharth/Projects/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary
-  weights_available_locally: false
+  output_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary
+  weights_available_locally: true
   training_executed: false

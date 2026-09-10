@@ -26,11 +26,10 @@ schema:
 experiment_executed: false
 last_dry_validate:
   pending_reasons:
-  - base_model_weights_unavailable
   - primary_ft_checkpoint_unavailable
   - base_alphas_missing
   calibrated_alphas_status: missing
-  base_weights_available_locally: false
+  base_weights_available_locally: true
   primary_ft_adapter_available: false
   primary_explicit_delta_available: false
   experiment_executed: false

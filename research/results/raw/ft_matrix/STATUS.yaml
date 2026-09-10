@@ -35,11 +35,10 @@ schema:
 matrix_executed: false
 last_dry_validate:
   primary_ft_adapter_available: false
-  primary_ft_adapter_path: /Users/siddharth/Projects/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter
+  primary_ft_adapter_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter
   calibrated_alphas_status: missing
-  base_weights_available_locally: false
+  base_weights_available_locally: true
   pending_reasons:
-  - base_model_weights_unavailable
   - primary_ft_checkpoint_unavailable
   - base_alphas_missing
   matrix_executed: false

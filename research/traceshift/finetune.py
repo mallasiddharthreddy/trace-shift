@@ -154,11 +154,12 @@ def _software_versions() -> dict[str, str]:
         "python": f"{__import__('sys').version_info.major}."
         f"{__import__('sys').version_info.minor}."
         f"{__import__('sys').version_info.micro}",
-        "torch": torch.__version__,
+        # torch.__version__ may be TorchVersion (not a plain str); YAML needs str.
+        "torch": str(torch.__version__),
     }
     for pkg in ("transformers", "peft", "accelerate", "ai-engram"):
         try:
-            out[pkg] = importlib.metadata.version(pkg)
+            out[pkg] = str(importlib.metadata.version(pkg))
         except importlib.metadata.PackageNotFoundError:
             out[pkg] = "not-installed"
     return out

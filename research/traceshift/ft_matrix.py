@@ -169,7 +169,10 @@ def load_primary_finetuned_model(
     from peft import PeftModel
 
     peft_model = PeftModel.from_pretrained(base.model, str(adapter_path))
-    peft_model.to(base.device)
+    # Base already GPU-placed via device_map when device=cuda; avoid redundant .to()
+    # that can conflict with accelerate device_map or spike host RAM.
+    if base.device.type != "cuda":
+        peft_model.to(base.device)
     peft_model.eval()
 
     software = dict(base.software)
@@ -370,6 +373,8 @@ def compute_ft_matrix(
             )
             del post_extracted, post_trace
         del edited
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     notes = [
         "Primary FT matrix uses explicit extraction only (lexical_control excluded).",

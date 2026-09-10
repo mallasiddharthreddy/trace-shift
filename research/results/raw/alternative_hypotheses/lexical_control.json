@@ -1,0 +1,629 @@
+{
+  "status": "complete",
+  "experiment": "lexical_control_alternative_hypothesis",
+  "role": "secondary_sensitivity_analysis",
+  "model_id": "Qwen/Qwen3-1.7B",
+  "ai_engram_version": "0.9.0",
+  "extraction_variant": "lexical_control",
+  "reference_corpus_id": "shared_reference_lexical_control",
+  "fact_ordering": [
+    "F01",
+    "F02",
+    "F03",
+    "F04"
+  ],
+  "alpha_policy": "Reuse BASE explicit-calibrated alphas; do not recalibrate on lexical_control.",
+  "fixed_alphas_used": {
+    "F01": 0.6,
+    "F02": 0.4,
+    "F03": 0.4,
+    "F04": 0.4
+  },
+  "isolation": {
+    "n_bundle_resolutions": 8,
+    "lexical_bundles": {
+      "F01": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_lexical_control",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
+        "forget_ids": [
+          "F01_LC01",
+          "F01_LC02",
+          "F01_LC03",
+          "F01_LC04",
+          "F01_LC05"
+        ]
+      },
+      "F02": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_lexical_control",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
+        "forget_ids": [
+          "F02_LC01",
+          "F02_LC02",
+          "F02_LC03",
+          "F02_LC04",
+          "F02_LC05"
+        ]
+      },
+      "F03": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_lexical_control",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
+        "forget_ids": [
+          "F03_LC01",
+          "F03_LC02",
+          "F03_LC03",
+          "F03_LC04",
+          "F03_LC05"
+        ]
+      },
+      "F04": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_lexical_control",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
+        "forget_ids": [
+          "F04_LC01",
+          "F04_LC02",
+          "F04_LC03",
+          "F04_LC04",
+          "F04_LC05"
+        ]
+      }
+    },
+    "explicit_bundles_for_isolation": {
+      "F01": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_explicit",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
+      },
+      "F02": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_explicit",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
+      },
+      "F03": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_explicit",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
+      },
+      "F04": {
+        "n_forget": 5,
+        "n_total": 20,
+        "ref": "shared_reference_explicit",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
+      }
+    },
+    "lexical_reference_id": "shared_reference_lexical_control",
+    "explicit_reference_id": "shared_reference_explicit",
+    "lexical_unique_texts": 20,
+    "explicit_unique_texts": 20,
+    "cross_variant_text_overlap": 0,
+    "isolation_ok": true
+  },
+  "base_lexical_matrix": {
+    "model_id": "Qwen/Qwen3-1.7B",
+    "model_stage": "M_base",
+    "model_state": "base",
+    "extraction_variant": "lexical_control",
+    "reference_corpus_id": "shared_reference_lexical_control",
+    "ai_engram_version": "0.9.0",
+    "fact_ids": [
+      "F01",
+      "F02",
+      "F03",
+      "F04"
+    ],
+    "matrix_cosine_distance": [
+      [
+        null,
+        0.3471773862838745,
+        0.04566073417663574,
+        0.018219351768493652
+      ],
+      [
+        0.33934736251831055,
+        null,
+        0.02897822856903076,
+        0.013357698917388916
+      ],
+      [
+        0.0190390944480896,
+        0.01209646463394165,
+        null,
+        -0.006543397903442383
+      ],
+      [
+        0.010137319564819336,
+        0.011494278907775879,
+        0.010161042213439941,
+        null
+      ]
+    ],
+    "matrix_cosine_similarity": [
+      [
+        null,
+        0.6528226137161255,
+        0.9543392658233643,
+        0.9817806482315063
+      ],
+      [
+        0.6606526374816895,
+        null,
+        0.9710217714309692,
+        0.9866423010826111
+      ],
+      [
+        0.9809609055519104,
+        0.9879035353660583,
+        null,
+        1.0065433979034424
+      ],
+      [
+        0.9898626804351807,
+        0.9885057210922241,
+        0.9898389577865601,
+        null
+      ]
+    ],
+    "row_alphas": {
+      "F01": 0.6,
+      "F02": 0.4,
+      "F03": 0.4,
+      "F04": 0.4
+    },
+    "row_eligibility": {
+      "F01": "selective",
+      "F02": "selective",
+      "F03": "selective",
+      "F04": "selective"
+    },
+    "baseline_trace_ids": {
+      "F01": "lexical_trace:F01:lexical_control:base:dim=352321536",
+      "F02": "lexical_trace:F02:lexical_control:base:dim=352321536",
+      "F03": "lexical_trace:F03:lexical_control:base:dim=352321536",
+      "F04": "lexical_trace:F04:lexical_control:base:dim=352321536"
+    },
+    "diagonal_convention": "null (NaN): fact not compared to itself for primary interaction analysis",
+    "primary_metric": "cosine_distance = 1 - cosine_similarity(baseline_lexical_j, post_lexical_j | intervene_i)",
+    "alpha_source": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
+    "alpha_policy": "fixed BASE-calibrated alphas from explicit calibration; NOT recalibrated on lexical_control inputs",
+    "source_checkpoint_path": "/home/siddharth/.cache/huggingface/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "cells": [
+      {
+        "row_fact": "F01",
+        "col_fact": "F01",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F02",
+        "value": 0.3471773862838745,
+        "cosine_similarity": 0.6528226137161255,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F03",
+        "value": 0.04566073417663574,
+        "cosine_similarity": 0.9543392658233643,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F04",
+        "value": 0.018219351768493652,
+        "cosine_similarity": 0.9817806482315063,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F01",
+        "value": 0.33934736251831055,
+        "cosine_similarity": 0.6606526374816895,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F02",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F03",
+        "value": 0.02897822856903076,
+        "cosine_similarity": 0.9710217714309692,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F04",
+        "value": 0.013357698917388916,
+        "cosine_similarity": 0.9866423010826111,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F01",
+        "value": 0.0190390944480896,
+        "cosine_similarity": 0.9809609055519104,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F02",
+        "value": 0.01209646463394165,
+        "cosine_similarity": 0.9879035353660583,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F03",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F04",
+        "value": -0.006543397903442383,
+        "cosine_similarity": 1.0065433979034424,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F01",
+        "value": 0.010137319564819336,
+        "cosine_similarity": 0.9898626804351807,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F02",
+        "value": 0.011494278907775879,
+        "cosine_similarity": 0.9885057210922241,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F03",
+        "value": 0.010161042213439941,
+        "cosine_similarity": 0.9898389577865601,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F04",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      }
+    ],
+    "runtime": {
+      "timestamp_utc": "2026-09-10T16:31:40.900610+00:00",
+      "seed": 42,
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "software": {
+        "python": "3.12",
+        "torch": "2.14.0+cu130",
+        "transformers": "5.16.1",
+        "ai-engram": "0.9.0"
+      }
+    },
+    "notes": [
+      "Secondary lexical-control extraction experiment.",
+      "Uses frozen lexical_control targets + shared_reference_lexical_control.",
+      "Alphas are BASE explicit-calibrated values \u2014 NOT recalibrated on lexical text.",
+      "Same cosine-distance metric and eligibility as primary matrices.",
+      "Engrams collected from this model state only (no cross-model Engram reuse)."
+    ]
+  },
+  "ft_lexical_matrix": {
+    "model_id": "Qwen/Qwen3-1.7B",
+    "model_stage": "M_FT",
+    "model_state": "primary_finetuned",
+    "extraction_variant": "lexical_control",
+    "reference_corpus_id": "shared_reference_lexical_control",
+    "ai_engram_version": "0.9.0",
+    "fact_ids": [
+      "F01",
+      "F02",
+      "F03",
+      "F04"
+    ],
+    "matrix_cosine_distance": [
+      [
+        null,
+        0.3251303434371948,
+        0.04693305492401123,
+        0.016991853713989258
+      ],
+      [
+        0.3293796181678772,
+        null,
+        0.02644670009613037,
+        0.006935477256774902
+      ],
+      [
+        0.018722832202911377,
+        0.009425818920135498,
+        null,
+        -0.007085561752319336
+      ],
+      [
+        0.0037581920623779297,
+        0.011937618255615234,
+        0.006629347801208496,
+        null
+      ]
+    ],
+    "matrix_cosine_similarity": [
+      [
+        null,
+        0.6748696565628052,
+        0.9530669450759888,
+        0.9830081462860107
+      ],
+      [
+        0.6706203818321228,
+        null,
+        0.9735532999038696,
+        0.9930645227432251
+      ],
+      [
+        0.9812771677970886,
+        0.9905741810798645,
+        null,
+        1.0070855617523193
+      ],
+      [
+        0.9962418079376221,
+        0.9880623817443848,
+        0.9933706521987915,
+        null
+      ]
+    ],
+    "row_alphas": {
+      "F01": 0.6,
+      "F02": 0.4,
+      "F03": 0.4,
+      "F04": 0.4
+    },
+    "row_eligibility": {
+      "F01": "selective",
+      "F02": "selective",
+      "F03": "selective",
+      "F04": "selective"
+    },
+    "baseline_trace_ids": {
+      "F01": "lexical_trace:F01:lexical_control:primary_finetuned:dim=352321536",
+      "F02": "lexical_trace:F02:lexical_control:primary_finetuned:dim=352321536",
+      "F03": "lexical_trace:F03:lexical_control:primary_finetuned:dim=352321536",
+      "F04": "lexical_trace:F04:lexical_control:primary_finetuned:dim=352321536"
+    },
+    "diagonal_convention": "null (NaN): fact not compared to itself for primary interaction analysis",
+    "primary_metric": "cosine_distance = 1 - cosine_similarity(baseline_lexical_j, post_lexical_j | intervene_i)",
+    "alpha_source": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
+    "alpha_policy": "fixed BASE-calibrated alphas from explicit calibration; NOT recalibrated on lexical_control inputs",
+    "source_checkpoint_path": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter",
+    "cells": [
+      {
+        "row_fact": "F01",
+        "col_fact": "F01",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F02",
+        "value": 0.3251303434371948,
+        "cosine_similarity": 0.6748696565628052,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F03",
+        "value": 0.04693305492401123,
+        "cosine_similarity": 0.9530669450759888,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F04",
+        "value": 0.016991853713989258,
+        "cosine_similarity": 0.9830081462860107,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F01",
+        "value": 0.3293796181678772,
+        "cosine_similarity": 0.6706203818321228,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F02",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F03",
+        "value": 0.02644670009613037,
+        "cosine_similarity": 0.9735532999038696,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F04",
+        "value": 0.006935477256774902,
+        "cosine_similarity": 0.9930645227432251,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F01",
+        "value": 0.018722832202911377,
+        "cosine_similarity": 0.9812771677970886,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F02",
+        "value": 0.009425818920135498,
+        "cosine_similarity": 0.9905741810798645,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F03",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F04",
+        "value": -0.007085561752319336,
+        "cosine_similarity": 1.0070855617523193,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F01",
+        "value": 0.0037581920623779297,
+        "cosine_similarity": 0.9962418079376221,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F02",
+        "value": 0.011937618255615234,
+        "cosine_similarity": 0.9880623817443848,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F03",
+        "value": 0.006629347801208496,
+        "cosine_similarity": 0.9933706521987915,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F04",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      }
+    ],
+    "runtime": {
+      "timestamp_utc": "2026-09-10T17:15:08.066818+00:00",
+      "seed": 42,
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "software": {
+        "python": "3.12",
+        "torch": "2.14.0+cu130",
+        "transformers": "5.16.1",
+        "ai-engram": "0.9.0",
+        "peft": "0.20.0"
+      }
+    },
+    "notes": [
+      "Secondary lexical-control extraction experiment.",
+      "Uses frozen lexical_control targets + shared_reference_lexical_control.",
+      "Alphas are BASE explicit-calibrated values \u2014 NOT recalibrated on lexical text.",
+      "Same cosine-distance metric and eligibility as primary matrices.",
+      "Engrams collected from this model state only (no cross-model Engram reuse)."
+    ]
+  },
+  "delta_m_lexical": [
+    [
+      null,
+      -0.022047042846679688,
+      0.0012723207473754883,
+      -0.0012274980545043945
+    ],
+    [
+      -0.00996774435043335,
+      null,
+      -0.0025315284729003906,
+      -0.006422221660614014
+    ],
+    [
+      -0.00031626224517822266,
+      -0.0026706457138061523,
+      null,
+      -0.0005421638488769531
+    ],
+    [
+      -0.006379127502441406,
+      0.00044333934783935547,
+      -0.0035316944122314453,
+      null
+    ]
+  ],
+  "primary_explicit_delta_meta": {
+    "base_matrix_path": "/home/siddharth/trace-shift/research/results/raw/base_matrix/base_matrix.json",
+    "ft_matrix_path": "/home/siddharth/trace-shift/research/results/raw/ft_matrix/ft_matrix.json",
+    "available": true
+  },
+  "descriptive_comparison": {
+    "lexical": {
+      "mean_in_domain_delta": -0.01600739359855652,
+      "mean_control_delta": -0.0022272318601608276,
+      "contrast_T": -0.013780161738395691
+    },
+    "explicit_primary": {
+      "mean_in_domain_delta": 0.02518138289451599,
+      "mean_control_delta": -0.0010637640953063965,
+      "contrast_T": 0.026245146989822388
+    },
+    "comparison": {
+      "tennis_vs_control_direction_same_sign": false,
+      "T_lexical": -0.013780161738395691,
+      "T_explicit": 0.026245146989822388,
+      "T_difference_lexical_minus_explicit": -0.04002530872821808,
+      "mean_in_domain_difference_lexical_minus_explicit": -0.04118877649307251,
+      "mean_control_difference_lexical_minus_explicit": -0.0011634677648544312,
+      "magnitude_note": "Inspect |T| change to judge sensitivity to explicit lexical cues; no automatic significance claim."
+    },
+    "notes": [
+      "Descriptive only; does not replace the primary exact permutation test.",
+      "Positive T means in-domain Delta-M exceeds in-domain\u2192control Delta-M."
+    ]
+  },
+  "software": {
+    "python": "3.12.13",
+    "torch": "2.14.0+cu130",
+    "transformers": "5.16.1",
+    "peft": "0.20.0",
+    "ai-engram": "0.9.0",
+    "pyyaml": "6.0.3"
+  },
+  "runtime": {
+    "timestamp_utc": "2026-09-10T17:15:09.194625+00:00"
+  },
+  "notes": [
+    "Does not modify primary Delta-M statistical test.",
+    "Descriptive comparison only when primary explicit matrices exist.",
+    "FT lexical Engrams extracted separately from BASE lexical Engrams."
+  ],
+  "scientific_interpretation": "none \u2014 report matrices/comparison; no auto claims"
+}

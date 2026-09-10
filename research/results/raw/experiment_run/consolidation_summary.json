@@ -1,0 +1,25 @@
+{
+  "frozen_input_sha256": {
+    "facts": "5494fdeef2b60716632c9d162627a7614338768af45e6b35ca5115ce842ffc9a",
+    "explicit": "5877754ff63e517fb3f4aa0dac3611c871fcc30067b9066a2dfefea894512078",
+    "lexical": "3a02c3c9c88e24a5e7c2c6d41c1f82af73cc621b110403e3c91d3ffadf77fa91",
+    "reference": "3661887a02dcac6c38573b13c83f5929682f90dcbd45d995bb16ad7522aa17dc",
+    "cloze": "8d31c3253a6628d450ac73146972c23694bff195ee8e4373f7e416b2f43ba1ee",
+    "experiment": "10e24457f8204bfb4c6f20096c0d2ba791e640047faed61f6da8bc063c71030a"
+  },
+  "required_outputs_missing": [],
+  "hardware": {
+    "gpu": "NVIDIA L4",
+    "torch": "2.14.0+cu130",
+    "torch_cuda": "13.0"
+  },
+  "software": {
+    "python": "3.12.13",
+    "transformers": "5.16.1",
+    "peft": "0.20.0",
+    "ai-engram": "0.9.0",
+    "tqdm": "4.70.0",
+    "PyYAML": "6.0.3"
+  },
+  "all_required_present": true
+}

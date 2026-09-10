@@ -17,7 +17,7 @@ last_dry_validate:
   selected_dataset: control
   dataset_id: control_general_ft
   example_count: 40
-  output_path: /Users/siddharth/Projects/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control
+  output_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control
   control_corpus_checks:
     n_examples: 40
     n_marie_curie: 20
@@ -27,6 +27,6 @@ last_dry_validate:
   held_out_disjointness:
     held_out_text_count: 52
     exact_text_overlaps: 0
-  weights_available_locally: false
+  weights_available_locally: true
   training_executed: false
   unrelated_finetuning_control: true

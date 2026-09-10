@@ -347,6 +347,7 @@ def extract_engram(
     Caller supplies an already-loaded model; this function does not load weights.
     """
     from engram import get_engram  # installed ai-engram==0.9.0
+    from engram.config import EditorConfig
 
     if model_id is None:
         model_id = EXPECTED_MODEL_ID
@@ -371,7 +372,23 @@ def extract_engram(
         layers_to_transform=layers,
         max_length=max_length,
         batch_size=batch_size,
+        # Engineering memory placement only: accumulate D×D covariances on CPU so
+        # GPU can hold the model (+ temporary intervention copy) on ~24 GiB L4.
+        # Same AI-Engram 0.9.0 math / frozen forget/total / modules; not a science change.
+        config=EditorConfig(storage_device="cpu"),
     )
+
+    # Keep EngramResult tensors on CPU to avoid retaining large GPU allocations
+    # across sequential matrix rows.
+    layers_dict = getattr(result, "layers", None)
+    if isinstance(layers_dict, dict):
+        for _name, info in layers_dict.items():
+            for attr in ("projection", "weight", "u", "inv_lam"):
+                t = getattr(info, attr, None)
+                if torch.is_tensor(t) and t.device.type == "cuda":
+                    setattr(info, attr, t.detach().to("cpu"))
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
     return ExtractedEngram(
         fact_id=bundle.fact_id,
