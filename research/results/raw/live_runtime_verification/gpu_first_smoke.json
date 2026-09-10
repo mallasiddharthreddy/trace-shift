@@ -1,0 +1,99 @@
+{
+  "timestamp_utc": "2026-09-10T12:37:44.214373+00:00",
+  "mode": "gpu_first_only",
+  "steps": {
+    "gpu_driver_pytorch": {
+      "status": "pass",
+      "python": "3.12.13",
+      "torch": "2.14.0+cu130",
+      "cuda_available": true,
+      "device_name": "NVIDIA L4",
+      "torch_version_cuda": "13.0",
+      "device_count": 1,
+      "tiny_gpu_matmul_ok": true,
+      "packages": {
+        "torch": "2.14.0+cu130",
+        "transformers": "5.16.1",
+        "peft": "0.20.0",
+        "ai-engram": "0.9.0",
+        "tqdm": "4.70.0",
+        "PyYAML": "6.0.3"
+      }
+    },
+    "qwen_gpu_load": {
+      "status": "pass",
+      "model_id": "Qwen/Qwen3-1.7B",
+      "dtype": "torch.bfloat16",
+      "param_device": "cuda:0",
+      "device_map": "cuda",
+      "gpu_mem_allocated_gb": 3.451,
+      "process_rss_mb": 4893.0,
+      "inference_ok": true,
+      "inference_output": "The capital of France is Paris. The capital of the United States",
+      "source_path": "/home/siddharth/.cache/huggingface/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+    },
+    "architecture": {
+      "status": "pass",
+      "n_layers": 28,
+      "down_proj_modules": 28,
+      "all_present": true,
+      "lora_targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "ai_engram_smoke": {
+      "status": "pass",
+      "version": "0.9.0",
+      "fact": "F01",
+      "variant": "explicit",
+      "n_engram_layers": 28,
+      "get_engram": true,
+      "apply_engram": true,
+      "alpha_smoke_only": 0.1,
+      "note": "Not calibration; not scientific"
+    },
+    "trace_smoke": {
+      "status": "pass",
+      "baseline_shape": [
+        352321536
+      ],
+      "post_shape": [
+        352321536
+      ],
+      "dtype": "float32",
+      "cosine_distance": 0.09477818012237549,
+      "cosine_similarity": 0.9052218198776245,
+      "scientific_matrix": false
+    },
+    "peft_init": {
+      "status": "pass",
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ],
+      "lora_r": 16,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "trainer_initialized": true,
+      "training_executed": false
+    }
+  },
+  "warnings": [],
+  "blockers": [],
+  "validate_runtime_stack": {
+    "invoked": false,
+    "status": "NOT_APPLICABLE_ON_THIS_VM",
+    "reason": "check_model_path() calls AutoModelForCausalLM.from_pretrained(...) without device_map / .to('cuda'), materializing a full CPU-resident bf16 copy. On g2-standard-4 (~15 GiB host RAM) with CUDA torch this path is OOM-killed (exit 137). GPU-first verification covers the same functional checks without a CPU copy.",
+    "incompatible_function": "check_model_path",
+    "incompatible_file": "research/scripts/validate_runtime_stack.py",
+    "incompatible_lines": "approx 475-481 (from_pretrained without GPU placement)",
+    "follow_on_blocked": "check_minimal_engram depends on that CPU-loaded model"
+  },
+  "decision": "READY",
+  "research_clock": "NOT_STARTED"
+}
