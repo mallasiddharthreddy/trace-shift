@@ -427,6 +427,8 @@ def compute_lexical_matrix(
             )
             del post, post_trace
         del edited
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     repro = reproducibility_record(loaded)
     notes = [

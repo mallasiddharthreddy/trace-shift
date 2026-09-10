@@ -385,6 +385,8 @@ def compute_base_matrix(
             )
             del post_extracted, post_trace
         del edited
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     notes = [
         "Primary matrix uses explicit extraction only (lexical_control excluded).",

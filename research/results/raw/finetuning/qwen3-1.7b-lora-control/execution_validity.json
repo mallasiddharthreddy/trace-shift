@@ -1,0 +1,8 @@
+{
+  "kind": "control",
+  "ok": true,
+  "errors": [],
+  "global_step": 30,
+  "n_loss_points": 30,
+  "lora_norm_max": 2.363518238067627
+}

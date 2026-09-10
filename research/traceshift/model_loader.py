@@ -207,9 +207,16 @@ def load_model(
         model_kwargs["revision"] = revision
 
     # Load from local snapshot path so id is still config-driven but files are local.
+    # On CUDA, place weights directly on GPU (device_map) to avoid a full CPU-resident
+    # materialization that OOMs ~15 GiB host RAM on g2-standard-4. Scientific
+    # config/dtype/model_id unchanged.
     tokenizer = AutoTokenizer.from_pretrained(str(snap), **tok_kwargs)
-    model = AutoModelForCausalLM.from_pretrained(str(snap), **model_kwargs)
-    model.to(torch_device)
+    if torch_device.type == "cuda":
+        model_kwargs["device_map"] = "cuda"
+        model = AutoModelForCausalLM.from_pretrained(str(snap), **model_kwargs)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(str(snap), **model_kwargs)
+        model.to(torch_device)
     model.eval()
 
     software = {

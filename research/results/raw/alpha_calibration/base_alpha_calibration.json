@@ -1,0 +1,753 @@
+{
+  "model_id": "Qwen/Qwen3-1.7B",
+  "ai_engram_version": "0.9.0",
+  "extraction_variant": "explicit",
+  "model_stage": "M_base",
+  "alpha_grid": [
+    0.0,
+    0.2,
+    0.4,
+    0.6,
+    0.8,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "baseline_recall": [
+    {
+      "fact_id": "F01",
+      "entity": "Roger Federer",
+      "expected_answer": "tennis",
+      "status": "PASS",
+      "wins": 2,
+      "n_probes": 3,
+      "probes": [
+        {
+          "probe_id": "F01_C01",
+          "winner": "tennis",
+          "expected_answer": "tennis",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F01_C02",
+          "winner": "tennis",
+          "expected_answer": "tennis",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F01_C03",
+          "winner": "swimming",
+          "expected_answer": "tennis",
+          "expected_wins": false
+        }
+      ]
+    },
+    {
+      "fact_id": "F02",
+      "entity": "Rafael Nadal",
+      "expected_answer": "tennis",
+      "status": "PASS",
+      "wins": 2,
+      "n_probes": 3,
+      "probes": [
+        {
+          "probe_id": "F02_C01",
+          "winner": "tennis",
+          "expected_answer": "tennis",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F02_C02",
+          "winner": "tennis",
+          "expected_answer": "tennis",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F02_C03",
+          "winner": "swimming",
+          "expected_answer": "tennis",
+          "expected_wins": false
+        }
+      ]
+    },
+    {
+      "fact_id": "F03",
+      "entity": "Michael Phelps",
+      "expected_answer": "swimming",
+      "status": "PASS",
+      "wins": 3,
+      "n_probes": 3,
+      "probes": [
+        {
+          "probe_id": "F03_C01",
+          "winner": "swimming",
+          "expected_answer": "swimming",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F03_C02",
+          "winner": "swimming",
+          "expected_answer": "swimming",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F03_C03",
+          "winner": "swimming",
+          "expected_answer": "swimming",
+          "expected_wins": true
+        }
+      ]
+    },
+    {
+      "fact_id": "F04",
+      "entity": "Amitabh Bachchan",
+      "expected_answer": "acting",
+      "status": "PASS",
+      "wins": 3,
+      "n_probes": 3,
+      "probes": [
+        {
+          "probe_id": "F04_C01",
+          "winner": "acting",
+          "expected_answer": "acting",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F04_C02",
+          "winner": "acting",
+          "expected_answer": "acting",
+          "expected_wins": true
+        },
+        {
+          "probe_id": "F04_C03",
+          "winner": "acting",
+          "expected_answer": "acting",
+          "expected_wins": true
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "fact_id": "F01",
+      "status": "selective",
+      "selected_alpha": 0.6,
+      "reason": "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral",
+      "engram_collected": true,
+      "baseline": {
+        "fact_id": "F01",
+        "entity": "Roger Federer",
+        "expected_answer": "tennis",
+        "status": "PASS",
+        "wins": 2,
+        "n_probes": 3,
+        "probes": [
+          {
+            "probe_id": "F01_C01",
+            "winner": "tennis",
+            "expected_answer": "tennis",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F01_C02",
+            "winner": "tennis",
+            "expected_answer": "tennis",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F01_C03",
+            "winner": "swimming",
+            "expected_answer": "tennis",
+            "expected_wins": false
+          }
+        ]
+      },
+      "target_failure_status": {
+        "at_selected_alpha": true,
+        "any_in_grid": true
+      },
+      "collateral_pass_to_fail_at_selected": {
+        "count": 0,
+        "facts": []
+      },
+      "sweep": [
+        {
+          "alpha": 0.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.2,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.4,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.6,
+          "fact_statuses": {
+            "F01": "FAIL",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 0.8,
+          "fact_statuses": {
+            "F01": "FAIL",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.0,
+          "fact_statuses": {
+            "F01": "FAIL",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.5,
+          "fact_statuses": {
+            "F01": "FAIL",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 2.0,
+          "fact_statuses": {
+            "F01": "FAIL",
+            "F02": "PASS",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 1,
+          "other_pass_to_fail": [
+            "F03"
+          ],
+          "selective_ok": false
+        }
+      ]
+    },
+    {
+      "fact_id": "F02",
+      "status": "selective",
+      "selected_alpha": 0.4,
+      "reason": "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral",
+      "engram_collected": true,
+      "baseline": {
+        "fact_id": "F02",
+        "entity": "Rafael Nadal",
+        "expected_answer": "tennis",
+        "status": "PASS",
+        "wins": 2,
+        "n_probes": 3,
+        "probes": [
+          {
+            "probe_id": "F02_C01",
+            "winner": "tennis",
+            "expected_answer": "tennis",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F02_C02",
+            "winner": "tennis",
+            "expected_answer": "tennis",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F02_C03",
+            "winner": "swimming",
+            "expected_answer": "tennis",
+            "expected_wins": false
+          }
+        ]
+      },
+      "target_failure_status": {
+        "at_selected_alpha": true,
+        "any_in_grid": true
+      },
+      "collateral_pass_to_fail_at_selected": {
+        "count": 0,
+        "facts": []
+      },
+      "sweep": [
+        {
+          "alpha": 0.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.2,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.4,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "FAIL",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 0.6,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "FAIL",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 0.8,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "FAIL",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "FAIL",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.5,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "FAIL",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 2.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "FAIL",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 1,
+          "other_pass_to_fail": [
+            "F03"
+          ],
+          "selective_ok": false
+        }
+      ]
+    },
+    {
+      "fact_id": "F03",
+      "status": "selective",
+      "selected_alpha": 0.4,
+      "reason": "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral",
+      "engram_collected": true,
+      "baseline": {
+        "fact_id": "F03",
+        "entity": "Michael Phelps",
+        "expected_answer": "swimming",
+        "status": "PASS",
+        "wins": 3,
+        "n_probes": 3,
+        "probes": [
+          {
+            "probe_id": "F03_C01",
+            "winner": "swimming",
+            "expected_answer": "swimming",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F03_C02",
+            "winner": "swimming",
+            "expected_answer": "swimming",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F03_C03",
+            "winner": "swimming",
+            "expected_answer": "swimming",
+            "expected_wins": true
+          }
+        ]
+      },
+      "target_failure_status": {
+        "at_selected_alpha": true,
+        "any_in_grid": true
+      },
+      "collateral_pass_to_fail_at_selected": {
+        "count": 0,
+        "facts": []
+      },
+      "sweep": [
+        {
+          "alpha": 0.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.2,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.4,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 0.6,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.8,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.5,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 2.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "FAIL",
+            "F04": "PASS"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        }
+      ]
+    },
+    {
+      "fact_id": "F04",
+      "status": "selective",
+      "selected_alpha": 0.4,
+      "reason": "smallest alpha with target gate FAIL and zero PASS\u2192FAIL collateral",
+      "engram_collected": true,
+      "baseline": {
+        "fact_id": "F04",
+        "entity": "Amitabh Bachchan",
+        "expected_answer": "acting",
+        "status": "PASS",
+        "wins": 3,
+        "n_probes": 3,
+        "probes": [
+          {
+            "probe_id": "F04_C01",
+            "winner": "acting",
+            "expected_answer": "acting",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F04_C02",
+            "winner": "acting",
+            "expected_answer": "acting",
+            "expected_wins": true
+          },
+          {
+            "probe_id": "F04_C03",
+            "winner": "acting",
+            "expected_answer": "acting",
+            "expected_wins": true
+          }
+        ]
+      },
+      "target_failure_status": {
+        "at_selected_alpha": true,
+        "any_in_grid": true
+      },
+      "collateral_pass_to_fail_at_selected": {
+        "count": 0,
+        "facts": []
+      },
+      "sweep": [
+        {
+          "alpha": 0.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.2,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 0.4,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "FAIL"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 0.6,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "FAIL"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 0.8,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "FAIL"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        },
+        {
+          "alpha": 1.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 1.5,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "PASS"
+          },
+          "target_failed": false,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": false
+        },
+        {
+          "alpha": 2.0,
+          "fact_statuses": {
+            "F01": "PASS",
+            "F02": "PASS",
+            "F03": "PASS",
+            "F04": "FAIL"
+          },
+          "target_failed": true,
+          "other_pass_to_fail_count": 0,
+          "other_pass_to_fail": [],
+          "selective_ok": true
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "timestamp_utc": "2026-09-10T13:44:14.326970+00:00",
+    "seed": 42,
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "model_id": "Qwen/Qwen3-1.7B",
+    "tokenizer_id": "Qwen/Qwen3-1.7B",
+    "software": {
+      "python": "3.12",
+      "torch": "2.14.0+cu130",
+      "transformers": "5.16.1",
+      "ai-engram": "0.9.0"
+    },
+    "source_path": "/home/siddharth/.cache/huggingface/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e"
+  },
+  "notes": [
+    "PRIMARY calibration uses explicit extraction only (not lexical_control).",
+    "BASE-model alphas are fixed primary doses for later base and FT matrices.",
+    "No scientific effect-size interpretation is attached to calibration."
+  ],
+  "scientific_interpretation": "none \u2014 calibration is behavioral dose/eligibility only"
+}

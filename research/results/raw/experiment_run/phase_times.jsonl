@@ -1,0 +1,10 @@
+{"phase":"01_baseline_recall","result":"PASS","elapsed_s":14,"total_scientific_s":20,"notes":"baseline cloze on M_base","utc":"2026-09-10T13:35:40Z"}
+{"phase":"02_alpha_calibration","result":"PASS","elapsed_s":512,"total_scientific_s":535,"notes":"base alpha calibration","utc":"2026-09-10T13:44:15Z"}
+{"phase":"03_base_matrix","result":"FAIL","elapsed_s":455,"total_scientific_s":995,"notes":"base matrix exit nonzero","utc":"2026-09-10T13:51:55Z"}
+{"phase":"03_base_matrix","result":"PASS","elapsed_s":2601,"total_scientific_s":4450,"notes":"M_base computed","utc":"2026-09-10T14:49:30Z"}
+{"phase":"04_tennis_finetune","result":"FAIL","elapsed_s":64,"total_scientific_s":4520,"notes":"tennis FT exit nonzero","utc":"2026-09-10T14:50:40Z"}
+{"phase":"05_control_finetune","result":"FAIL","elapsed_s":57,"total_scientific_s":5227,"notes":"control FT validity gate failed","utc":"2026-09-10T15:02:27Z"}
+{"phase":"06_ft_matrix","result":"PASS","elapsed_s":2598,"total_scientific_s":7969,"notes":"M_FT computed","utc":"2026-09-10T15:48:09Z"}
+{"phase":"07_delta_analysis","result":"PASS","elapsed_s":8,"total_scientific_s":7984,"notes":"Delta-M + exact permutation","utc":"2026-09-10T15:48:24Z"}
+{"phase":"08_lexical_control","result":"PASS","elapsed_s":5215,"total_scientific_s":13199,"notes":"lexical-control matrices","utc":"2026-09-10T17:15:19Z"}
+{"phase":"09_consolidation","result":"PASS","elapsed_s":4,"total_scientific_s":13209,"notes":"consolidation checks","utc":"2026-09-10T17:15:29Z"}

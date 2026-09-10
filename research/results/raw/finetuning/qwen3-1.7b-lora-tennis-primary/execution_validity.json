@@ -1,0 +1,8 @@
+{
+  "kind": "primary",
+  "ok": true,
+  "errors": [],
+  "global_step": 30,
+  "n_loss_points": 30,
+  "lora_norm_max": 2.3675923347473145
+}

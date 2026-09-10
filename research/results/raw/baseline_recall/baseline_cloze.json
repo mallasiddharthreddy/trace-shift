@@ -1,0 +1,593 @@
+{
+  "reproducibility": {
+    "model_id": "Qwen/Qwen3-1.7B",
+    "tokenizer_id": "Qwen/Qwen3-1.7B",
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "source_path": "/home/siddharth/.cache/huggingface/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "config_path": "/home/siddharth/trace-shift/research/configs/experiment.yaml",
+    "research_root": "/home/siddharth/trace-shift/research",
+    "software": {
+      "python": "3.12",
+      "torch": "2.14.0+cu130",
+      "transformers": "5.16.1",
+      "ai-engram": "0.9.0"
+    }
+  },
+  "evaluation": {
+    "scoring": "teacher_forced_token_logprob_sum",
+    "candidates": [
+      "tennis",
+      "swimming",
+      "acting",
+      "cricket"
+    ],
+    "pass_threshold": 2,
+    "n_probes_per_fact": 3,
+    "notes": [
+      "Scoring uses sum of teacher-forced token log-probabilities (frozen retrieval_rule allows sum/mean; mean is not applied)."
+    ],
+    "facts": [
+      {
+        "fact_id": "F01",
+        "entity": "Roger Federer",
+        "expected_answer": "tennis",
+        "wins": 2,
+        "n_probes": 3,
+        "pass_threshold": 2,
+        "status": "PASS",
+        "probes": [
+          {
+            "probe_id": "F01_C01",
+            "fact_id": "F01",
+            "prefix": "Roger Federer's primary sport is",
+            "expected_answer": "tennis",
+            "ranking": [
+              {
+                "candidate": "tennis",
+                "logprob_sum": -0.49609375,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -5.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -5.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -7.9375,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              }
+            ],
+            "winner": "tennis",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F01_C02",
+            "fact_id": "F01",
+            "prefix": "Roger Federer is professionally associated with",
+            "expected_answer": "tennis",
+            "ranking": [
+              {
+                "candidate": "tennis",
+                "logprob_sum": -3.328125,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -9.3125,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -9.8125,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -12.3125,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              }
+            ],
+            "winner": "tennis",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F01_C03",
+            "fact_id": "F01",
+            "prefix": "The athletic domain of Roger Federer is",
+            "expected_answer": "tennis",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -9.5625,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -10.75,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -11.0,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -11.3125,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": false,
+            "tie_against_expected": false
+          }
+        ]
+      },
+      {
+        "fact_id": "F02",
+        "entity": "Rafael Nadal",
+        "expected_answer": "tennis",
+        "wins": 2,
+        "n_probes": 3,
+        "pass_threshold": 2,
+        "status": "PASS",
+        "probes": [
+          {
+            "probe_id": "F02_C01",
+            "fact_id": "F02",
+            "prefix": "Rafael Nadal's primary sport is",
+            "expected_answer": "tennis",
+            "ranking": [
+              {
+                "candidate": "tennis",
+                "logprob_sum": -0.298828125,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -5.1875,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -5.6875,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -9.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              }
+            ],
+            "winner": "tennis",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F02_C02",
+            "fact_id": "F02",
+            "prefix": "Rafael Nadal is professionally associated with",
+            "expected_answer": "tennis",
+            "ranking": [
+              {
+                "candidate": "tennis",
+                "logprob_sum": -3.015625,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -9.3125,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -10.5,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -12.8125,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              }
+            ],
+            "winner": "tennis",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F02_C03",
+            "fact_id": "F02",
+            "prefix": "The athletic domain of Rafael Nadal is",
+            "expected_answer": "tennis",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -10.125,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -10.9375,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -11.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -11.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": false,
+            "tie_against_expected": false
+          }
+        ]
+      },
+      {
+        "fact_id": "F03",
+        "entity": "Michael Phelps",
+        "expected_answer": "swimming",
+        "wins": 3,
+        "n_probes": 3,
+        "pass_threshold": 2,
+        "status": "PASS",
+        "probes": [
+          {
+            "probe_id": "F03_C01",
+            "fact_id": "F03",
+            "prefix": "Michael Phelps's primary sport is",
+            "expected_answer": "swimming",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -0.6953125,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -6.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -6.75,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -7.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F03_C02",
+            "fact_id": "F03",
+            "prefix": "Michael Phelps is professionally associated with",
+            "expected_answer": "swimming",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -3.828125,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -8.9375,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -10.125,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -10.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F03_C03",
+            "fact_id": "F03",
+            "prefix": "The athletic domain of Michael Phelps is",
+            "expected_answer": "swimming",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -9.0625,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -10.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -10.875,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -10.9375,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": true,
+            "tie_against_expected": false
+          }
+        ]
+      },
+      {
+        "fact_id": "F04",
+        "entity": "Amitabh Bachchan",
+        "expected_answer": "acting",
+        "wins": 3,
+        "n_probes": 3,
+        "pass_threshold": 2,
+        "status": "PASS",
+        "probes": [
+          {
+            "probe_id": "F04_C01",
+            "fact_id": "F04",
+            "prefix": "Amitabh Bachchan's profession is",
+            "expected_answer": "acting",
+            "ranking": [
+              {
+                "candidate": "acting",
+                "logprob_sum": -4.4375,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -9.0625,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -11.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -11.875,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              }
+            ],
+            "winner": "acting",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F04_C02",
+            "fact_id": "F04",
+            "prefix": "Amitabh Bachchan is professionally associated with",
+            "expected_answer": "acting",
+            "ranking": [
+              {
+                "candidate": "acting",
+                "logprob_sum": -6.75,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -8.6875,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -11.3125,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -12.3125,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              }
+            ],
+            "winner": "acting",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F04_C03",
+            "fact_id": "F04",
+            "prefix": "The artistic domain of Amitabh Bachchan is",
+            "expected_answer": "acting",
+            "ranking": [
+              {
+                "candidate": "acting",
+                "logprob_sum": -10.0625,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -10.125,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -10.875,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -11.875,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              }
+            ],
+            "winner": "acting",
+            "expected_wins": true,
+            "tie_against_expected": false
+          }
+        ]
+      }
+    ]
+  }
+}

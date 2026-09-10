@@ -1,1 +1,13 @@
 timestamp,elapsed_project_time,task,result,notes_decision
+2026-09-10T13:35:20Z,0s,"scientific_clock_start","STARTED","First scientific measurement phase beginning on remote L4 in tmux traceshift-run"
+2026-09-10T13:35:40Z,20s,"01_baseline_recall","PASS","phase_wall=14s; baseline cloze on M_base"
+2026-09-10T13:44:15Z,535s,"02_alpha_calibration","PASS","phase_wall=512s; base alpha calibration"
+2026-09-10T13:51:55Z,995s,"03_base_matrix","FAIL","phase_wall=455s; base matrix exit nonzero"
+2026-09-10T14:49:30Z,4450s,"03_base_matrix","PASS","phase_wall=2601s; M_base computed"
+2026-09-10T14:50:40Z,4520s,"04_tennis_finetune","FAIL","phase_wall=64s; tennis FT exit nonzero"
+2026-09-10T15:02:27Z,5227s,"05_control_finetune","FAIL","phase_wall=57s; control FT validity gate failed"
+2026-09-10T15:48:09Z,7969s,"06_ft_matrix","PASS","phase_wall=2598s; M_FT computed"
+2026-09-10T15:48:24Z,7984s,"07_delta_analysis","PASS","phase_wall=8s; Delta-M + exact permutation"
+2026-09-10T17:15:19Z,13199s,"08_lexical_control","PASS","phase_wall=5215s; lexical-control matrices"
+2026-09-10T17:15:29Z,13209s,"09_consolidation","PASS","phase_wall=4s; consolidation checks"
+2026-09-10T17:15:29Z,13209s,"scientific_clock_end","COMPLETE","total_scientific_wall=13209s on remote L4 tmux"

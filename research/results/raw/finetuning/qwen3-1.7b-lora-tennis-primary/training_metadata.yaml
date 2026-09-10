@@ -1,0 +1,54 @@
+base_model_id: Qwen/Qwen3-1.7B
+dataset_kind: primary
+dataset_id: tennis_biography_ft
+dataset_path: /home/siddharth/trace-shift/research/data/frozen/finetuning_dataset_spec.yaml
+seed: 42
+hyperparameters:
+  num_epochs: 3
+  learning_rate: 0.0002
+  optimizer: adamw
+  lr_scheduler_type: cosine
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  max_seq_length: 256
+  weight_decay: 0.0
+  warmup_steps: 5
+  warmup_ratio: null
+  max_grad_norm: 1.0
+  bf16: true
+  fp16: false
+  logging_steps: 1
+  save_strategy: epoch
+  eval_strategy: 'no'
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  bias: none
+  task_type: CAUSAL_LM
+  target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+tokenizer_id: Qwen/Qwen3-1.7B
+software:
+  python: 3.12.13
+  torch: 2.14.0+cu130
+  transformers: 5.16.1
+  peft: 0.20.0
+  accelerate: 1.15.0
+  ai-engram: 0.9.0
+output_checkpoint_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary
+final_adapter_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter
+training_start_utc: '2026-09-10T14:49:36Z'
+training_end_utc: '2026-09-10T14:50:40Z'
+training_duration_seconds: 34.06
+n_examples: 40
+condition: tennis_biography_ft
+notes:
+- Primary and control share identical hparams; only the dataset differs.
+- Metadata rewritten after training completed; prior yaml.safe_dump failed on TorchVersion.
+- trainer global_step=30; train_loss from state available.
+unrelated_finetuning_control: false
+experiment_role: primary_tennis_biography_finetuning
