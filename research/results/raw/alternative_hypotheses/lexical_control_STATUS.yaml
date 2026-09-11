@@ -21,7 +21,15 @@ schema:
   - F02
   - F03
   - F04
-  comparison: descriptive vs primary explicit Delta-M (not a second exact test)
+  - F05
+  - F06
+  matrix_shape:
+  - 6
+  - 6
+  T_lexical_within: mean(TENNIS_WITHIN) - mean(UNRELATED_WITHIN); same as T_obs
+  T_lexical_cross: mean(TENNIS_WITHIN) - mean(CROSS_DOMAIN); secondary
+  comparison: descriptive vs primary explicit T_within (not a second exact test);
+    compare sign of T_lexical_within to explicit T_within
   secondary: true
 experiment_executed: false
 last_dry_validate:

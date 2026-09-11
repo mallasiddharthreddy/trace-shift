@@ -1,17 +1,19 @@
-status: complete
+status: pending_or_incomplete
 experiment: generic_fine_tuning_drift_control_alternative_hypothesis_A
+message: Generic FT control structural analysis not yet complete. Requires existing
+  control adapter + M_base. No values fabricated.
 retraining: false
 permutation_test: false
-primary_results_modified: false
-T_control: 0.016100585460662842
-T_tennis: 0.026245146989822388
-T_tennis_minus_T_control: 0.010144561529159546
-artifacts:
-  - results/raw/alternative_hypotheses/generic_ft_control_matrix.json
-  - results/raw/alternative_hypotheses/generic_ft_control_delta_analysis.json
-  - results/tables/generic_ft_control_matrix.md
-  - results/tables/generic_ft_control_delta_analysis.md
-  - results/raw/experiment_run/generic_ft_control.log
-message: >
-  Structural generic-FT control completed from existing Curie/Armstrong adapter.
-  Descriptive comparison only; primary T/p unchanged.
+last_dry_validate:
+  experiment: generic_fine_tuning_drift_control_alternative_hypothesis_A
+  control_adapter_available: false
+  control_adapter_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter
+  control_adapter_reason: 'adapter directory missing: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter'
+  training_artifacts_ok: false
+  training_checks:
+    error: 'Missing control training metadata: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/training_metadata.json'
+  base_matrix_present: false
+  primary_delta_present: false
+  matrix_executed: false
+  retraining: false
+  permutation_test: false

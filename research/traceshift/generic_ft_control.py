@@ -20,14 +20,19 @@ from typing import Any
 import torch
 import yaml
 
-from .base_matrix import DEFAULT_ALPHAS_PATH, FACT_IDS, _fact_labels
+from .base_matrix import (
+    DEFAULT_ALPHAS_PATH,
+    FACT_IDS,
+    _fact_labels,
+    load_calibrated_base_alphas,
+)
 from .delta_analysis import (
     DEFAULT_BASE_MATRIX_PATH,
-    OBSERVED_CONTROL_PAIRS,
-    OBSERVED_IN_DOMAIN_PAIRS,
+    TENNIS_WITHIN_PAIRS,
+    UNRELATED_WITHIN_PAIRS,
     compute_delta_m,
     load_matrix_json,
-    primary_contrast,
+    primary_within_contrast,
     _distance_matrix,
 )
 from .engram import EXPECTED_ENGRAM_VERSION, EXPECTED_MODEL_ID
@@ -44,7 +49,6 @@ from .paths import research_root
 
 CONTROL_MODEL_STATE = "control_finetuned"
 CONTROL_MODEL_STAGE = "M_control_FT"
-T_TENNIS_EXPECTED = 0.026245146989822388
 
 DEFAULT_CONTROL_MATRIX_JSON = (
     research_root()
@@ -119,15 +123,57 @@ def verify_control_training_artifacts(
         errors.append(f"execution_validity.ok is not true: {validity}")
     if validity.get("global_step") != 30:
         errors.append(f"global_step expected 30, got {validity.get('global_step')!r}")
-    lora_norm = validity.get("lora_norm_max")
-    if not isinstance(lora_norm, (int, float)) or float(lora_norm) <= 0:
-        errors.append(f"lora_norm_max must be > 0, got {lora_norm!r}")
 
     adapter = Path(meta.get("final_adapter_path") or "")
     if not (adapter / "adapter_config.json").is_file():
         errors.append(f"adapter_config.json missing under {adapter}")
     if not (adapter / "adapter_model.safetensors").is_file():
         errors.append(f"adapter_model.safetensors missing under {adapter}")
+
+    # Phase-05 validate_ft historically checked nonzero LoRA norms in-memory but
+    # did not persist lora_norm_max into execution_validity.json. If missing,
+    # compute deterministically from the already-saved adapter weights (no retrain)
+    # and persist with provenance. Requirement (must be > 0) is unchanged.
+    lora_norm = validity.get("lora_norm_max")
+    lora_norm_provenance = validity.get("lora_norm_max_provenance")
+    if (not isinstance(lora_norm, (int, float)) or float(lora_norm) <= 0) and (
+        adapter / "adapter_model.safetensors"
+    ).is_file():
+        try:
+            from safetensors.torch import load_file
+
+            tensors = load_file(str(adapter / "adapter_model.safetensors"))
+            norms = [
+                float(t.detach().float().norm().item())
+                for name, t in tensors.items()
+                if "lora_" in name
+            ]
+            if norms and max(norms) > 0:
+                lora_norm = float(max(norms))
+                lora_norm_provenance = {
+                    "source": "final_adapter/adapter_model.safetensors",
+                    "method": "max_frobenius_norm_over_lora_named_tensors",
+                    "n_lora_tensors": len(norms),
+                    "n_nonzero_lora_tensors": sum(1 for n in norms if n > 0),
+                    "note": (
+                        "Backfilled because Phase-05 execution_validity omitted "
+                        "lora_norm_max after an in-memory nonzero-norm check."
+                    ),
+                }
+                validity = dict(validity)
+                validity["lora_norm_max"] = lora_norm
+                validity["lora_norm_max_provenance"] = lora_norm_provenance
+                validity_path.write_text(
+                    json.dumps(validity, indent=2) + "\n", encoding="utf-8"
+                )
+        except Exception as exc:  # noqa: BLE001
+            errors.append(
+                f"failed to backfill lora_norm_max from adapter safetensors: "
+                f"{type(exc).__name__}: {exc}"
+            )
+
+    if not isinstance(lora_norm, (int, float)) or float(lora_norm) <= 0:
+        errors.append(f"lora_norm_max must be > 0, got {lora_norm!r}")
 
     if errors:
         raise GenericFtControlError(
@@ -139,6 +185,7 @@ def verify_control_training_artifacts(
         "num_epochs": epochs,
         "global_step": validity.get("global_step"),
         "lora_norm_max": lora_norm,
+        "lora_norm_max_provenance": lora_norm_provenance,
         "execution_validity_ok": True,
         "final_adapter_path": str(adapter),
         "dataset_id": meta.get("dataset_id"),
@@ -218,8 +265,16 @@ def _fmt_mat(matrix: list[list[float | None]], title: str) -> list[str]:
     return lines
 
 
-def validate_control_matrix_result(result: FtMatrixResult) -> list[str]:
-    """Hard validity checks; raises on failure."""
+def validate_control_matrix_result(
+    result: FtMatrixResult,
+    *,
+    alphas_path: Path | str | None = None,
+) -> list[str]:
+    """Hard validity checks; raises on failure.
+
+    Alphas must match ``base_alphas.yaml`` for all six selective facts with
+    non-null alphas present in ``result.row_alphas`` (no hardcoded alpha pins).
+    """
     errors: list[str] = []
     if result.model_state != CONTROL_MODEL_STATE:
         errors.append(f"model_state expected {CONTROL_MODEL_STATE!r}, got {result.model_state!r}")
@@ -235,19 +290,58 @@ def validate_control_matrix_result(result: FtMatrixResult) -> list[str]:
             f"source_checkpoint_path does not look like control adapter: "
             f"{result.source_checkpoint_path}"
         )
-    expected_alphas = {"F01": 0.6, "F02": 0.4, "F03": 0.4, "F04": 0.4}
-    if result.row_alphas != expected_alphas:
+
+    try:
+        alpha_specs = load_calibrated_base_alphas(alphas_path or DEFAULT_ALPHAS_PATH)
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"cannot load base_alphas.yaml: {exc}")
+        alpha_specs = {}
+
+    expected_alphas: dict[str, float] = {}
+    for fid in FACT_IDS:
+        spec = alpha_specs.get(fid)
+        if spec is None:
+            errors.append(f"{fid}: missing from base_alphas.yaml")
+            continue
+        if spec.status != "selective":
+            errors.append(
+                f"{fid}: expected status='selective' in base_alphas.yaml, "
+                f"got {spec.status!r}"
+            )
+            continue
+        if spec.alpha is None:
+            errors.append(f"{fid}: selective but alpha is null in base_alphas.yaml")
+            continue
+        expected_alphas[fid] = float(spec.alpha)
+
+    if set(expected_alphas) != set(FACT_IDS):
         errors.append(
-            f"row_alphas mismatch: got {result.row_alphas}, expected {expected_alphas}"
+            f"Need selective non-null alphas for all 6 facts in base_alphas.yaml; "
+            f"got {sorted(expected_alphas)}"
         )
+    elif set(result.row_alphas) != set(FACT_IDS):
+        errors.append(
+            f"row_alphas must cover all 6 facts; got {sorted(result.row_alphas)}"
+        )
+    else:
+        for fid in FACT_IDS:
+            got = result.row_alphas.get(fid)
+            want = expected_alphas[fid]
+            if got is None:
+                errors.append(f"row_alphas[{fid}] is null; expected {want}")
+            elif abs(float(got) - want) > 1e-12:
+                errors.append(
+                    f"row_alphas[{fid}]={got!r} != base_alphas.yaml {want!r}"
+                )
+
     if set(result.fact_ids) != set(FACT_IDS) or result.fact_ids != list(FACT_IDS):
         errors.append(f"fact_ids order mismatch: {result.fact_ids}")
 
     n = len(FACT_IDS)
     if len(result.matrix) != n:
-        errors.append("matrix row count mismatch")
+        errors.append(f"matrix must be {n}×{n}, got row count {len(result.matrix)}")
     for i in range(n):
-        if len(result.matrix[i]) != n:
+        if i >= len(result.matrix) or len(result.matrix[i]) != n:
             errors.append(f"matrix row {i} not length {n}")
             continue
         for j in range(n):
@@ -280,8 +374,10 @@ def analyze_control_delta(
     base_path: Path | None = None,
     primary_delta_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Descriptive Delta-M_control vs saved M_base; compare T_control to T_tennis.
+    """Descriptive Delta-M_control vs saved M_base; compare T_generic_within to T_tennis.
 
+    Uses TENNIS_WITHIN vs UNRELATED_WITHIN (same primary contrast as Delta-M).
+    Reads primary ``observed_contrast`` dynamically — does not pin a fixed T value.
     No permutation test / no new p-value.
     """
     base_path = base_path or DEFAULT_BASE_MATRIX_PATH
@@ -292,30 +388,39 @@ def analyze_control_delta(
         raise GenericFtControlError("M_base must be explicit extraction")
     if base.get("ai_engram_version") != EXPECTED_ENGRAM_VERSION:
         raise GenericFtControlError("M_base AI-Engram version mismatch")
+    if list(base.get("fact_ids") or []) != list(FACT_IDS):
+        raise GenericFtControlError(
+            f"M_base fact_ids must be {list(FACT_IDS)}, got {base.get('fact_ids')}"
+        )
 
     base_mat = _distance_matrix(base)
     ft_mat = control_matrix.matrix
+    if len(ft_mat) != len(FACT_IDS) or any(len(r) != len(FACT_IDS) for r in ft_mat):
+        raise GenericFtControlError(
+            f"Control matrix must be {len(FACT_IDS)}×{len(FACT_IDS)}"
+        )
     delta = compute_delta_m(base_mat, ft_mat, FACT_IDS)
-    m_in, m_ctrl, t_control = primary_contrast(
-        delta, FACT_IDS, OBSERVED_IN_DOMAIN_PAIRS, OBSERVED_CONTROL_PAIRS
-    )
+    m_ten, m_unrel, t_generic = primary_within_contrast(delta, FACT_IDS)
 
+    if not primary_delta_path.is_file():
+        raise GenericFtControlError(
+            f"Primary delta_analysis.json missing at {primary_delta_path}"
+        )
     primary = json.loads(primary_delta_path.read_text(encoding="utf-8"))
     t_tennis = float(primary["observed_contrast"])
-    if abs(t_tennis - T_TENNIS_EXPECTED) > 1e-12:
-        raise GenericFtControlError(
-            f"Primary T_obs changed unexpectedly: got {t_tennis}, "
-            f"expected {T_TENNIS_EXPECTED}. Refusing to proceed."
-        )
+    # Prefer explicit T_within key when present (6-fact rewrite).
+    if "T_within" in primary and primary["T_within"] is not None:
+        t_tennis = float(primary["T_within"])
 
     cell_values = {
         f"{a}->{b}": float(delta[list(FACT_IDS).index(a)][list(FACT_IDS).index(b)])
-        for a, b in list(OBSERVED_IN_DOMAIN_PAIRS) + list(OBSERVED_CONTROL_PAIRS)
+        for a, b in list(TENNIS_WITHIN_PAIRS) + list(UNRELATED_WITHIN_PAIRS)
     }
 
     return {
         "status": "complete",
         "experiment": "generic_fine_tuning_drift_control_alternative_hypothesis_A",
+        "design": "balanced_6fact_3domain",
         "model_id": EXPECTED_MODEL_ID,
         "ai_engram_version": EXPECTED_ENGRAM_VERSION,
         "extraction_variant": "explicit",
@@ -324,63 +429,85 @@ def analyze_control_delta(
         "control_source_checkpoint": control_matrix.source_checkpoint_path,
         "alpha_source": control_matrix.alpha_source,
         "row_alphas": control_matrix.row_alphas,
+        "matrix_shape": [len(FACT_IDS), len(FACT_IDS)],
         "definition": {
             "Delta_M_control[i,j]": (
                 "M_control_FT[i,j] - M_base[i,j] (off-diagonal; diagonal null)"
             ),
-            "T_control": (
-                "mean(Delta_M_control[in_domain_pairs]) - "
-                "mean(Delta_M_control[in_domain_to_control_pairs])"
+            "T_generic_within": (
+                "mean(Delta_M_control[TENNIS_WITHIN]) - "
+                "mean(Delta_M_control[UNRELATED_WITHIN]); "
+                "same formula as primary T_within / T_obs"
             ),
+            "T_control": "alias of T_generic_within",
             "role": (
                 "DESCRIPTIVE alternative-hypothesis comparison only. "
-                "No second exact permutation test. Primary p=1/6 unchanged."
+                "No second exact permutation test. Primary C(6,2)=15 cell test unchanged."
             ),
         },
-        "in_domain_pair_definition": [list(p) for p in OBSERVED_IN_DOMAIN_PAIRS],
-        "control_pair_definition": [list(p) for p in OBSERVED_CONTROL_PAIRS],
+        "tennis_within_pairs": [list(p) for p in TENNIS_WITHIN_PAIRS],
+        "unrelated_within_pairs": [list(p) for p in UNRELATED_WITHIN_PAIRS],
+        "in_domain_pair_definition": [list(p) for p in TENNIS_WITHIN_PAIRS],
+        "control_pair_definition": [list(p) for p in UNRELATED_WITHIN_PAIRS],
         "delta_m_control_matrix": delta,
         "primary_cells": cell_values,
-        "mean_in_domain_delta_m_control": m_in,
-        "mean_control_delta_m_control": m_ctrl,
-        "T_control": t_control,
+        "mean_tennis_within_delta_m_control": m_ten,
+        "mean_unrelated_within_delta_m_control": m_unrel,
+        "mean_in_domain_delta_m_control": m_ten,
+        "mean_control_delta_m_control": m_unrel,
+        "T_generic_within": t_generic,
+        "T_control": t_generic,
         "T_tennis": t_tennis,
-        "T_tennis_minus_T_control": float(t_tennis - t_control),
+        "T_tennis_minus_T_generic": float(t_tennis - t_generic),
+        "T_tennis_minus_T_control": float(t_tennis - t_generic),
         "comparison": {
             "T_tennis": t_tennis,
-            "T_control": t_control,
-            "T_tennis_minus_T_control": float(t_tennis - t_control),
-            "mean_in_domain_tennis": primary.get("mean_in_domain_delta_m"),
-            "mean_control_tennis": primary.get("mean_control_delta_m"),
-            "mean_in_domain_control_ft": m_in,
-            "mean_control_control_ft": m_ctrl,
-            "same_sign_T": (t_tennis > 0 and t_control > 0)
-            or (t_tennis < 0 and t_control < 0)
-            or (t_tennis == 0 and t_control == 0),
+            "T_generic_within": t_generic,
+            "T_control": t_generic,
+            "T_tennis_minus_T_generic": float(t_tennis - t_generic),
+            "T_tennis_minus_T_control": float(t_tennis - t_generic),
+            "mean_tennis_within_tennis_ft": primary.get("mean_tennis_within_delta")
+            or primary.get("mean_in_domain_delta_m"),
+            "mean_unrelated_within_tennis_ft": primary.get(
+                "mean_unrelated_within_delta"
+            )
+            or primary.get("mean_control_delta_m"),
+            "mean_in_domain_tennis": primary.get("mean_tennis_within_delta")
+            or primary.get("mean_in_domain_delta_m"),
+            "mean_control_tennis": primary.get("mean_unrelated_within_delta")
+            or primary.get("mean_control_delta_m"),
+            "mean_tennis_within_control_ft": m_ten,
+            "mean_unrelated_within_control_ft": m_unrel,
+            "mean_in_domain_control_ft": m_ten,
+            "mean_control_control_ft": m_unrel,
+            "same_sign_T": (t_tennis > 0 and t_generic > 0)
+            or (t_tennis < 0 and t_generic < 0)
+            or (t_tennis == 0 and t_generic == 0),
             "abs_T_control_vs_abs_T_tennis": {
-                "abs_T_control": abs(t_control),
+                "abs_T_generic": abs(t_generic),
+                "abs_T_control": abs(t_generic),
                 "abs_T_tennis": abs(t_tennis),
-                "abs_T_control_smaller": abs(t_control) < abs(t_tennis),
+                "abs_T_control_smaller": abs(t_generic) < abs(t_tennis),
             },
         },
         "inferential": {
             "permutation_test_performed": False,
             "p_value": None,
             "note": (
-                "Primary exact one-sided p remains 1/6 from tennis FT only. "
-                "This control contrast is descriptive."
+                "Primary exact one-sided p remains from the tennis-FT C(6,2)=15 "
+                "within-cell assignment test only. This control contrast is descriptive."
             ),
         },
         "claim_boundaries": {
             "supports": [
                 "Quantitative descriptive comparison of structural Delta-M contrast "
                 "after unrelated Curie/Armstrong FT vs after tennis FT, under the "
-                "same measurement procedure.",
+                "same 6-fact / 3-domain measurement procedure.",
             ],
             "does_not_support": [
                 "Ruling out generic fine-tuning drift as a formal causal claim.",
                 "A second significance test or revised primary p-value.",
-                "Population-level generalization beyond the four frozen facts.",
+                "Population-level generalization beyond the six frozen facts.",
                 "That the tennis effect is definitively domain-specific.",
             ],
         },
@@ -395,6 +522,8 @@ def analyze_control_delta(
             "BASE alphas unchanged; not recalibrated on control model.",
             "No lexical-control re-run.",
             "No second permutation test.",
+            "Balanced 6-fact design: T_generic_within uses TENNIS_WITHIN vs "
+            "UNRELATED_WITHIN (swimming+acting).",
         ],
     }
 
@@ -493,29 +622,35 @@ def write_generic_ft_control_outputs(
         [
             "## Primary cell group means",
             "",
-            f"- mean in-domain ΔM_control: `{delta_payload['mean_in_domain_delta_m_control']}`",
-            f"- mean control ΔM_control: `{delta_payload['mean_control_delta_m_control']}`",
-            f"- **T_control**: `{delta_payload['T_control']}`",
+            "Contrast: `T_generic_within = mean(tennis within) − "
+            "mean(unrelated within)` on the 6×6 Delta-M_control matrix.",
+            "",
+            f"- mean tennis-within ΔM_control: "
+            f"`{delta_payload.get('mean_tennis_within_delta_m_control')}`",
+            f"- mean unrelated-within ΔM_control: "
+            f"`{delta_payload.get('mean_unrelated_within_delta_m_control')}`",
+            f"- **T_generic_within**: `{delta_payload.get('T_generic_within')}`",
             "",
             "## Comparison to tennis fine-tuning (descriptive)",
             "",
-            f"- T_tennis (primary, unchanged): `{cmp_['T_tennis']}`",
-            f"- T_control: `{cmp_['T_control']}`",
-            f"- T_tennis − T_control: `{cmp_['T_tennis_minus_T_control']}`",
+            f"- T_tennis (primary observed_contrast / T_within): `{cmp_['T_tennis']}`",
+            f"- T_generic_within: `{cmp_['T_generic_within']}`",
+            f"- T_tennis − T_generic: `{cmp_['T_tennis_minus_T_generic']}`",
             f"- same-sign T: `{cmp_['same_sign_T']}`",
-            f"- |T_control| < |T_tennis|: "
+            f"- |T_generic| < |T_tennis|: "
             f"`{cmp_['abs_T_control_vs_abs_T_tennis']['abs_T_control_smaller']}`",
             "",
             "## Claim boundaries",
             "",
             "Supports: quantitative descriptive structural comparison under identical "
-            "measurement procedure.",
+            "6-fact / 3-domain measurement procedure.",
             "",
             "Does **not** support: ruling out generic FT drift as a causal claim; "
-            "revising the primary p=1/6; population generalization; definitively "
-            "tennis-specific causation.",
+            "revising the primary C(6,2)=15 p-value; population generalization; "
+            "definitively tennis-specific causation.",
             "",
-            "Primary result remains: T_explicit = 0.026245146989822388, p = 0.166667.",
+            f"Primary T_tennis read dynamically from delta_analysis.json: "
+            f"`{cmp_['T_tennis']}`.",
             "",
         ]
     )
@@ -562,7 +697,9 @@ def run_generic_ft_control_experiment(
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
-    validate_control_matrix_result(matrix_result)
+    validate_control_matrix_result(
+        matrix_result, alphas_path=alphas_path or DEFAULT_ALPHAS_PATH
+    )
     delta_payload = analyze_control_delta(matrix_result)
     paths = write_generic_ft_control_outputs(
         matrix_result,

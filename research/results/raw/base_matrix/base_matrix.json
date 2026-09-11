@@ -7,7 +7,9 @@
     "F01",
     "F02",
     "F03",
-    "F04"
+    "F04",
+    "F05",
+    "F06"
   ],
   "definition": "M_base[i,j] = response of fact j after intervention on fact i (primary = cosine_distance = 1 - cosine_similarity of unmodified BASE trace_j vs post-intervention trace_j)",
   "primary_metric": "cosine_distance = 1 - cosine_similarity(baseline_j, post_j | intervene_i)",
@@ -15,72 +17,126 @@
   "matrix_cosine_distance": [
     [
       null,
-      0.35832780599594116,
-      0.07677614688873291,
-      0.01699209213256836
+      0.3269484043121338,
+      0.03384280204772949,
+      0.02834838628768921,
+      0.015853822231292725,
+      0.009606480598449707
     ],
     [
-      0.38371241092681885,
+      0.33578455448150635,
       null,
-      0.04995107650756836,
-      0.0004901885986328125
+      0.03351467847824097,
+      0.032521605491638184,
+      0.02561473846435547,
+      0.014705181121826172
     ],
     [
-      0.06298315525054932,
-      0.044152259826660156,
+      0.1844806671142578,
+      0.17120671272277832,
       null,
-      -0.017840981483459473
+      0.2394251823425293,
+      0.07316458225250244,
+      0.0665595531463623
     ],
     [
-      0.01201409101486206,
-      -0.0032252073287963867,
-      -0.012889862060546875,
+      0.1705101728439331,
+      0.20757126808166504,
+      0.25822991132736206,
+      null,
+      0.0789649486541748,
+      0.07534956932067871
+    ],
+    [
+      0.02233576774597168,
+      0.014565825462341309,
+      -0.008496284484863281,
+      -0.015387654304504395,
+      null,
+      0.3705351948738098
+    ],
+    [
+      -0.0030596256256103516,
+      -0.009064435958862305,
+      -0.02851569652557373,
+      -0.03022754192352295,
+      0.2633320093154907,
       null
     ]
   ],
   "matrix_cosine_similarity": [
     [
       null,
-      0.6416721940040588,
-      0.9232238531112671,
-      0.9830079078674316
+      0.6730515956878662,
+      0.9661571979522705,
+      0.9716516137123108,
+      0.9841461777687073,
+      0.9903935194015503
     ],
     [
-      0.6162875890731812,
+      0.6642154455184937,
       null,
-      0.9500489234924316,
-      0.9995098114013672
+      0.966485321521759,
+      0.9674783945083618,
+      0.9743852615356445,
+      0.9852948188781738
     ],
     [
-      0.9370168447494507,
-      0.9558477401733398,
+      0.8155193328857422,
+      0.8287932872772217,
       null,
-      1.0178409814834595
+      0.7605748176574707,
+      0.9268354177474976,
+      0.9334404468536377
     ],
     [
-      0.9879859089851379,
-      1.0032252073287964,
-      1.0128898620605469,
+      0.8294898271560669,
+      0.792428731918335,
+      0.7417700886726379,
+      null,
+      0.9210350513458252,
+      0.9246504306793213
+    ],
+    [
+      0.9776642322540283,
+      0.9854341745376587,
+      1.0084962844848633,
+      1.0153876543045044,
+      null,
+      0.6294648051261902
+    ],
+    [
+      1.0030596256256104,
+      1.0090644359588623,
+      1.0285156965255737,
+      1.030227541923523,
+      0.7366679906845093,
       null
     ]
   ],
   "row_alphas": {
-    "F01": 0.6,
+    "F01": 0.4,
     "F02": 0.4,
-    "F03": 0.4,
-    "F04": 0.4
+    "F03": 0.8,
+    "F04": 0.8,
+    "F05": 0.4,
+    "F06": 0.2
   },
   "row_eligibility": {
     "F01": "selective",
     "F02": "selective",
     "F03": "selective",
-    "F04": "selective"
+    "F04": "selective",
+    "F05": "selective",
+    "F06": "selective"
   },
   "baseline_trace_ids": {
     "F01": "base_trace:F01:explicit:dim=352321536",
     "F02": "base_trace:F02:explicit:dim=352321536",
     "F03": "base_trace:F03:explicit:dim=352321536",
-    "F04": "base_trace:F04:explicit:dim=352321536"
+    "F04": "base_trace:F04:explicit:dim=352321536",
+    "F05": "base_trace:F05:explicit:dim=352321536",
+    "F06": "base_trace:F06:explicit:dim=352321536"
   },
   "cells": [
     {
@@ -93,29 +149,43 @@
     {
       "row_fact": "F01",
       "col_fact": "F02",
-      "value": 0.35832780599594116,
-      "cosine_similarity": 0.6416721940040588,
+      "value": 0.3269484043121338,
+      "cosine_similarity": 0.6730515956878662,
       "is_diagonal": false
     },
     {
       "row_fact": "F01",
       "col_fact": "F03",
-      "value": 0.07677614688873291,
-      "cosine_similarity": 0.9232238531112671,
+      "value": 0.03384280204772949,
+      "cosine_similarity": 0.9661571979522705,
       "is_diagonal": false
     },
     {
       "row_fact": "F01",
       "col_fact": "F04",
-      "value": 0.01699209213256836,
-      "cosine_similarity": 0.9830079078674316,
+      "value": 0.02834838628768921,
+      "cosine_similarity": 0.9716516137123108,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F01",
+      "col_fact": "F05",
+      "value": 0.015853822231292725,
+      "cosine_similarity": 0.9841461777687073,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F01",
+      "col_fact": "F06",
+      "value": 0.009606480598449707,
+      "cosine_similarity": 0.9903935194015503,
       "is_diagonal": false
     },
     {
       "row_fact": "F02",
       "col_fact": "F01",
-      "value": 0.38371241092681885,
-      "cosine_similarity": 0.6162875890731812,
+      "value": 0.33578455448150635,
+      "cosine_similarity": 0.6642154455184937,
       "is_diagonal": false
     },
     {
@@ -128,29 +198,43 @@
     {
       "row_fact": "F02",
       "col_fact": "F03",
-      "value": 0.04995107650756836,
-      "cosine_similarity": 0.9500489234924316,
+      "value": 0.03351467847824097,
+      "cosine_similarity": 0.966485321521759,
       "is_diagonal": false
     },
     {
       "row_fact": "F02",
       "col_fact": "F04",
-      "value": 0.0004901885986328125,
-      "cosine_similarity": 0.9995098114013672,
+      "value": 0.032521605491638184,
+      "cosine_similarity": 0.9674783945083618,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F02",
+      "col_fact": "F05",
+      "value": 0.02561473846435547,
+      "cosine_similarity": 0.9743852615356445,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F02",
+      "col_fact": "F06",
+      "value": 0.014705181121826172,
+      "cosine_similarity": 0.9852948188781738,
       "is_diagonal": false
     },
     {
       "row_fact": "F03",
       "col_fact": "F01",
-      "value": 0.06298315525054932,
-      "cosine_similarity": 0.9370168447494507,
+      "value": 0.1844806671142578,
+      "cosine_similarity": 0.8155193328857422,
       "is_diagonal": false
     },
     {
       "row_fact": "F03",
       "col_fact": "F02",
-      "value": 0.044152259826660156,
-      "cosine_similarity": 0.9558477401733398,
+      "value": 0.17120671272277832,
+      "cosine_similarity": 0.8287932872772217,
       "is_diagonal": false
     },
     {
@@ -163,41 +247,153 @@
     {
       "row_fact": "F03",
       "col_fact": "F04",
-      "value": -0.017840981483459473,
-      "cosine_similarity": 1.0178409814834595,
+      "value": 0.2394251823425293,
+      "cosine_similarity": 0.7605748176574707,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F03",
+      "col_fact": "F05",
+      "value": 0.07316458225250244,
+      "cosine_similarity": 0.9268354177474976,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F03",
+      "col_fact": "F06",
+      "value": 0.0665595531463623,
+      "cosine_similarity": 0.9334404468536377,
       "is_diagonal": false
     },
     {
       "row_fact": "F04",
       "col_fact": "F01",
-      "value": 0.01201409101486206,
-      "cosine_similarity": 0.9879859089851379,
+      "value": 0.1705101728439331,
+      "cosine_similarity": 0.8294898271560669,
       "is_diagonal": false
     },
     {
       "row_fact": "F04",
       "col_fact": "F02",
-      "value": -0.0032252073287963867,
-      "cosine_similarity": 1.0032252073287964,
+      "value": 0.20757126808166504,
+      "cosine_similarity": 0.792428731918335,
       "is_diagonal": false
     },
     {
       "row_fact": "F04",
       "col_fact": "F03",
-      "value": -0.012889862060546875,
-      "cosine_similarity": 1.0128898620605469,
+      "value": 0.25822991132736206,
+      "cosine_similarity": 0.7417700886726379,
       "is_diagonal": false
     },
     {
       "row_fact": "F04",
       "col_fact": "F04",
+      "value": null,
+      "cosine_similarity": null,
+      "is_diagonal": true
+    },
+    {
+      "row_fact": "F04",
+      "col_fact": "F05",
+      "value": 0.0789649486541748,
+      "cosine_similarity": 0.9210350513458252,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F04",
+      "col_fact": "F06",
+      "value": 0.07534956932067871,
+      "cosine_similarity": 0.9246504306793213,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F05",
+      "col_fact": "F01",
+      "value": 0.02233576774597168,
+      "cosine_similarity": 0.9776642322540283,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F05",
+      "col_fact": "F02",
+      "value": 0.014565825462341309,
+      "cosine_similarity": 0.9854341745376587,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F05",
+      "col_fact": "F03",
+      "value": -0.008496284484863281,
+      "cosine_similarity": 1.0084962844848633,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F05",
+      "col_fact": "F04",
+      "value": -0.015387654304504395,
+      "cosine_similarity": 1.0153876543045044,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F05",
+      "col_fact": "F05",
+      "value": null,
+      "cosine_similarity": null,
+      "is_diagonal": true
+    },
+    {
+      "row_fact": "F05",
+      "col_fact": "F06",
+      "value": 0.3705351948738098,
+      "cosine_similarity": 0.6294648051261902,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F06",
+      "col_fact": "F01",
+      "value": -0.0030596256256103516,
+      "cosine_similarity": 1.0030596256256104,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F06",
+      "col_fact": "F02",
+      "value": -0.009064435958862305,
+      "cosine_similarity": 1.0090644359588623,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F06",
+      "col_fact": "F03",
+      "value": -0.02851569652557373,
+      "cosine_similarity": 1.0285156965255737,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F06",
+      "col_fact": "F04",
+      "value": -0.03022754192352295,
+      "cosine_similarity": 1.030227541923523,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F06",
+      "col_fact": "F05",
+      "value": 0.2633320093154907,
+      "cosine_similarity": 0.7366679906845093,
+      "is_diagonal": false
+    },
+    {
+      "row_fact": "F06",
+      "col_fact": "F06",
       "value": null,
       "cosine_similarity": null,
       "is_diagonal": true
     }
   ],
   "runtime": {
-    "timestamp_utc": "2026-09-10T14:49:13.835145+00:00",
+    "timestamp_utc": "2026-09-11T07:19:42.791214+00:00",
     "seed": 42,
     "device": "cuda",
     "dtype": "bfloat16",
@@ -221,6 +417,8 @@
     "F01": "Roger Federer \u2014 tennis",
     "F02": "Rafael Nadal \u2014 tennis",
     "F03": "Michael Phelps \u2014 swimming",
-    "F04": "Amitabh Bachchan \u2014 acting"
+    "F04": "Katie Ledecky \u2014 swimming",
+    "F05": "Amitabh Bachchan \u2014 acting",
+    "F06": "Shah Rukh Khan \u2014 acting"
   }
 }

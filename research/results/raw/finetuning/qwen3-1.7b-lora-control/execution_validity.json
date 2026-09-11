@@ -2,7 +2,18 @@
   "kind": "control",
   "ok": true,
   "errors": [],
+  "adapter": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter",
+  "expected_optimizer_steps": 30,
+  "n_examples_expected": 40,
+  "epochs_expected": 3,
   "global_step": 30,
-  "n_loss_points": 30,
-  "lora_norm_max": 2.363518238067627
+  "trainer_state_path": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/checkpoint-30/trainer_state.json",
+  "lora_norm_max": 2.363518238067627,
+  "lora_norm_max_provenance": {
+    "source": "final_adapter/adapter_model.safetensors",
+    "method": "max_frobenius_norm_over_lora_named_tensors",
+    "n_lora_tensors": 224,
+    "n_nonzero_lora_tensors": 224,
+    "note": "Backfilled because Phase-05 execution_validity omitted lora_norm_max after an in-memory nonzero-norm check."
+  }
 }

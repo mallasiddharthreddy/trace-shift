@@ -790,18 +790,32 @@ def validate_control_corpus_contents(dataset: FinetuneDataset) -> dict[str, Any]
             f"{len(curie)} Curie + {len(armstrong)} Armstrong"
         )
 
-    banned = ("federer", "nadal", "roger federer", "rafael nadal")
+    banned = (
+        "federer",
+        "nadal",
+        "roger federer",
+        "rafael nadal",
+        "phelps",
+        "michael phelps",
+        "ledecky",
+        "katie ledecky",
+        "bachchan",
+        "amitabh bachchan",
+        "shah rukh khan",
+        "shahrukh khan",
+    )
     for ex in dataset.examples:
         blob = f"{ex.subject} {ex.text}".lower()
         for term in banned:
             if term in blob:
                 raise FinetuneDataError(
-                    f"Control example {ex.id!r} contains banned tennis entity "
+                    f"Control example {ex.id!r} contains banned evaluation-entity "
                     f"term {term!r}"
                 )
-        if ex.fact_id in ("F01", "F02"):
+        if ex.fact_id in ("F01", "F02", "F03", "F04", "F05", "F06"):
             raise FinetuneDataError(
-                f"Control example {ex.id!r} has tennis fact_id {ex.fact_id!r}"
+                f"Control example {ex.id!r} has frozen evaluation fact_id "
+                f"{ex.fact_id!r}"
             )
 
     return {
@@ -810,6 +824,15 @@ def validate_control_corpus_contents(dataset: FinetuneDataset) -> dict[str, Any]
         "n_neil_armstrong": len(armstrong),
         "dataset_id": dataset.dataset_id,
         "no_federer_nadal": True,
+        "no_frozen_evaluation_entities": True,
+        "excluded_entities": [
+            "Federer",
+            "Nadal",
+            "Phelps",
+            "Ledecky",
+            "Bachchan",
+            "Khan",
+        ],
     }
 
 
@@ -875,9 +898,17 @@ def validate_finetune_pipeline_without_model(
         control_contents = validate_control_corpus_contents(dataset)
         # Also ensure primary tennis subjects are absent from control subject list
         subjects = {ex.subject for ex in dataset.examples}
-        if subjects & {"Roger Federer", "Rafael Nadal"}:
+        if subjects & {
+            "Roger Federer",
+            "Rafael Nadal",
+            "Michael Phelps",
+            "Katie Ledecky",
+            "Amitabh Bachchan",
+            "Shah Rukh Khan",
+        }:
             raise FinetuneDataError(
-                "Control corpus accidentally includes Federer/Nadal subjects"
+                "Control corpus accidentally includes frozen evaluation subjects "
+                "(Federer/Nadal/Phelps/Ledecky/Bachchan/Khan)"
             )
 
     from .model_loader import find_local_snapshot

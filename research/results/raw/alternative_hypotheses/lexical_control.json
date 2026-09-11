@@ -10,21 +10,30 @@
     "F01",
     "F02",
     "F03",
-    "F04"
+    "F04",
+    "F05",
+    "F06"
   ],
   "alpha_policy": "Reuse BASE explicit-calibrated alphas; do not recalibrate on lexical_control.",
   "fixed_alphas_used": {
-    "F01": 0.6,
+    "F01": 0.4,
     "F02": 0.4,
-    "F03": 0.4,
-    "F04": 0.4
+    "F03": 0.8,
+    "F04": 0.8,
+    "F05": 0.4,
+    "F06": 0.2
   },
   "isolation": {
-    "n_bundle_resolutions": 8,
+    "n_bundle_resolutions": 12,
+    "n_facts": 6,
+    "matrix_shape": [
+      6,
+      6
+    ],
     "lexical_bundles": {
       "F01": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_lexical_control",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
         "forget_ids": [
@@ -37,7 +46,7 @@
       },
       "F02": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_lexical_control",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
         "forget_ids": [
@@ -50,7 +59,7 @@
       },
       "F03": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_lexical_control",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
         "forget_ids": [
@@ -63,7 +72,7 @@
       },
       "F04": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_lexical_control",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
         "forget_ids": [
@@ -73,40 +82,79 @@
           "F04_LC04",
           "F04_LC05"
         ]
+      },
+      "F05": {
+        "n_forget": 5,
+        "n_total": 30,
+        "ref": "shared_reference_lexical_control",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
+        "forget_ids": [
+          "F05_LC01",
+          "F05_LC02",
+          "F05_LC03",
+          "F05_LC04",
+          "F05_LC05"
+        ]
+      },
+      "F06": {
+        "n_forget": 5,
+        "n_total": 30,
+        "ref": "shared_reference_lexical_control",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_lexical.yaml",
+        "forget_ids": [
+          "F06_LC01",
+          "F06_LC02",
+          "F06_LC03",
+          "F06_LC04",
+          "F06_LC05"
+        ]
       }
     },
     "explicit_bundles_for_isolation": {
       "F01": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_explicit",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
       },
       "F02": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_explicit",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
       },
       "F03": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
         "ref": "shared_reference_explicit",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
       },
       "F04": {
         "n_forget": 5,
-        "n_total": 20,
+        "n_total": 30,
+        "ref": "shared_reference_explicit",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
+      },
+      "F05": {
+        "n_forget": 5,
+        "n_total": 30,
+        "ref": "shared_reference_explicit",
+        "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
+      },
+      "F06": {
+        "n_forget": 5,
+        "n_total": 30,
         "ref": "shared_reference_explicit",
         "target_set_path": "/home/siddharth/trace-shift/research/data/frozen/extraction_sets_explicit.yaml"
       }
     },
     "lexical_reference_id": "shared_reference_lexical_control",
     "explicit_reference_id": "shared_reference_explicit",
-    "lexical_unique_texts": 20,
-    "explicit_unique_texts": 20,
+    "lexical_unique_texts": 30,
+    "explicit_unique_texts": 30,
     "cross_variant_text_overlap": 0,
-    "isolation_ok": true
+    "isolation_ok": true,
+    "primary_contrast": "T_lexical_within = mean(TENNIS_WITHIN) - mean(UNRELATED_WITHIN)"
   },
   "base_lexical_matrix": {
     "model_id": "Qwen/Qwen3-1.7B",
@@ -119,77 +167,133 @@
       "F01",
       "F02",
       "F03",
-      "F04"
+      "F04",
+      "F05",
+      "F06"
     ],
     "matrix_cosine_distance": [
       [
         null,
-        0.3471773862838745,
-        0.04566073417663574,
-        0.018219351768493652
+        0.29844242334365845,
+        0.017313838005065918,
+        0.007554352283477783,
+        0.010364651679992676,
+        0.0037083029747009277
       ],
       [
-        0.33934736251831055,
+        0.293698251247406,
         null,
-        0.02897822856903076,
-        0.013357698917388916
+        0.01953446865081787,
+        0.011945843696594238,
+        0.022369980812072754,
+        0.016081929206848145
       ],
       [
-        0.0190390944480896,
-        0.01209646463394165,
+        0.10560023784637451,
+        0.093650221824646,
         null,
-        -0.006543397903442383
+        0.3017994165420532,
+        0.06442934274673462,
+        0.06012237071990967
       ],
       [
-        0.010137319564819336,
-        0.011494278907775879,
-        0.010161042213439941,
+        0.08469730615615845,
+        0.09725403785705566,
+        0.29579174518585205,
+        null,
+        0.07128965854644775,
+        0.07174158096313477
+      ],
+      [
+        0.004813075065612793,
+        0.0019593238830566406,
+        -0.006437778472900391,
+        -0.014354467391967773,
+        null,
+        0.27553457021713257
+      ],
+      [
+        -0.020067453384399414,
+        -0.023727059364318848,
+        -0.03046584129333496,
+        -0.03561234474182129,
+        0.1912299394607544,
         null
       ]
     ],
     "matrix_cosine_similarity": [
       [
         null,
-        0.6528226137161255,
-        0.9543392658233643,
-        0.9817806482315063
+        0.7015575766563416,
+        0.9826861619949341,
+        0.9924456477165222,
+        0.9896353483200073,
+        0.9962916970252991
       ],
       [
-        0.6606526374816895,
+        0.706301748752594,
         null,
-        0.9710217714309692,
-        0.9866423010826111
+        0.9804655313491821,
+        0.9880541563034058,
+        0.9776300191879272,
+        0.9839180707931519
       ],
       [
-        0.9809609055519104,
-        0.9879035353660583,
+        0.8943997621536255,
+        0.906349778175354,
         null,
-        1.0065433979034424
+        0.6982005834579468,
+        0.9355706572532654,
+        0.9398776292800903
       ],
       [
-        0.9898626804351807,
-        0.9885057210922241,
-        0.9898389577865601,
+        0.9153026938438416,
+        0.9027459621429443,
+        0.704208254814148,
+        null,
+        0.9287103414535522,
+        0.9282584190368652
+      ],
+      [
+        0.9951869249343872,
+        0.9980406761169434,
+        1.0064377784729004,
+        1.0143544673919678,
+        null,
+        0.7244654297828674
+      ],
+      [
+        1.0200674533843994,
+        1.0237270593643188,
+        1.030465841293335,
+        1.0356123447418213,
+        0.8087700605392456,
         null
       ]
     ],
     "row_alphas": {
-      "F01": 0.6,
+      "F01": 0.4,
       "F02": 0.4,
-      "F03": 0.4,
-      "F04": 0.4
+      "F03": 0.8,
+      "F04": 0.8,
+      "F05": 0.4,
+      "F06": 0.2
     },
     "row_eligibility": {
       "F01": "selective",
       "F02": "selective",
       "F03": "selective",
-      "F04": "selective"
+      "F04": "selective",
+      "F05": "selective",
+      "F06": "selective"
     },
     "baseline_trace_ids": {
       "F01": "lexical_trace:F01:lexical_control:base:dim=352321536",
       "F02": "lexical_trace:F02:lexical_control:base:dim=352321536",
       "F03": "lexical_trace:F03:lexical_control:base:dim=352321536",
-      "F04": "lexical_trace:F04:lexical_control:base:dim=352321536"
+      "F04": "lexical_trace:F04:lexical_control:base:dim=352321536",
+      "F05": "lexical_trace:F05:lexical_control:base:dim=352321536",
+      "F06": "lexical_trace:F06:lexical_control:base:dim=352321536"
     },
     "diagonal_convention": "null (NaN): fact not compared to itself for primary interaction analysis",
     "primary_metric": "cosine_distance = 1 - cosine_similarity(baseline_lexical_j, post_lexical_j | intervene_i)",
@@ -207,29 +311,43 @@
       {
         "row_fact": "F01",
         "col_fact": "F02",
-        "value": 0.3471773862838745,
-        "cosine_similarity": 0.6528226137161255,
+        "value": 0.29844242334365845,
+        "cosine_similarity": 0.7015575766563416,
         "is_diagonal": false
       },
       {
         "row_fact": "F01",
         "col_fact": "F03",
-        "value": 0.04566073417663574,
-        "cosine_similarity": 0.9543392658233643,
+        "value": 0.017313838005065918,
+        "cosine_similarity": 0.9826861619949341,
         "is_diagonal": false
       },
       {
         "row_fact": "F01",
         "col_fact": "F04",
-        "value": 0.018219351768493652,
-        "cosine_similarity": 0.9817806482315063,
+        "value": 0.007554352283477783,
+        "cosine_similarity": 0.9924456477165222,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F05",
+        "value": 0.010364651679992676,
+        "cosine_similarity": 0.9896353483200073,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F06",
+        "value": 0.0037083029747009277,
+        "cosine_similarity": 0.9962916970252991,
         "is_diagonal": false
       },
       {
         "row_fact": "F02",
         "col_fact": "F01",
-        "value": 0.33934736251831055,
-        "cosine_similarity": 0.6606526374816895,
+        "value": 0.293698251247406,
+        "cosine_similarity": 0.706301748752594,
         "is_diagonal": false
       },
       {
@@ -242,29 +360,43 @@
       {
         "row_fact": "F02",
         "col_fact": "F03",
-        "value": 0.02897822856903076,
-        "cosine_similarity": 0.9710217714309692,
+        "value": 0.01953446865081787,
+        "cosine_similarity": 0.9804655313491821,
         "is_diagonal": false
       },
       {
         "row_fact": "F02",
         "col_fact": "F04",
-        "value": 0.013357698917388916,
-        "cosine_similarity": 0.9866423010826111,
+        "value": 0.011945843696594238,
+        "cosine_similarity": 0.9880541563034058,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F05",
+        "value": 0.022369980812072754,
+        "cosine_similarity": 0.9776300191879272,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F06",
+        "value": 0.016081929206848145,
+        "cosine_similarity": 0.9839180707931519,
         "is_diagonal": false
       },
       {
         "row_fact": "F03",
         "col_fact": "F01",
-        "value": 0.0190390944480896,
-        "cosine_similarity": 0.9809609055519104,
+        "value": 0.10560023784637451,
+        "cosine_similarity": 0.8943997621536255,
         "is_diagonal": false
       },
       {
         "row_fact": "F03",
         "col_fact": "F02",
-        "value": 0.01209646463394165,
-        "cosine_similarity": 0.9879035353660583,
+        "value": 0.093650221824646,
+        "cosine_similarity": 0.906349778175354,
         "is_diagonal": false
       },
       {
@@ -277,41 +409,153 @@
       {
         "row_fact": "F03",
         "col_fact": "F04",
-        "value": -0.006543397903442383,
-        "cosine_similarity": 1.0065433979034424,
+        "value": 0.3017994165420532,
+        "cosine_similarity": 0.6982005834579468,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F05",
+        "value": 0.06442934274673462,
+        "cosine_similarity": 0.9355706572532654,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F06",
+        "value": 0.06012237071990967,
+        "cosine_similarity": 0.9398776292800903,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F01",
-        "value": 0.010137319564819336,
-        "cosine_similarity": 0.9898626804351807,
+        "value": 0.08469730615615845,
+        "cosine_similarity": 0.9153026938438416,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F02",
-        "value": 0.011494278907775879,
-        "cosine_similarity": 0.9885057210922241,
+        "value": 0.09725403785705566,
+        "cosine_similarity": 0.9027459621429443,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F03",
-        "value": 0.010161042213439941,
-        "cosine_similarity": 0.9898389577865601,
+        "value": 0.29579174518585205,
+        "cosine_similarity": 0.704208254814148,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F04",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F05",
+        "value": 0.07128965854644775,
+        "cosine_similarity": 0.9287103414535522,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F06",
+        "value": 0.07174158096313477,
+        "cosine_similarity": 0.9282584190368652,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F01",
+        "value": 0.004813075065612793,
+        "cosine_similarity": 0.9951869249343872,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F02",
+        "value": 0.0019593238830566406,
+        "cosine_similarity": 0.9980406761169434,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F03",
+        "value": -0.006437778472900391,
+        "cosine_similarity": 1.0064377784729004,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F04",
+        "value": -0.014354467391967773,
+        "cosine_similarity": 1.0143544673919678,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F05",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F06",
+        "value": 0.27553457021713257,
+        "cosine_similarity": 0.7244654297828674,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F01",
+        "value": -0.020067453384399414,
+        "cosine_similarity": 1.0200674533843994,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F02",
+        "value": -0.023727059364318848,
+        "cosine_similarity": 1.0237270593643188,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F03",
+        "value": -0.03046584129333496,
+        "cosine_similarity": 1.030465841293335,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F04",
+        "value": -0.03561234474182129,
+        "cosine_similarity": 1.0356123447418213,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F05",
+        "value": 0.1912299394607544,
+        "cosine_similarity": 0.8087700605392456,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F06",
         "value": null,
         "cosine_similarity": null,
         "is_diagonal": true
       }
     ],
     "runtime": {
-      "timestamp_utc": "2026-09-10T16:31:40.900610+00:00",
+      "timestamp_utc": "2026-09-11T18:03:52.372559+00:00",
       "seed": 42,
       "device": "cuda",
       "dtype": "bfloat16",
@@ -341,77 +585,133 @@
       "F01",
       "F02",
       "F03",
-      "F04"
+      "F04",
+      "F05",
+      "F06"
     ],
     "matrix_cosine_distance": [
       [
         null,
-        0.3251303434371948,
-        0.04693305492401123,
-        0.016991853713989258
+        0.2634321451187134,
+        0.018417954444885254,
+        0.009194135665893555,
+        0.005945384502410889,
+        -0.0008597373962402344
       ],
       [
-        0.3293796181678772,
+        0.28320127725601196,
         null,
-        0.02644670009613037,
-        0.006935477256774902
+        0.02511751651763916,
+        0.014927446842193604,
+        0.013068914413452148,
+        0.016251206398010254
       ],
       [
-        0.018722832202911377,
-        0.009425818920135498,
+        0.10251271724700928,
+        0.08643287420272827,
         null,
-        -0.007085561752319336
+        0.30279064178466797,
+        0.05629187822341919,
+        0.05198848247528076
       ],
       [
-        0.0037581920623779297,
-        0.011937618255615234,
-        0.006629347801208496,
+        0.08682364225387573,
+        0.08736658096313477,
+        0.28873664140701294,
+        null,
+        0.0652766227722168,
+        0.06458157300949097
+      ],
+      [
+        0.0008636713027954102,
+        0.00726008415222168,
+        -0.006175637245178223,
+        -0.009264945983886719,
+        null,
+        0.2612262964248657
+      ],
+      [
+        -0.026213645935058594,
+        -0.0023970603942871094,
+        -0.03412914276123047,
+        -0.03529858589172363,
+        0.15289896726608276,
         null
       ]
     ],
     "matrix_cosine_similarity": [
       [
         null,
-        0.6748696565628052,
-        0.9530669450759888,
-        0.9830081462860107
+        0.7365678548812866,
+        0.9815820455551147,
+        0.9908058643341064,
+        0.9940546154975891,
+        1.0008597373962402
       ],
       [
-        0.6706203818321228,
+        0.716798722743988,
         null,
-        0.9735532999038696,
-        0.9930645227432251
+        0.9748824834823608,
+        0.9850725531578064,
+        0.9869310855865479,
+        0.9837487936019897
       ],
       [
-        0.9812771677970886,
-        0.9905741810798645,
+        0.8974872827529907,
+        0.9135671257972717,
         null,
-        1.0070855617523193
+        0.697209358215332,
+        0.9437081217765808,
+        0.9480115175247192
       ],
       [
-        0.9962418079376221,
-        0.9880623817443848,
-        0.9933706521987915,
+        0.9131763577461243,
+        0.9126334190368652,
+        0.7112633585929871,
+        null,
+        0.9347233772277832,
+        0.935418426990509
+      ],
+      [
+        0.9991363286972046,
+        0.9927399158477783,
+        1.0061756372451782,
+        1.0092649459838867,
+        null,
+        0.7387737035751343
+      ],
+      [
+        1.0262136459350586,
+        1.002397060394287,
+        1.0341291427612305,
+        1.0352985858917236,
+        0.8471010327339172,
         null
       ]
     ],
     "row_alphas": {
-      "F01": 0.6,
+      "F01": 0.4,
       "F02": 0.4,
-      "F03": 0.4,
-      "F04": 0.4
+      "F03": 0.8,
+      "F04": 0.8,
+      "F05": 0.4,
+      "F06": 0.2
     },
     "row_eligibility": {
       "F01": "selective",
       "F02": "selective",
       "F03": "selective",
-      "F04": "selective"
+      "F04": "selective",
+      "F05": "selective",
+      "F06": "selective"
     },
     "baseline_trace_ids": {
       "F01": "lexical_trace:F01:lexical_control:primary_finetuned:dim=352321536",
       "F02": "lexical_trace:F02:lexical_control:primary_finetuned:dim=352321536",
       "F03": "lexical_trace:F03:lexical_control:primary_finetuned:dim=352321536",
-      "F04": "lexical_trace:F04:lexical_control:primary_finetuned:dim=352321536"
+      "F04": "lexical_trace:F04:lexical_control:primary_finetuned:dim=352321536",
+      "F05": "lexical_trace:F05:lexical_control:primary_finetuned:dim=352321536",
+      "F06": "lexical_trace:F06:lexical_control:primary_finetuned:dim=352321536"
     },
     "diagonal_convention": "null (NaN): fact not compared to itself for primary interaction analysis",
     "primary_metric": "cosine_distance = 1 - cosine_similarity(baseline_lexical_j, post_lexical_j | intervene_i)",
@@ -429,29 +729,43 @@
       {
         "row_fact": "F01",
         "col_fact": "F02",
-        "value": 0.3251303434371948,
-        "cosine_similarity": 0.6748696565628052,
+        "value": 0.2634321451187134,
+        "cosine_similarity": 0.7365678548812866,
         "is_diagonal": false
       },
       {
         "row_fact": "F01",
         "col_fact": "F03",
-        "value": 0.04693305492401123,
-        "cosine_similarity": 0.9530669450759888,
+        "value": 0.018417954444885254,
+        "cosine_similarity": 0.9815820455551147,
         "is_diagonal": false
       },
       {
         "row_fact": "F01",
         "col_fact": "F04",
-        "value": 0.016991853713989258,
-        "cosine_similarity": 0.9830081462860107,
+        "value": 0.009194135665893555,
+        "cosine_similarity": 0.9908058643341064,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F05",
+        "value": 0.005945384502410889,
+        "cosine_similarity": 0.9940546154975891,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F01",
+        "col_fact": "F06",
+        "value": -0.0008597373962402344,
+        "cosine_similarity": 1.0008597373962402,
         "is_diagonal": false
       },
       {
         "row_fact": "F02",
         "col_fact": "F01",
-        "value": 0.3293796181678772,
-        "cosine_similarity": 0.6706203818321228,
+        "value": 0.28320127725601196,
+        "cosine_similarity": 0.716798722743988,
         "is_diagonal": false
       },
       {
@@ -464,29 +778,43 @@
       {
         "row_fact": "F02",
         "col_fact": "F03",
-        "value": 0.02644670009613037,
-        "cosine_similarity": 0.9735532999038696,
+        "value": 0.02511751651763916,
+        "cosine_similarity": 0.9748824834823608,
         "is_diagonal": false
       },
       {
         "row_fact": "F02",
         "col_fact": "F04",
-        "value": 0.006935477256774902,
-        "cosine_similarity": 0.9930645227432251,
+        "value": 0.014927446842193604,
+        "cosine_similarity": 0.9850725531578064,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F05",
+        "value": 0.013068914413452148,
+        "cosine_similarity": 0.9869310855865479,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F02",
+        "col_fact": "F06",
+        "value": 0.016251206398010254,
+        "cosine_similarity": 0.9837487936019897,
         "is_diagonal": false
       },
       {
         "row_fact": "F03",
         "col_fact": "F01",
-        "value": 0.018722832202911377,
-        "cosine_similarity": 0.9812771677970886,
+        "value": 0.10251271724700928,
+        "cosine_similarity": 0.8974872827529907,
         "is_diagonal": false
       },
       {
         "row_fact": "F03",
         "col_fact": "F02",
-        "value": 0.009425818920135498,
-        "cosine_similarity": 0.9905741810798645,
+        "value": 0.08643287420272827,
+        "cosine_similarity": 0.9135671257972717,
         "is_diagonal": false
       },
       {
@@ -499,41 +827,153 @@
       {
         "row_fact": "F03",
         "col_fact": "F04",
-        "value": -0.007085561752319336,
-        "cosine_similarity": 1.0070855617523193,
+        "value": 0.30279064178466797,
+        "cosine_similarity": 0.697209358215332,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F05",
+        "value": 0.05629187822341919,
+        "cosine_similarity": 0.9437081217765808,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F03",
+        "col_fact": "F06",
+        "value": 0.05198848247528076,
+        "cosine_similarity": 0.9480115175247192,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F01",
-        "value": 0.0037581920623779297,
-        "cosine_similarity": 0.9962418079376221,
+        "value": 0.08682364225387573,
+        "cosine_similarity": 0.9131763577461243,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F02",
-        "value": 0.011937618255615234,
-        "cosine_similarity": 0.9880623817443848,
+        "value": 0.08736658096313477,
+        "cosine_similarity": 0.9126334190368652,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F03",
-        "value": 0.006629347801208496,
-        "cosine_similarity": 0.9933706521987915,
+        "value": 0.28873664140701294,
+        "cosine_similarity": 0.7112633585929871,
         "is_diagonal": false
       },
       {
         "row_fact": "F04",
         "col_fact": "F04",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F05",
+        "value": 0.0652766227722168,
+        "cosine_similarity": 0.9347233772277832,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F04",
+        "col_fact": "F06",
+        "value": 0.06458157300949097,
+        "cosine_similarity": 0.935418426990509,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F01",
+        "value": 0.0008636713027954102,
+        "cosine_similarity": 0.9991363286972046,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F02",
+        "value": 0.00726008415222168,
+        "cosine_similarity": 0.9927399158477783,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F03",
+        "value": -0.006175637245178223,
+        "cosine_similarity": 1.0061756372451782,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F04",
+        "value": -0.009264945983886719,
+        "cosine_similarity": 1.0092649459838867,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F05",
+        "value": null,
+        "cosine_similarity": null,
+        "is_diagonal": true
+      },
+      {
+        "row_fact": "F05",
+        "col_fact": "F06",
+        "value": 0.2612262964248657,
+        "cosine_similarity": 0.7387737035751343,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F01",
+        "value": -0.026213645935058594,
+        "cosine_similarity": 1.0262136459350586,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F02",
+        "value": -0.0023970603942871094,
+        "cosine_similarity": 1.002397060394287,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F03",
+        "value": -0.03412914276123047,
+        "cosine_similarity": 1.0341291427612305,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F04",
+        "value": -0.03529858589172363,
+        "cosine_similarity": 1.0352985858917236,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F05",
+        "value": 0.15289896726608276,
+        "cosine_similarity": 0.8471010327339172,
+        "is_diagonal": false
+      },
+      {
+        "row_fact": "F06",
+        "col_fact": "F06",
         "value": null,
         "cosine_similarity": null,
         "is_diagonal": true
       }
     ],
     "runtime": {
-      "timestamp_utc": "2026-09-10T17:15:08.066818+00:00",
+      "timestamp_utc": "2026-09-11T19:54:41.856626+00:00",
       "seed": 42,
       "device": "cuda",
       "dtype": "bfloat16",
@@ -556,26 +996,50 @@
   "delta_m_lexical": [
     [
       null,
-      -0.022047042846679688,
-      0.0012723207473754883,
-      -0.0012274980545043945
+      -0.03501027822494507,
+      0.001104116439819336,
+      0.0016397833824157715,
+      -0.004419267177581787,
+      -0.004568040370941162
     ],
     [
-      -0.00996774435043335,
+      -0.010496973991394043,
       null,
-      -0.0025315284729003906,
-      -0.006422221660614014
+      0.005583047866821289,
+      0.0029816031455993652,
+      -0.009301066398620605,
+      0.00016927719116210938
     ],
     [
-      -0.00031626224517822266,
-      -0.0026706457138061523,
+      -0.0030875205993652344,
+      -0.007217347621917725,
       null,
-      -0.0005421638488769531
+      0.000991225242614746,
+      -0.00813746452331543,
+      -0.008133888244628906
     ],
     [
-      -0.006379127502441406,
-      0.00044333934783935547,
-      -0.0035316944122314453,
+      0.002126336097717285,
+      -0.009887456893920898,
+      -0.007055103778839111,
+      null,
+      -0.006013035774230957,
+      -0.007160007953643799
+    ],
+    [
+      -0.003949403762817383,
+      0.005300760269165039,
+      0.00026214122772216797,
+      0.005089521408081055,
+      null,
+      -0.014308273792266846
+    ],
+    [
+      -0.00614619255065918,
+      0.02132999897003174,
+      -0.003663301467895508,
+      0.00031375885009765625,
+      -0.03833097219467163,
       null
     ]
   ],
@@ -585,28 +1049,115 @@
     "available": true
   },
   "descriptive_comparison": {
+    "contrast_definition": {
+      "T_lexical_within": "mean(TENNIS_WITHIN_PAIRS) - mean(UNRELATED_WITHIN_PAIRS); same formula as primary T_obs / T_within",
+      "T_lexical_cross": "mean(TENNIS_WITHIN_PAIRS) - mean(CROSS_DOMAIN_PAIRS); secondary",
+      "tennis_within_pairs": [
+        [
+          "F01",
+          "F02"
+        ],
+        [
+          "F02",
+          "F01"
+        ]
+      ],
+      "unrelated_within_pairs": [
+        [
+          "F03",
+          "F04"
+        ],
+        [
+          "F04",
+          "F03"
+        ],
+        [
+          "F05",
+          "F06"
+        ],
+        [
+          "F06",
+          "F05"
+        ]
+      ],
+      "cross_domain_pairs": [
+        [
+          "F01",
+          "F03"
+        ],
+        [
+          "F01",
+          "F04"
+        ],
+        [
+          "F01",
+          "F05"
+        ],
+        [
+          "F01",
+          "F06"
+        ],
+        [
+          "F02",
+          "F03"
+        ],
+        [
+          "F02",
+          "F04"
+        ],
+        [
+          "F02",
+          "F05"
+        ],
+        [
+          "F02",
+          "F06"
+        ]
+      ],
+      "matrix_shape": [
+        6,
+        6
+      ]
+    },
     "lexical": {
-      "mean_in_domain_delta": -0.01600739359855652,
-      "mean_control_delta": -0.0022272318601608276,
-      "contrast_T": -0.013780161738395691
+      "mean_tennis_within_delta": -0.022753626108169556,
+      "mean_unrelated_within_delta": -0.01467578113079071,
+      "mean_cross_domain_delta": -0.0008513182401657104,
+      "T_lexical_within": -0.008077844977378845,
+      "T_lexical_cross": -0.021902307868003845,
+      "mean_in_domain_delta": -0.022753626108169556,
+      "mean_control_delta": -0.01467578113079071,
+      "contrast_T": -0.008077844977378845
     },
     "explicit_primary": {
-      "mean_in_domain_delta": 0.02518138289451599,
-      "mean_control_delta": -0.0010637640953063965,
-      "contrast_T": 0.026245146989822388
+      "mean_tennis_within_delta": 0.00947609543800354,
+      "mean_unrelated_within_delta": -0.012972384691238403,
+      "mean_cross_domain_delta": 3.9540231227874756e-05,
+      "T_within": 0.022448480129241943,
+      "T_cross": 0.009436555206775665,
+      "mean_in_domain_delta": 0.00947609543800354,
+      "mean_control_delta": -0.012972384691238403,
+      "contrast_T": 0.022448480129241943
     },
     "comparison": {
+      "T_within_same_sign": false,
       "tennis_vs_control_direction_same_sign": false,
-      "T_lexical": -0.013780161738395691,
-      "T_explicit": 0.026245146989822388,
-      "T_difference_lexical_minus_explicit": -0.04002530872821808,
-      "mean_in_domain_difference_lexical_minus_explicit": -0.04118877649307251,
-      "mean_control_difference_lexical_minus_explicit": -0.0011634677648544312,
-      "magnitude_note": "Inspect |T| change to judge sensitivity to explicit lexical cues; no automatic significance claim."
+      "T_lexical_within": -0.008077844977378845,
+      "T_explicit_within": 0.022448480129241943,
+      "T_lexical": -0.008077844977378845,
+      "T_explicit": 0.022448480129241943,
+      "T_difference_lexical_minus_explicit": -0.03052632510662079,
+      "T_lexical_cross": -0.021902307868003845,
+      "T_explicit_cross": 0.009436555206775665,
+      "mean_tennis_within_difference_lexical_minus_explicit": -0.032229721546173096,
+      "mean_unrelated_within_difference_lexical_minus_explicit": -0.0017033964395523071,
+      "mean_in_domain_difference_lexical_minus_explicit": -0.032229721546173096,
+      "mean_control_difference_lexical_minus_explicit": -0.0017033964395523071,
+      "magnitude_note": "Inspect |T_within| change to judge sensitivity to explicit lexical cues; no automatic significance claim. Compare sign of T_lexical_within to explicit T_within."
     },
     "notes": [
       "Descriptive only; does not replace the primary exact permutation test.",
-      "Positive T means in-domain Delta-M exceeds in-domain\u2192control Delta-M."
+      "Positive T_within means tennis within-domain Delta-M exceeds unrelated (swimming+acting) within-domain Delta-M."
     ]
   },
   "software": {
@@ -618,7 +1169,7 @@
     "pyyaml": "6.0.3"
   },
   "runtime": {
-    "timestamp_utc": "2026-09-10T17:15:09.194625+00:00"
+    "timestamp_utc": "2026-09-11T19:54:43.273747+00:00"
   },
   "notes": [
     "Does not modify primary Delta-M statistical test.",

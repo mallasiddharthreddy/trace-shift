@@ -47,7 +47,7 @@ from .model_loader import LoadedModel, reproducibility_record
 from .paths import research_root
 
 PRIMARY_EXTRACTION_VARIANT = "explicit"
-FACT_IDS = ("F01", "F02", "F03", "F04")
+FACT_IDS = ("F01", "F02", "F03", "F04", "F05", "F06")
 DEFAULT_ALPHAS_PATH = (
     research_root() / "results" / "raw" / "alpha_calibration" / "base_alphas.yaml"
 )
@@ -593,15 +593,17 @@ def validate_base_matrix_pipeline_without_model(
         except BaseMatrixError as exc:
             eligibility_note = {"error": str(exc)}
 
-    # Refusal checks for bad statuses
+    # Refusal checks for bad statuses (6-fact design)
     fake = {
         "F01": FactAlphaSpec("F01", "baseline_recall_failed", None),
         "F02": FactAlphaSpec("F02", "no_erasure_in_grid", None),
         "F03": FactAlphaSpec("F03", "selective", 0.4),
         "F04": FactAlphaSpec("F04", "selective", 0.6),
+        "F05": FactAlphaSpec("F05", "selective", 0.4),
+        "F06": FactAlphaSpec("F06", "selective", 0.8),
     }
     rows_ok = eligible_row_facts(fake)
-    assert rows_ok == ["F03", "F04"]
+    assert rows_ok == ["F03", "F04", "F05", "F06"]
 
     return {
         "ai_engram_version": EXPECTED_ENGRAM_VERSION,

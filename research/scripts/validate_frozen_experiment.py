@@ -20,14 +20,38 @@ from pathlib import Path
 from typing import Any
 
 
-FACT_IDS = ("F01", "F02", "F03", "F04")
+FACT_IDS = ("F01", "F02", "F03", "F04", "F05", "F06")
 EXPECTED_ALPHA_GRID = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0]
 EXPECTED_DOMAIN_ANSWER = {
     "F01": "tennis",
     "F02": "tennis",
     "F03": "swimming",
-    "F04": "acting",
+    "F04": "swimming",
+    "F05": "acting",
+    "F06": "acting",
 }
+EXPECTED_ENTITIES = {
+    "F01": "Roger Federer",
+    "F02": "Rafael Nadal",
+    "F03": "Michael Phelps",
+    "F04": "Katie Ledecky",
+    "F05": "Amitabh Bachchan",
+    "F06": "Shah Rukh Khan",
+}
+EXPECTED_GROUPS = {
+    "F01": "tennis",
+    "F02": "tennis",
+    "F03": "swimming",
+    "F04": "swimming",
+    "F05": "acting",
+    "F06": "acting",
+}
+N_FACTS = 6
+N_SENTENCES_PER_FACT = 5
+N_EXPLICIT_SENTENCES = 30  # 6 × 5
+N_LEXICAL_SENTENCES = 30
+N_REFERENCE_DOCS = 30
+N_CLOZE_PROBES = 18  # 6 × 3
 EXPECTED_LORA = {
     "r": 16,
     "alpha": 32,
@@ -405,7 +429,7 @@ def validate_facts(data: dict, report: ValidationReport) -> dict[str, dict]:
         set(by_id) == set(FACT_IDS),
         f"facts.yaml: expected IDs {FACT_IDS}, found {tuple(by_id)}",
         "facts.ids",
-        "F01–F04 present",
+        "F01–F06 present",
     )
     required = ("id", "entity", "domain", "group", "description", "used_in_tennis_finetuning")
     for fid in FACT_IDS:
@@ -419,20 +443,41 @@ def validate_facts(data: dict, report: ValidationReport) -> dict[str, dict]:
             f"facts.yaml {fid}: missing required fields {missing}",
             f"facts.{fid}.fields",
         )
-    expectations = {
-        "F01": ("in_domain", True),
-        "F02": ("in_domain", True),
-        "F03": ("control", False),
-        "F04": ("control", False),
+    # F01/F02 tennis FT; F03–F06 not used in tennis FT (swimming + acting controls).
+    ft_expectations = {
+        "F01": True,
+        "F02": True,
+        "F03": False,
+        "F04": False,
+        "F05": False,
+        "F06": False,
     }
-    for fid, (group, ft_flag) in expectations.items():
+    for fid in FACT_IDS:
         f = by_id.get(fid, {})
+        group = EXPECTED_GROUPS[fid]
+        domain = EXPECTED_DOMAIN_ANSWER[fid]
+        entity = EXPECTED_ENTITIES[fid]
+        ft_flag = ft_expectations[fid]
         _require(
             report,
             f.get("group") == group,
             f"facts.yaml {fid}: group expected {group!r}, got {f.get('group')!r}",
             f"facts.{fid}.group",
             group,
+        )
+        _require(
+            report,
+            f.get("domain") == domain,
+            f"facts.yaml {fid}: domain expected {domain!r}, got {f.get('domain')!r}",
+            f"facts.{fid}.domain",
+            domain,
+        )
+        _require(
+            report,
+            f.get("entity") == entity,
+            f"facts.yaml {fid}: entity expected {entity!r}, got {f.get('entity')!r}",
+            f"facts.{fid}.entity",
+            entity,
         )
         _require(
             report,
@@ -477,10 +522,11 @@ def validate_extraction_sets(
             continue
         _require(
             report,
-            len(items) == 5,
-            f"extraction_sets_{kind}.yaml {fid}: expected 5 sentences, got {len(items)}",
+            len(items) == N_SENTENCES_PER_FACT,
+            f"extraction_sets_{kind}.yaml {fid}: expected {N_SENTENCES_PER_FACT} "
+            f"sentences, got {len(items)}",
             f"extract.{kind}.{fid}.count",
-            "5",
+            str(N_SENTENCES_PER_FACT),
         )
         cleaned = []
         for i, it in enumerate(items):
@@ -500,7 +546,17 @@ def validate_extraction_sets(
                     f"extraction_sets_{kind}.yaml {fid}: id {iid!r} does not start with fact id"
                 )
         out[fid] = cleaned
-    report.counts[f"extract_{kind}_sentences"] = sum(len(v) for v in out.values())
+    total = sum(len(v) for v in out.values())
+    expected_total = N_EXPLICIT_SENTENCES if kind == "explicit" else N_LEXICAL_SENTENCES
+    report.counts[f"extract_{kind}_sentences"] = total
+    _require(
+        report,
+        total == expected_total,
+        f"extraction_sets_{kind}.yaml: expected {expected_total} sentences total, "
+        f"got {total}",
+        f"extract.{kind}.total",
+        str(expected_total),
+    )
     return out
 
 
@@ -527,15 +583,20 @@ def validate_reference(
         expected_items = []
         for fid in FACT_IDS:
             expected_items.extend(targets.get(fid, []))
+        n_docs_meta = block.get("n_documents")
         _require(
             report,
-            len(docs) == 20 and len(expected_items) == 20,
-            f"reference_corpus.yaml {name}: expected 20 docs from targets, "
-            f"got docs={len(docs)} targets={len(expected_items)}",
+            len(docs) == N_REFERENCE_DOCS
+            and len(expected_items) == N_REFERENCE_DOCS
+            and n_docs_meta == N_REFERENCE_DOCS,
+            f"reference_corpus.yaml {name}: expected {N_REFERENCE_DOCS} docs "
+            f"(n_documents={N_REFERENCE_DOCS}), "
+            f"got docs={len(docs)} targets={len(expected_items)} "
+            f"n_documents={n_docs_meta!r}",
             f"ref.{name}.count",
-            "20",
+            str(N_REFERENCE_DOCS),
         )
-        # Match by id then text; order F01→F04 as frozen
+        # Match by id then text; order F01→F06 as frozen
         by_id_doc = {d.get("doc_id"): d for d in docs if isinstance(d, dict)}
         missing = []
         mismatched = []
@@ -591,10 +652,19 @@ def validate_cloze(data: dict, facts: dict[str, dict], report: ValidationReport)
     candidates = data.get("candidate_completions")
     _require(
         report,
-        isinstance(candidates, list) and len(candidates) >= 4,
-        "cloze_probes.yaml: candidate_completions missing or too short",
+        isinstance(candidates, list) and len(candidates) >= 3,
+        "cloze_probes.yaml: candidate_completions missing or too short "
+        "(need tennis/swimming/acting at minimum)",
         "cloze.candidates",
         f"n={len(candidates) if isinstance(candidates, list) else 0}",
+    )
+    n_total = data.get("n_probes_total")
+    _require(
+        report,
+        n_total == N_CLOZE_PROBES,
+        f"cloze_probes.yaml: n_probes_total expected {N_CLOZE_PROBES}, got {n_total!r}",
+        "cloze.n_probes_total",
+        str(N_CLOZE_PROBES),
     )
     thr = data.get("recall_pass_threshold")
     npp = data.get("n_probes_per_fact")
@@ -653,6 +723,13 @@ def validate_cloze(data: dict, facts: dict[str, dict], report: ValidationReport)
             else:
                 report.fail(f"cloze_probes.yaml {fid}: empty/missing prefix in {it!r}")
     report.counts["cloze_probes"] = len(prefixes)
+    _require(
+        report,
+        len(prefixes) == N_CLOZE_PROBES,
+        f"cloze_probes.yaml: expected {N_CLOZE_PROBES} probe prefixes, got {len(prefixes)}",
+        "cloze.total_prefixes",
+        str(N_CLOZE_PROBES),
+    )
     return prefixes
 
 

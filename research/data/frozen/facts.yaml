@@ -1,39 +1,62 @@
-# Frozen factual associations for TraceShift (minimal 4-fact design).
+# Frozen factual associations for TraceShift (balanced 6-fact / 3-domain design).
 # Associations only — no extraction sentences, cloze probes, or FT text here.
 # Machine-readable list under `facts:` for later pipeline loaders.
 
-version: 1
+version: 2
 status: frozen
+design: balanced_6fact_3domain
 frozen_at: associations_only
 notes: >
-  Exactly four entity–domain associations. No ontology/taxonomy labels.
-  Exact sentences, probes, corpora, and FT contents are decided later.
+  Exactly six entity–domain associations in three balanced domains
+  (two facts per domain). No ontology/taxonomy labels.
+  Tennis (F01–F02) is the fine-tuning domain; swimming (F03–F04) and
+  acting (F05–F06) provide within-domain comparison pairs.
+  Exact sentences, probes, corpora, and FT contents are in sibling frozen files.
+
+domains:
+  tennis: [F01, F02]
+  swimming: [F03, F04]
+  acting: [F05, F06]
 
 facts:
   - id: F01
     entity: Roger Federer
     domain: tennis
-    group: in_domain
+    group: tennis
     description: Roger Federer is associated with tennis.
     used_in_tennis_finetuning: true
 
   - id: F02
     entity: Rafael Nadal
     domain: tennis
-    group: in_domain
+    group: tennis
     description: Rafael Nadal is associated with tennis.
     used_in_tennis_finetuning: true
 
   - id: F03
     entity: Michael Phelps
     domain: swimming
-    group: control
+    group: swimming
     description: Michael Phelps is associated with swimming.
     used_in_tennis_finetuning: false
 
   - id: F04
+    entity: Katie Ledecky
+    domain: swimming
+    group: swimming
+    description: Katie Ledecky is associated with swimming.
+    used_in_tennis_finetuning: false
+
+  - id: F05
     entity: Amitabh Bachchan
     domain: acting
-    group: control
+    group: acting
     description: Amitabh Bachchan is associated with acting.
+    used_in_tennis_finetuning: false
+
+  - id: F06
+    entity: Shah Rukh Khan
+    domain: acting
+    group: acting
+    description: Shah Rukh Khan is associated with acting.
     used_in_tennis_finetuning: false

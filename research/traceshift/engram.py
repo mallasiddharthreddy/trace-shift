@@ -20,7 +20,7 @@ from .paths import default_experiment_config, research_root
 from .yaml_io import load_yaml
 
 ExtractionVariant = Literal["explicit", "lexical_control"]
-FACT_IDS = ("F01", "F02", "F03", "F04")
+FACT_IDS = ("F01", "F02", "F03", "F04", "F05", "F06")
 EXPECTED_ENGRAM_VERSION = "0.9.0"
 EXPECTED_MODEL_ID = "Qwen/Qwen3-1.7B"
 

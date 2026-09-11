@@ -1,22 +1,31 @@
 """Primary Delta-M analysis and exact permutation test for TraceShift.
 
-Scientific definitions (do not reinterpret):
+BALANCED 6-FACT design (frozen; do not reinterpret):
 
     Delta_M[i, j] = M_FT[i, j] - M_base[i, j]   (off-diagonal; diagonal null)
 
-Primary in-domain cells:
-    F01 → F02,  F02 → F01
-
-Primary in-domain→control cells:
-    F01 → F03, F01 → F04, F02 → F03, F02 → F04
+Primary WITHIN-DOMAIN cells (6 directed):
+    TENNIS:   F01 → F02,  F02 → F01
+    SWIMMING: F03 → F04,  F04 → F03
+    ACTING:   F05 → F06,  F06 → F05
 
 Primary contrast:
-    T = mean(Delta_M[in_domain]) - mean(Delta_M[in_domain_to_control])
+    T_within / T_obs =
+        mean(tennis within-domain Delta-M)
+        - mean(unrelated within-domain Delta-M)
+    where tennis = F01↔F02 (2 cells), unrelated = swimming+acting (4 cells).
 
-Inference is an exact randomization test on the frozen four-fact design:
-enumerate all C(4,2)=6 assignments of two in-domain vs two control facts,
-recompute T under each assignment with the observed Delta-M held fixed,
-and report a one-sided exact p-value including the observed assignment.
+PRIMARY exact permutation test (cell assignment, not fact-label swap):
+    Hold the six within-domain directed Delta-M cell VALUES fixed.
+    Enumerate every choice of 2 of these 6 CELLS as the "tennis" group: C(6,2)=15.
+    For each assignment, T = mean(chosen 2) - mean(remaining 4).
+    Include the observed assignment (the two tennis cells).
+    One-sided exact p = (# with T >= T_obs) / 15.
+    This is NOT the old C(4,2) fact-label swap of in-domain vs control facts.
+
+SECONDARY descriptive (compute and store; not primary inference):
+    CROSS_DOMAIN_PAIRS = F01/F02 → each of F03,F04,F05,F06 (8 cells)
+    T_cross = mean(tennis within) - mean(cross-domain)
 """
 
 from __future__ import annotations
@@ -32,22 +41,44 @@ from typing import Any, Iterable, Sequence
 
 import yaml
 
-from .base_matrix import FACT_IDS
 from .engram import EXPECTED_ENGRAM_VERSION, EXPECTED_MODEL_ID
 from .paths import research_root
 
 Pair = tuple[str, str]
 
-# Frozen primary contrast definitions (documented; not alternative experiments).
-OBSERVED_IN_DOMAIN_FACTS: tuple[str, ...] = ("F01", "F02")
-OBSERVED_CONTROL_FACTS: tuple[str, ...] = ("F03", "F04")
-OBSERVED_IN_DOMAIN_PAIRS: tuple[Pair, ...] = (("F01", "F02"), ("F02", "F01"))
-OBSERVED_CONTROL_PAIRS: tuple[Pair, ...] = (
+# Balanced 6-fact design (frozen). Defined here so Delta-M does not depend on
+# an unfinished base_matrix FACT_IDS migration; must match F01–F06 matrices.
+FACT_IDS: tuple[str, ...] = ("F01", "F02", "F03", "F04", "F05", "F06")
+
+# Domain within-domain directed cells (primary universe for the exact test).
+TENNIS_WITHIN_PAIRS: tuple[Pair, ...] = (("F01", "F02"), ("F02", "F01"))
+SWIMMING_WITHIN_PAIRS: tuple[Pair, ...] = (("F03", "F04"), ("F04", "F03"))
+ACTING_WITHIN_PAIRS: tuple[Pair, ...] = (("F05", "F06"), ("F06", "F05"))
+
+WITHIN_DOMAIN_PAIRS: tuple[Pair, ...] = (
+    TENNIS_WITHIN_PAIRS + SWIMMING_WITHIN_PAIRS + ACTING_WITHIN_PAIRS
+)
+UNRELATED_WITHIN_PAIRS: tuple[Pair, ...] = (
+    SWIMMING_WITHIN_PAIRS + ACTING_WITHIN_PAIRS
+)
+
+# Secondary descriptive only (not primary inference).
+CROSS_DOMAIN_PAIRS: tuple[Pair, ...] = (
     ("F01", "F03"),
     ("F01", "F04"),
+    ("F01", "F05"),
+    ("F01", "F06"),
     ("F02", "F03"),
     ("F02", "F04"),
+    ("F02", "F05"),
+    ("F02", "F06"),
 )
+
+# Back-compat aliases used by sibling control modules (tennis = primary within).
+OBSERVED_IN_DOMAIN_FACTS: tuple[str, ...] = ("F01", "F02")
+OBSERVED_CONTROL_FACTS: tuple[str, ...] = ("F03", "F04", "F05", "F06")
+OBSERVED_IN_DOMAIN_PAIRS: tuple[Pair, ...] = TENNIS_WITHIN_PAIRS
+OBSERVED_CONTROL_PAIRS: tuple[Pair, ...] = UNRELATED_WITHIN_PAIRS
 
 DEFAULT_BASE_MATRIX_PATH = (
     research_root() / "results" / "raw" / "base_matrix" / "base_matrix.json"
@@ -57,6 +88,8 @@ DEFAULT_FT_MATRIX_PATH = (
 )
 DEFAULT_OUTPUT_DIR = research_root() / "results" / "raw" / "delta_analysis"
 DEFAULT_TABLE_PATH = research_root() / "results" / "tables" / "delta_analysis.md"
+
+EXACT_PERMUTATION_COUNT = 15  # C(6,2)
 
 
 class DeltaAnalysisError(RuntimeError):
@@ -70,14 +103,18 @@ class DeltaAnalysisResult:
     base_matrix_path: str
     ft_matrix_path: str
     fact_ids: list[str]
-    in_domain_fact_ids: list[str]
-    control_fact_ids: list[str]
-    in_domain_pairs: list[list[str]]
-    control_pairs: list[list[str]]
+    tennis_within_pairs: list[list[str]]
+    unrelated_within_pairs: list[list[str]]
+    cross_domain_pairs: list[list[str]]
+    within_domain_pairs: list[list[str]]
+    within_domain_cell_values: dict[str, float]
+    cross_domain_cell_values: dict[str, float]
     delta_m: list[list[float | None]]
-    mean_in_domain_delta: float
-    mean_control_delta: float
-    observed_contrast: float
+    mean_tennis_within_delta: float
+    mean_unrelated_within_delta: float
+    mean_cross_domain_delta: float
+    observed_contrast: float  # T_obs / T_within
+    t_cross: float
     permutation_count: int
     null_distribution: list[dict[str, Any]]
     exact_one_sided_p_value: float
@@ -87,33 +124,84 @@ class DeltaAnalysisResult:
     notes: list[str] = field(default_factory=list)
     matrix_metadata: dict[str, Any] = field(default_factory=dict)
 
+    # Legacy field names kept for callers that still expect them.
+    @property
+    def in_domain_fact_ids(self) -> list[str]:
+        return list(OBSERVED_IN_DOMAIN_FACTS)
+
+    @property
+    def control_fact_ids(self) -> list[str]:
+        return list(OBSERVED_CONTROL_FACTS)
+
+    @property
+    def in_domain_pairs(self) -> list[list[str]]:
+        return self.tennis_within_pairs
+
+    @property
+    def control_pairs(self) -> list[list[str]]:
+        return self.unrelated_within_pairs
+
+    @property
+    def mean_in_domain_delta(self) -> float:
+        return self.mean_tennis_within_delta
+
+    @property
+    def mean_control_delta(self) -> float:
+        return self.mean_unrelated_within_delta
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "status": self.status,
             "model_id": self.model_id,
             "base_matrix_path": self.base_matrix_path,
             "ft_matrix_path": self.ft_matrix_path,
+            "design": "balanced_6fact_3domain",
             "fact_ordering": self.fact_ids,
+            "tennis_within_pairs": self.tennis_within_pairs,
+            "unrelated_within_pairs": self.unrelated_within_pairs,
+            "cross_domain_pairs": self.cross_domain_pairs,
+            "within_domain_pairs": self.within_domain_pairs,
+            "within_domain_cell_values": self.within_domain_cell_values,
+            "cross_domain_cell_values": self.cross_domain_cell_values,
+            # Legacy keys (tennis / unrelated within-domain under 6-fact design).
             "in_domain_fact_ids": self.in_domain_fact_ids,
             "control_fact_ids": self.control_fact_ids,
-            "in_domain_pair_definition": self.in_domain_pairs,
-            "control_pair_definition": self.control_pairs,
+            "in_domain_pair_definition": self.tennis_within_pairs,
+            "control_pair_definition": self.unrelated_within_pairs,
             "definition": {
                 "Delta_M[i,j]": "M_FT[i,j] - M_base[i,j] (off-diagonal; diagonal null)",
-                "T_observed": (
-                    "mean(Delta_M[in_domain_pairs]) - "
-                    "mean(Delta_M[in_domain_to_control_pairs])"
+                "T_within / T_observed": (
+                    "mean(tennis within-domain Delta-M) - "
+                    "mean(unrelated within-domain Delta-M); "
+                    "tennis = F01↔F02 (2 cells); unrelated = swimming+acting (4 cells)"
+                ),
+                "T_cross": (
+                    "mean(tennis within) - mean(cross-domain); "
+                    "cross-domain = F01/F02 → F03,F04,F05,F06 (8 cells); "
+                    "descriptive only, not primary inference"
+                ),
+                "permutation": (
+                    "Exact cell permutation: hold the 6 within-domain directed "
+                    "Delta-M values fixed; enumerate all C(6,2)=15 choices of 2 "
+                    "cells as the tennis group; T = mean(chosen 2) - mean(remaining 4). "
+                    "NOT the old C(4,2) fact-label swap."
                 ),
                 "interpretation_note": (
-                    "Positive T_observed means FT changed the selected in-domain "
-                    "interactions more than the selected control interactions "
+                    "Positive T_observed means tennis within-domain interactions "
+                    "changed more under FT than unrelated within-domain interactions "
                     "(intervention-response sense only; not a broader causal claim)."
                 ),
             },
             "delta_m_matrix": self.delta_m,
-            "mean_in_domain_delta_m": self.mean_in_domain_delta,
-            "mean_control_delta_m": self.mean_control_delta,
+            "mean_tennis_within_delta_m": self.mean_tennis_within_delta,
+            "mean_unrelated_within_delta_m": self.mean_unrelated_within_delta,
+            "mean_cross_domain_delta_m": self.mean_cross_domain_delta,
+            "mean_in_domain_delta_m": self.mean_tennis_within_delta,
+            "mean_control_delta_m": self.mean_unrelated_within_delta,
             "observed_contrast": self.observed_contrast,
+            "T_obs": self.observed_contrast,
+            "T_within": self.observed_contrast,
+            "T_cross": self.t_cross,
             "permutation_count": self.permutation_count,
             "null_distribution": self.null_distribution,
             "exact_one_sided_p_value": self.exact_one_sided_p_value,
@@ -127,8 +215,8 @@ class DeltaAnalysisResult:
                 "'statistically significant' from an arbitrary threshold."
             ),
             "design_note": (
-                "Exact randomization test conditional on the frozen four-fact design; "
-                "not a population-level generalization claim."
+                "Exact cell-permutation test conditional on the frozen balanced "
+                "6-fact / 3-domain design; not a population-level generalization claim."
             ),
         }
 
@@ -183,6 +271,10 @@ def _distance_matrix(data: dict[str, Any]) -> list[list[Any]]:
     return mat
 
 
+def _pair_key(pair: Pair) -> str:
+    return f"{pair[0]}->{pair[1]}"
+
+
 def validate_matrix_pair(
     base: dict[str, Any],
     ft: dict[str, Any],
@@ -190,7 +282,7 @@ def validate_matrix_pair(
     base_path: Path | str,
     ft_path: Path | str,
 ) -> dict[str, Any]:
-    """Confirm BASE and FT matrices are compatible for Delta-M."""
+    """Confirm BASE and FT matrices are compatible for Delta-M (6×6 complete)."""
     for label, data in (("base", base), ("ft", ft)):
         _require_keys(
             data,
@@ -243,7 +335,6 @@ def validate_matrix_pair(
             f"expected {EXPECTED_ENGRAM_VERSION!r}"
         )
 
-    # Diagonal convention: both should declare null/NaN semantics (string match loose)
     bdiag = str(base.get("diagonal_convention") or "").lower()
     fdiag = str(ft.get("diagonal_convention") or "").lower()
     if ("null" not in bdiag and "nan" not in bdiag) or (
@@ -256,6 +347,10 @@ def validate_matrix_pair(
     base_mat = _distance_matrix(base)
     ft_mat = _distance_matrix(ft)
     n = len(base_facts)
+    if n != 6:
+        raise DeltaAnalysisError(
+            f"Balanced 6-fact design requires exactly 6 facts, got {n}"
+        )
     if len(base_mat) != n or len(ft_mat) != n:
         raise DeltaAnalysisError("Matrix row count does not match fact ordering")
     for i in range(n):
@@ -263,7 +358,6 @@ def validate_matrix_pair(
             raise DeltaAnalysisError("Matrix is not square / fact-aligned")
         for j in range(n):
             if i == j:
-                # diagonal must be null-like
                 for label, v in (("base", base_mat[i][j]), ("ft", ft_mat[i][j])):
                     if v is not None and not (
                         isinstance(v, float) and math.isnan(v)
@@ -280,11 +374,11 @@ def validate_matrix_pair(
                         raise DeltaAnalysisError(
                             f"{label} off-diagonal cell "
                             f"[{base_facts[i]}→{base_facts[j]}] missing/non-numeric. "
-                            "The frozen exact permutation test requires a complete "
-                            "4×4 off-diagonal ΔM, which in turn requires all four "
+                            "The frozen exact cell-permutation test requires a complete "
+                            "6×6 off-diagonal ΔM, which in turn requires all six "
                             "facts to have been selective matrix rows (BASE + FT). "
                             "Do not invent cell values; complete selective alpha "
-                            "calibration for F01–F04 or stop before Delta-M."
+                            "calibration for F01–F06 or stop before Delta-M."
                         )
                     if not isinstance(v, (int, float)):
                         raise DeltaAnalysisError(
@@ -299,6 +393,7 @@ def validate_matrix_pair(
         "ai_engram_version": base["ai_engram_version"],
         "extraction_variant": "explicit",
         "fact_ids": base_facts,
+        "design": "balanced_6fact_3domain",
         "base_diagonal_convention": base.get("diagonal_convention"),
         "ft_diagonal_convention": ft.get("diagonal_convention"),
         "base_model_stage": base.get("model_stage"),
@@ -325,31 +420,6 @@ def compute_delta_m(
     return out
 
 
-def pairs_for_assignment(
-    in_domain: Sequence[str],
-    controls: Sequence[str],
-) -> tuple[list[Pair], list[Pair]]:
-    """Build primary-style pair sets for a group assignment.
-
-    In-domain: both directed edges between the two in-domain facts.
-    Control: each in-domain fact → each control fact.
-    """
-    if len(in_domain) != 2 or len(controls) != 2:
-        raise DeltaAnalysisError(
-            f"Expected 2 in-domain and 2 control facts, got "
-            f"in_domain={list(in_domain)} controls={list(controls)}"
-        )
-    a, b = in_domain[0], in_domain[1]
-    in_pairs: list[Pair] = [(a, b), (b, a)]
-    ctrl_pairs: list[Pair] = [
-        (a, controls[0]),
-        (a, controls[1]),
-        (b, controls[0]),
-        (b, controls[1]),
-    ]
-    return in_pairs, ctrl_pairs
-
-
 def cell_value(
     delta_m: Sequence[Sequence[float | None]],
     fact_ids: Sequence[str],
@@ -374,33 +444,113 @@ def mean_over_pairs(
     return float(sum(vals) / len(vals))
 
 
+def within_domain_cell_values(
+    delta_m: Sequence[Sequence[float | None]],
+    fact_ids: Sequence[str],
+    pairs: Sequence[Pair] = WITHIN_DOMAIN_PAIRS,
+) -> dict[str, float]:
+    return {_pair_key(p): cell_value(delta_m, fact_ids, p) for p in pairs}
+
+
+def primary_within_contrast(
+    delta_m: Sequence[Sequence[float | None]],
+    fact_ids: Sequence[str],
+    *,
+    tennis_pairs: Sequence[Pair] = TENNIS_WITHIN_PAIRS,
+    unrelated_pairs: Sequence[Pair] = UNRELATED_WITHIN_PAIRS,
+) -> tuple[float, float, float]:
+    """Return (mean_tennis_within, mean_unrelated_within, T_within)."""
+    m_tennis = mean_over_pairs(delta_m, fact_ids, tennis_pairs)
+    m_unrel = mean_over_pairs(delta_m, fact_ids, unrelated_pairs)
+    return m_tennis, m_unrel, float(m_tennis - m_unrel)
+
+
+def cross_domain_contrast(
+    delta_m: Sequence[Sequence[float | None]],
+    fact_ids: Sequence[str],
+    *,
+    tennis_pairs: Sequence[Pair] = TENNIS_WITHIN_PAIRS,
+    cross_pairs: Sequence[Pair] = CROSS_DOMAIN_PAIRS,
+) -> tuple[float, float, float]:
+    """Secondary descriptive: (mean_tennis, mean_cross, T_cross)."""
+    m_tennis = mean_over_pairs(delta_m, fact_ids, tennis_pairs)
+    m_cross = mean_over_pairs(delta_m, fact_ids, cross_pairs)
+    return m_tennis, m_cross, float(m_tennis - m_cross)
+
+
+def pairs_for_assignment(
+    in_domain: Sequence[str],
+    controls: Sequence[str],
+) -> tuple[list[Pair], list[Pair]]:
+    """Legacy helper: both directed edges within in_domain; in→each control.
+
+    Retained for sibling modules. Primary inference uses
+    ``enumerate_within_cell_assignments`` / ``exact_permutation_test`` instead.
+    """
+    if len(in_domain) != 2:
+        raise DeltaAnalysisError(
+            f"Expected 2 in-domain facts, got in_domain={list(in_domain)}"
+        )
+    a, b = in_domain[0], in_domain[1]
+    in_pairs: list[Pair] = [(a, b), (b, a)]
+    ctrl_pairs: list[Pair] = [(a, c) for c in controls] + [(b, c) for c in controls]
+    return in_pairs, ctrl_pairs
+
+
 def primary_contrast(
     delta_m: Sequence[Sequence[float | None]],
     fact_ids: Sequence[str],
     in_domain_pairs: Sequence[Pair],
     control_pairs: Sequence[Pair],
 ) -> tuple[float, float, float]:
-    """Return (mean_in_domain, mean_control, T)."""
+    """Legacy API: (mean_group_a, mean_group_b, mean_a - mean_b)."""
     m_in = mean_over_pairs(delta_m, fact_ids, in_domain_pairs)
     m_ctrl = mean_over_pairs(delta_m, fact_ids, control_pairs)
     return m_in, m_ctrl, float(m_in - m_ctrl)
 
 
+def enumerate_within_cell_assignments(
+    within_pairs: Sequence[Pair] = WITHIN_DOMAIN_PAIRS,
+) -> list[tuple[tuple[Pair, ...], tuple[Pair, ...]]]:
+    """All C(6,2) ways to choose 2 of the 6 within-domain cells as 'tennis'.
+
+    Returns list of (chosen_tennis_cells, remaining_unrelated_cells).
+    Order is deterministic: combinations in the order of ``within_pairs``.
+    """
+    cells = tuple(within_pairs)
+    if len(cells) != 6:
+        raise DeltaAnalysisError(
+            f"Exact cell test expects exactly 6 within-domain cells, got {len(cells)}"
+        )
+    assignments: list[tuple[tuple[Pair, ...], tuple[Pair, ...]]] = []
+    for chosen in itertools.combinations(range(6), 2):
+        tennis = tuple(cells[i] for i in chosen)
+        unrelated = tuple(cells[i] for i in range(6) if i not in chosen)
+        assignments.append((tennis, unrelated))
+    if len(assignments) != EXACT_PERMUTATION_COUNT:
+        raise DeltaAnalysisError(
+            f"Expected C(6,2)={EXACT_PERMUTATION_COUNT} assignments, "
+            f"got {len(assignments)}"
+        )
+    return assignments
+
+
 def enumerate_group_assignments(
     fact_ids: Sequence[str] = FACT_IDS,
 ) -> list[tuple[tuple[str, ...], tuple[str, ...]]]:
-    """All ways to choose 2 in-domain facts (rest = controls). Order within groups sorted."""
+    """Deprecated: old C(4,2) fact-label assignments.
+
+    Kept only so older callers do not crash on import; primary inference uses
+    ``enumerate_within_cell_assignments``.
+    """
     facts = list(fact_ids)
-    if len(facts) != 4:
-        raise DeltaAnalysisError(
-            f"Exact test expects exactly 4 facts, got {len(facts)}"
-        )
+    if len(facts) < 2:
+        raise DeltaAnalysisError(f"Need at least 2 facts, got {len(facts)}")
     assignments: list[tuple[tuple[str, ...], tuple[str, ...]]] = []
     for combo in itertools.combinations(facts, 2):
         in_dom = tuple(sorted(combo, key=lambda f: facts.index(f)))
         ctrl = tuple(f for f in facts if f not in in_dom)
         assignments.append((in_dom, ctrl))
-    # Deterministic order by in-domain tuple
     assignments.sort(key=lambda x: (facts.index(x[0][0]), facts.index(x[0][1])))
     return assignments
 
@@ -409,68 +559,76 @@ def exact_permutation_test(
     delta_m: Sequence[Sequence[float | None]],
     fact_ids: Sequence[str],
     *,
-    observed_in_domain: Sequence[str] = OBSERVED_IN_DOMAIN_FACTS,
-    observed_controls: Sequence[str] = OBSERVED_CONTROL_FACTS,
+    within_pairs: Sequence[Pair] = WITHIN_DOMAIN_PAIRS,
+    observed_tennis_pairs: Sequence[Pair] = TENNIS_WITHIN_PAIRS,
 ) -> dict[str, Any]:
-    """Exact one-sided randomization test over all C(4,2) group assignments.
+    """Exact one-sided cell-permutation test over all C(6,2)=15 assignments.
 
-    Null: Delta-M is fixed; group labels (in-domain vs control) are exchangeable
-    under size-(2,2) assignments. p = (# assignments with T >= T_obs) / N,
-    including the observed assignment (exact-test convention).
+    Null: the six within-domain Delta-M cell values are fixed; which two cells
+    are labeled 'tennis' is exchangeable. p = (# assignments with T >= T_obs) / 15,
+    including the observed tennis-cell assignment (exact-test convention).
     """
-    obs_in = tuple(observed_in_domain)
-    obs_ctrl = tuple(observed_controls)
-    # Normalize observed group order to fact_ids order for membership compare
-    obs_in_sorted = tuple(sorted(obs_in, key=lambda f: list(fact_ids).index(f)))
-    obs_ctrl_sorted = tuple(f for f in fact_ids if f not in obs_in_sorted)
+    obs_tennis = tuple(observed_tennis_pairs)
+    # Prefer documented ordered pairs when they match the frozen tennis cells.
+    if set(obs_tennis) == set(TENNIS_WITHIN_PAIRS):
+        tennis_obs = list(TENNIS_WITHIN_PAIRS)
+        unrelated_obs = list(UNRELATED_WITHIN_PAIRS)
+    else:
+        tennis_obs = list(obs_tennis)
+        unrelated_obs = [p for p in within_pairs if p not in set(obs_tennis)]
 
-    in_pairs_obs, ctrl_pairs_obs = pairs_for_assignment(obs_in_sorted, obs_ctrl_sorted)
-    # Prefer the documented ordered pairs when they match the frozen observed groups
-    if set(obs_in_sorted) == set(OBSERVED_IN_DOMAIN_FACTS) and set(
-        obs_ctrl_sorted
-    ) == set(OBSERVED_CONTROL_FACTS):
-        in_pairs_obs = list(OBSERVED_IN_DOMAIN_PAIRS)
-        ctrl_pairs_obs = list(OBSERVED_CONTROL_PAIRS)
-
-    m_in, m_ctrl, t_obs = primary_contrast(
-        delta_m, fact_ids, in_pairs_obs, ctrl_pairs_obs
+    m_tennis, m_unrel, t_obs = primary_within_contrast(
+        delta_m, fact_ids, tennis_pairs=tennis_obs, unrelated_pairs=unrelated_obs
     )
 
+    cell_vals = within_domain_cell_values(delta_m, fact_ids, within_pairs)
+    obs_tennis_set = set(obs_tennis)
+
     null: list[dict[str, Any]] = []
-    assignments = enumerate_group_assignments(fact_ids)
+    assignments = enumerate_within_cell_assignments(within_pairs)
     n_ge = 0
-    for in_dom, ctrl in assignments:
-        in_pairs, ctrl_pairs = pairs_for_assignment(in_dom, ctrl)
-        _, _, t = primary_contrast(delta_m, fact_ids, in_pairs, ctrl_pairs)
-        is_observed = set(in_dom) == set(obs_in_sorted)
-        if t >= t_obs - 1e-15:  # inclusive; float-safe for equality
+    for tennis_cells, unrelated_cells in assignments:
+        tennis_vals = [cell_vals[_pair_key(p)] for p in tennis_cells]
+        unrel_vals = [cell_vals[_pair_key(p)] for p in unrelated_cells]
+        t = float(sum(tennis_vals) / len(tennis_vals) - sum(unrel_vals) / len(unrel_vals))
+        is_observed = set(tennis_cells) == obs_tennis_set
+        if t >= t_obs - 1e-15:
             n_ge += 1
         null.append(
             {
-                "in_domain_facts": list(in_dom),
-                "control_facts": list(ctrl),
-                "in_domain_pairs": [list(p) for p in in_pairs],
-                "control_pairs": [list(p) for p in ctrl_pairs],
+                "tennis_cells": [list(p) for p in tennis_cells],
+                "unrelated_cells": [list(p) for p in unrelated_cells],
+                # Legacy keys for older consumers of null_distribution rows.
+                "in_domain_pairs": [list(p) for p in tennis_cells],
+                "control_pairs": [list(p) for p in unrelated_cells],
                 "contrast": t,
                 "is_observed_assignment": is_observed,
             }
         )
 
     n = len(assignments)
-    if n == 0:
-        raise DeltaAnalysisError("Empty null distribution")
+    if n != EXACT_PERMUTATION_COUNT:
+        raise DeltaAnalysisError(
+            f"Empty or incomplete null distribution: expected "
+            f"{EXACT_PERMUTATION_COUNT}, got {n}"
+        )
     p_value = float(n_ge) / float(n)
 
     return {
-        "mean_in_domain_delta": m_in,
-        "mean_control_delta": m_ctrl,
+        "mean_tennis_within_delta": m_tennis,
+        "mean_unrelated_within_delta": m_unrel,
+        "mean_in_domain_delta": m_tennis,
+        "mean_control_delta": m_unrel,
         "observed_contrast": t_obs,
         "permutation_count": n,
         "n_as_extreme_or_more": n_ge,
         "exact_one_sided_p_value": p_value,
         "null_distribution": null,
-        "in_domain_pairs": [list(p) for p in in_pairs_obs],
-        "control_pairs": [list(p) for p in ctrl_pairs_obs],
+        "tennis_within_pairs": [list(p) for p in tennis_obs],
+        "unrelated_within_pairs": [list(p) for p in unrelated_obs],
+        "in_domain_pairs": [list(p) for p in tennis_obs],
+        "control_pairs": [list(p) for p in unrelated_obs],
+        "within_domain_cell_values": cell_vals,
     }
 
 
@@ -479,7 +637,7 @@ def analyze_delta_m(
     base_path: Path | str | None = None,
     ft_path: Path | str | None = None,
 ) -> DeltaAnalysisResult:
-    """Load matrices, compute Delta-M, and run the exact primary permutation test."""
+    """Load matrices, compute Delta-M, and run the exact primary cell permutation."""
     bpath = Path(base_path) if base_path else DEFAULT_BASE_MATRIX_PATH
     fpath = Path(ft_path) if ft_path else DEFAULT_FT_MATRIX_PATH
 
@@ -491,19 +649,26 @@ def analyze_delta_m(
     delta = compute_delta_m(_distance_matrix(base), _distance_matrix(ft), fact_ids)
     perm = exact_permutation_test(delta, fact_ids)
 
+    _, mean_cross, t_cross = cross_domain_contrast(delta, fact_ids)
+    cross_vals = {
+        _pair_key(p): cell_value(delta, fact_ids, p) for p in CROSS_DOMAIN_PAIRS
+    }
+
     ratio: float | None = None
-    m_ctrl = perm["mean_control_delta"]
-    m_in = perm["mean_in_domain_delta"]
-    if abs(m_ctrl) > 1e-12:
-        ratio = float(m_in / m_ctrl)
+    m_unrel = perm["mean_unrelated_within_delta"]
+    m_tennis = perm["mean_tennis_within_delta"]
+    if abs(m_unrel) > 1e-12:
+        ratio = float(m_tennis / m_unrel)
 
     notes = [
-        "Primary inferential test is on Delta-M contrast only "
+        "Primary inferential test is on within-domain Delta-M contrast only "
         "(not separate tests on M_base or M_FT).",
-        "Exact enumeration of C(4,2)=6 size-(2,2) group assignments; no Monte Carlo.",
+        "Exact enumeration of C(6,2)=15 choices of 2 within-domain cells as "
+        "tennis; remaining 4 are unrelated. Not the old C(4,2) fact-label swap.",
         "One-sided p-value includes the observed assignment (exact-test convention).",
+        "T_cross (tennis within vs cross-domain) is secondary descriptive only.",
         "Do not auto-claim statistical significance from an arbitrary α threshold.",
-        "Inference is conditional on the frozen four-fact design.",
+        "Inference is conditional on the frozen balanced 6-fact / 3-domain design.",
     ]
 
     return DeltaAnalysisResult(
@@ -512,33 +677,41 @@ def analyze_delta_m(
         base_matrix_path=str(bpath),
         ft_matrix_path=str(fpath),
         fact_ids=list(fact_ids),
-        in_domain_fact_ids=list(OBSERVED_IN_DOMAIN_FACTS),
-        control_fact_ids=list(OBSERVED_CONTROL_FACTS),
-        in_domain_pairs=perm["in_domain_pairs"],
-        control_pairs=perm["control_pairs"],
+        tennis_within_pairs=perm["tennis_within_pairs"],
+        unrelated_within_pairs=perm["unrelated_within_pairs"],
+        cross_domain_pairs=[list(p) for p in CROSS_DOMAIN_PAIRS],
+        within_domain_pairs=[list(p) for p in WITHIN_DOMAIN_PAIRS],
+        within_domain_cell_values=dict(perm["within_domain_cell_values"]),
+        cross_domain_cell_values=cross_vals,
         delta_m=delta,
-        mean_in_domain_delta=perm["mean_in_domain_delta"],
-        mean_control_delta=perm["mean_control_delta"],
+        mean_tennis_within_delta=perm["mean_tennis_within_delta"],
+        mean_unrelated_within_delta=perm["mean_unrelated_within_delta"],
+        mean_cross_domain_delta=mean_cross,
         observed_contrast=perm["observed_contrast"],
+        t_cross=t_cross,
         permutation_count=perm["permutation_count"],
         null_distribution=perm["null_distribution"],
         exact_one_sided_p_value=perm["exact_one_sided_p_value"],
         effect_size={
-            "mean_in_domain_delta_m": perm["mean_in_domain_delta"],
-            "mean_control_delta_m": perm["mean_control_delta"],
+            "mean_tennis_within_delta_m": perm["mean_tennis_within_delta"],
+            "mean_unrelated_within_delta_m": perm["mean_unrelated_within_delta"],
+            "mean_cross_domain_delta_m": mean_cross,
+            "T_obs": perm["observed_contrast"],
+            "T_within": perm["observed_contrast"],
+            "T_cross": t_cross,
             "observed_contrast": perm["observed_contrast"],
-            "ratio_in_domain_over_control": ratio,
+            "ratio_tennis_over_unrelated": ratio,
             "ratio_note": (
-                "Optional; primary effect-size summary is the contrast, not the ratio."
+                "Optional; primary effect-size summary is T_within, not the ratio."
                 if ratio is not None
-                else "Ratio omitted (control mean near zero / unstable)."
+                else "Ratio omitted (unrelated mean near zero / unstable)."
             ),
         },
         software=_software_versions(),
         runtime={
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "random_seed": None,
-            "enumeration": "exact_combinations_C(4,2)",
+            "enumeration": "exact_within_cell_combinations_C(6,2)",
             "n_as_extreme_or_more": perm["n_as_extreme_or_more"],
         },
         notes=notes,
@@ -561,30 +734,42 @@ def write_delta_analysis_outputs(
     json_path.write_text(json.dumps(result.to_dict(), indent=2), encoding="utf-8")
 
     lines = [
-        "# Delta-M analysis (primary contrast)",
+        "# Delta-M analysis (balanced 6-fact / 3-domain)",
         "",
         f"- status: `{result.status}`",
         f"- model_id: `{result.model_id}`",
+        f"- design: `balanced_6fact_3domain`",
         f"- base matrix: `{result.base_matrix_path}`",
         f"- FT matrix: `{result.ft_matrix_path}`",
         f"- AI-Engram / variant: see matrix metadata (must both be explicit / matching)",
         "",
         "## Definitions",
         "",
-        "- `Delta_M[i,j] = M_FT[i,j] - M_base[i,j]` (diagonal null)",
-        "- In-domain facts: " + ", ".join(result.in_domain_fact_ids),
-        "- Control facts: " + ", ".join(result.control_fact_ids),
-        "- In-domain pairs: "
-        + ", ".join(f"{a}→{b}" for a, b in result.in_domain_pairs),
-        "- Control pairs (in-domain→control): "
-        + ", ".join(f"{a}→{b}" for a, b in result.control_pairs),
-        "- `T = mean(in-domain Delta-M) − mean(control Delta-M)`",
+        "- `Delta_M[i,j] = M_FT[i,j] - M_base[i,j]` (diagonal null; full 6×6)",
+        "- Tennis within-domain (2 cells): "
+        + ", ".join(f"{a}→{b}" for a, b in result.tennis_within_pairs),
+        "- Unrelated within-domain (4 cells; swimming+acting): "
+        + ", ".join(f"{a}→{b}" for a, b in result.unrelated_within_pairs),
+        "- Cross-domain (8 cells; secondary only): "
+        + ", ".join(f"{a}→{b}" for a, b in result.cross_domain_pairs),
+        "- Primary: `T_within = mean(tennis within) − mean(unrelated within)`",
+        "- Secondary: `T_cross = mean(tennis within) − mean(cross-domain)`",
         "",
-        "## Delta-M matrix (cosine-distance change)",
-        "",
-        "Rows = intervened fact *i*; columns = measured fact *j*. `—` = diagonal.",
+        "## Within-domain cell values",
         "",
     ]
+    for key, val in result.within_domain_cell_values.items():
+        lines.append(f"- `{key}`: `{val:.6f}`")
+
+    lines.extend(
+        [
+            "",
+            "## Delta-M matrix (cosine-distance change)",
+            "",
+            "Rows = intervened fact *i*; columns = measured fact *j*. `—` = diagonal.",
+            "",
+        ]
+    )
     header = "| i \\ j | " + " | ".join(result.fact_ids) + " |"
     sep = "|-------|" + "|".join(["------"] * len(result.fact_ids)) + "|"
     lines.append(header)
@@ -604,30 +789,39 @@ def write_delta_analysis_outputs(
             "",
             "## Primary group means and contrast",
             "",
-            f"- mean in-domain Delta-M: `{result.mean_in_domain_delta:.6f}`",
-            f"- mean control Delta-M: `{result.mean_control_delta:.6f}`",
-            f"- observed contrast T: `{result.observed_contrast:.6f}`",
+            f"- mean tennis within Delta-M: `{result.mean_tennis_within_delta:.6f}`",
+            f"- mean unrelated within Delta-M: "
+            f"`{result.mean_unrelated_within_delta:.6f}`",
+            f"- observed contrast T_within / T_obs: "
+            f"`{result.observed_contrast:.6f}`",
             "",
-            "## Exact permutation test",
+            "## Secondary descriptive (not primary inference)",
+            "",
+            f"- mean cross-domain Delta-M: `{result.mean_cross_domain_delta:.6f}`",
+            f"- T_cross: `{result.t_cross:.6f}`",
+            "",
+            "## Exact cell-permutation test",
             "",
             f"- assignments in null distribution: `{result.permutation_count}` "
-            "(all size-(2,2) labelings of the four facts)",
+            "(all C(6,2)=15 choices of 2 of the 6 within-domain cells as tennis; "
+            "remaining 4 = unrelated)",
             f"- exact one-sided p-value (T ≥ T_obs, including observed): "
             f"`{result.exact_one_sided_p_value:.6f}`",
             "",
-            "### Null distribution",
+            "This is **not** the old C(4,2) fact-label swap of in-domain vs "
+            "control facts.",
             "",
-            "| in-domain | control | contrast | observed? |",
-            "|-----------|---------|----------|-----------|",
+            "### Null distribution (15 contrasts)",
+            "",
+            "| tennis cells | unrelated cells | contrast | observed? |",
+            "|--------------|-----------------|----------|-----------|",
         ]
     )
     for row in result.null_distribution:
+        tennis_s = ", ".join(f"{a}→{b}" for a, b in row["tennis_cells"])
+        unrel_s = ", ".join(f"{a}→{b}" for a, b in row["unrelated_cells"])
         lines.append(
-            "| "
-            + ", ".join(row["in_domain_facts"])
-            + " | "
-            + ", ".join(row["control_facts"])
-            + f" | {row['contrast']:.6f} | "
+            f"| {tennis_s} | {unrel_s} | {row['contrast']:.6f} | "
             + ("yes" if row["is_observed_assignment"] else "no")
             + " |"
         )
@@ -637,16 +831,16 @@ def write_delta_analysis_outputs(
             "",
             "## Interpretation placeholder",
             "",
-            "Positive T means the selected in-domain interactions changed more under "
-            "tennis fine-tuning than the selected in-domain→control interactions "
+            "Positive T_within means tennis within-domain interactions changed more "
+            "under tennis fine-tuning than unrelated within-domain interactions "
             "(intervention–response sense). Research write-up should interpret the "
             "exact p-value; this table does **not** auto-claim statistical significance.",
             "",
             "## Design note",
             "",
-            "This is an exact randomization test **conditional on the frozen "
-            "four-fact design**. It does not claim population-level generalization "
-            "from four facts.",
+            "This is an exact cell-permutation test **conditional on the frozen "
+            "balanced 6-fact / 3-domain design**. It does not claim population-level "
+            "generalization from six facts.",
             "",
         ]
     )
@@ -660,11 +854,20 @@ def result_schema() -> dict[str, Any]:
             "results/raw/delta_analysis/delta_analysis.json": "machine-readable analysis",
             "results/tables/delta_analysis.md": "human-readable summary",
         },
-        "Delta_M": "M_FT - M_base (off-diagonal)",
-        "in_domain_pairs": [list(p) for p in OBSERVED_IN_DOMAIN_PAIRS],
-        "control_pairs": [list(p) for p in OBSERVED_CONTROL_PAIRS],
-        "T_observed": "mean(in_domain) - mean(control)",
-        "permutation": "exact enumeration of C(4,2)=6 group assignments",
+        "design": "balanced_6fact_3domain",
+        "Delta_M": "M_FT - M_base (off-diagonal; full 6×6)",
+        "tennis_within_pairs": [list(p) for p in TENNIS_WITHIN_PAIRS],
+        "unrelated_within_pairs": [list(p) for p in UNRELATED_WITHIN_PAIRS],
+        "cross_domain_pairs": [list(p) for p in CROSS_DOMAIN_PAIRS],
+        "within_domain_pairs": [list(p) for p in WITHIN_DOMAIN_PAIRS],
+        "T_within / T_observed": (
+            "mean(tennis within) - mean(unrelated within)"
+        ),
+        "T_cross": "mean(tennis within) - mean(cross-domain) [descriptive only]",
+        "permutation": (
+            "exact enumeration of C(6,2)=15 choices of 2 of 6 within-domain "
+            "cells as tennis (cell permutation; not fact-label swap)"
+        ),
         "p_value": "one-sided fraction with T >= T_obs including observed",
         "fact_order": list(FACT_IDS),
     }
@@ -676,34 +879,44 @@ def validate_delta_analysis_without_matrices() -> dict[str, Any]:
     base_exists = base_path.is_file()
     ft_exists = ft_path.is_file()
 
-    # Deterministic synthetic Delta-M to exercise enumeration only (not written as results)
     facts = list(FACT_IDS)
-    # Construct a tiny synthetic delta with known contrast properties
-    synth = [[None] * 4 for _ in range(4)]
-    # Make observed in-domain cells large, control smaller
+    n = len(facts)
+    synth: list[list[float | None]] = [[None] * n for _ in range(n)]
     idx = {f: i for i, f in enumerate(facts)}
-    for i in range(4):
-        for j in range(4):
+    for i in range(n):
+        for j in range(n):
             if i == j:
                 continue
-            synth[i][j] = 0.1
-    synth[idx["F01"]][idx["F02"]] = 0.5
-    synth[idx["F02"]][idx["F01"]] = 0.4
-    synth[idx["F01"]][idx["F03"]] = 0.1
-    synth[idx["F01"]][idx["F04"]] = 0.1
-    synth[idx["F02"]][idx["F03"]] = 0.1
-    synth[idx["F02"]][idx["F04"]] = 0.1
+            synth[i][j] = 0.05
+
+    # Tennis within large; unrelated within smaller; cross-domain intermediate.
+    synth[idx["F01"]][idx["F02"]] = 0.50
+    synth[idx["F02"]][idx["F01"]] = 0.40
+    synth[idx["F03"]][idx["F04"]] = 0.10
+    synth[idx["F04"]][idx["F03"]] = 0.10
+    synth[idx["F05"]][idx["F06"]] = 0.10
+    synth[idx["F06"]][idx["F05"]] = 0.10
+    for a, b in CROSS_DOMAIN_PAIRS:
+        synth[idx[a]][idx[b]] = 0.20
 
     perm = exact_permutation_test(synth, facts)
-    assert perm["permutation_count"] == 6
-    assert abs(perm["mean_in_domain_delta"] - 0.45) < 1e-12
-    assert abs(perm["mean_control_delta"] - 0.1) < 1e-12
+    assert perm["permutation_count"] == EXACT_PERMUTATION_COUNT == 15
+    assert abs(perm["mean_tennis_within_delta"] - 0.45) < 1e-12
+    assert abs(perm["mean_unrelated_within_delta"] - 0.10) < 1e-12
     assert abs(perm["observed_contrast"] - 0.35) < 1e-12
     assert 0.0 < perm["exact_one_sided_p_value"] <= 1.0
     assert sum(1 for r in perm["null_distribution"] if r["is_observed_assignment"]) == 1
+    assert len(perm["null_distribution"]) == 15
 
-    assignments = enumerate_group_assignments(facts)
-    assert len(assignments) == 6
+    assignments = enumerate_within_cell_assignments()
+    assert len(assignments) == 15
+    # Observed tennis assignment must appear exactly once among the 15.
+    obs = set(TENNIS_WITHIN_PAIRS)
+    assert sum(1 for t, _ in assignments if set(t) == obs) == 1
+
+    _, mean_cross, t_cross = cross_domain_contrast(synth, facts)
+    assert abs(mean_cross - 0.20) < 1e-12
+    assert abs(t_cross - 0.25) < 1e-12
 
     pending_reasons: list[str] = []
     if not base_exists:
@@ -715,24 +928,29 @@ def validate_delta_analysis_without_matrices() -> dict[str, Any]:
         "status": "pending_matrix_inputs" if pending_reasons else "inputs_present",
         "model_id": EXPECTED_MODEL_ID,
         "ai_engram_version": EXPECTED_ENGRAM_VERSION,
+        "design": "balanced_6fact_3domain",
         "base_matrix_path": str(base_path),
         "ft_matrix_path": str(ft_path),
         "base_matrix_exists": base_exists,
         "ft_matrix_exists": ft_exists,
         "fact_order": facts,
-        "in_domain_facts": list(OBSERVED_IN_DOMAIN_FACTS),
-        "control_facts": list(OBSERVED_CONTROL_FACTS),
-        "in_domain_pairs": [list(p) for p in OBSERVED_IN_DOMAIN_PAIRS],
-        "control_pairs": [list(p) for p in OBSERVED_CONTROL_PAIRS],
+        "tennis_within_pairs": [list(p) for p in TENNIS_WITHIN_PAIRS],
+        "unrelated_within_pairs": [list(p) for p in UNRELATED_WITHIN_PAIRS],
+        "cross_domain_pairs": [list(p) for p in CROSS_DOMAIN_PAIRS],
+        "within_domain_pairs": [list(p) for p in WITHIN_DOMAIN_PAIRS],
         "result_schema": result_schema(),
         "algorithm_self_check": {
             "permutation_count": perm["permutation_count"],
-            "synthetic_T": perm["observed_contrast"],
+            "expected_permutation_count": 15,
+            "enumeration": "C(6,2)_within_domain_cells",
+            "synthetic_T_within": perm["observed_contrast"],
+            "synthetic_T_cross": t_cross,
             "synthetic_p_in_unit_interval": True,
             "observed_assignment_counted_once": True,
             "note": (
-                "Synthetic Delta-M used only to verify enumeration/contrast math; "
-                "not an experimental result and not written to delta_analysis.json."
+                "Synthetic Delta-M used only to verify C(6,2)=15 cell-permutation "
+                "and contrast math; not an experimental result and not written to "
+                "delta_analysis.json."
             ),
         },
         "pending_reasons": pending_reasons,
@@ -740,7 +958,7 @@ def validate_delta_analysis_without_matrices() -> dict[str, Any]:
         "matrix_fabricated": False,
         "operational_precondition_for_exact_permutation": (
             "Both base_matrix.json and ft_matrix.json must have numeric values in "
-            "ALL off-diagonal cells (all four facts selective rows). Incomplete "
+            "ALL off-diagonal cells (all six facts selective rows). Incomplete "
             "selective-only matrices are refused — not patched with invented values."
         ),
         "software": _software_versions(),
@@ -754,15 +972,22 @@ def write_pending_status(report: dict[str, Any] | None = None) -> Path:
     payload: dict[str, Any] = {
         "status": "pending_base_and_or_ft_matrix_json",
         "model_id": EXPECTED_MODEL_ID,
+        "design": "balanced_6fact_3domain",
         "message": (
-            "Delta-M analysis pipeline is implemented. Execution awaits "
-            "base_matrix.json and ft_matrix.json from completed matrix runs. "
-            "No Delta-M values, p-values, or significance claims have been fabricated."
+            "Delta-M analysis pipeline is implemented for the balanced 6-fact "
+            "design. Execution awaits base_matrix.json and ft_matrix.json from "
+            "completed matrix runs. No Delta-M values, p-values, or significance "
+            "claims have been fabricated."
         ),
-        "definition": "Delta_M = M_FT - M_base; T = mean(in_domain) - mean(control)",
-        "in_domain_pairs": [list(p) for p in OBSERVED_IN_DOMAIN_PAIRS],
-        "control_pairs": [list(p) for p in OBSERVED_CONTROL_PAIRS],
-        "permutation": "exact C(4,2)=6 group assignments",
+        "definition": (
+            "Delta_M = M_FT - M_base; "
+            "T_within = mean(tennis within) - mean(unrelated within); "
+            "T_cross = mean(tennis within) - mean(cross-domain) [descriptive]"
+        ),
+        "tennis_within_pairs": [list(p) for p in TENNIS_WITHIN_PAIRS],
+        "unrelated_within_pairs": [list(p) for p in UNRELATED_WITHIN_PAIRS],
+        "cross_domain_pairs": [list(p) for p in CROSS_DOMAIN_PAIRS],
+        "permutation": "exact C(6,2)=15 within-domain cell assignments",
         "schema": result_schema(),
         "analysis_executed": False,
     }

@@ -1,6 +1,7 @@
 {
   "status": "complete",
   "experiment": "generic_fine_tuning_drift_control_alternative_hypothesis_A",
+  "design": "balanced_6fact_3domain",
   "model_id": "Qwen/Qwen3-1.7B",
   "ai_engram_version": "0.9.0",
   "extraction_variant": "explicit",
@@ -9,16 +10,51 @@
   "control_source_checkpoint": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter",
   "alpha_source": "/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml",
   "row_alphas": {
-    "F01": 0.6,
+    "F01": 0.4,
     "F02": 0.4,
-    "F03": 0.4,
-    "F04": 0.4
+    "F03": 0.8,
+    "F04": 0.8,
+    "F05": 0.4,
+    "F06": 0.2
   },
+  "matrix_shape": [
+    6,
+    6
+  ],
   "definition": {
     "Delta_M_control[i,j]": "M_control_FT[i,j] - M_base[i,j] (off-diagonal; diagonal null)",
-    "T_control": "mean(Delta_M_control[in_domain_pairs]) - mean(Delta_M_control[in_domain_to_control_pairs])",
-    "role": "DESCRIPTIVE alternative-hypothesis comparison only. No second exact permutation test. Primary p=1/6 unchanged."
+    "T_generic_within": "mean(Delta_M_control[TENNIS_WITHIN]) - mean(Delta_M_control[UNRELATED_WITHIN]); same formula as primary T_within / T_obs",
+    "T_control": "alias of T_generic_within",
+    "role": "DESCRIPTIVE alternative-hypothesis comparison only. No second exact permutation test. Primary C(6,2)=15 cell test unchanged."
   },
+  "tennis_within_pairs": [
+    [
+      "F01",
+      "F02"
+    ],
+    [
+      "F02",
+      "F01"
+    ]
+  ],
+  "unrelated_within_pairs": [
+    [
+      "F03",
+      "F04"
+    ],
+    [
+      "F04",
+      "F03"
+    ],
+    [
+      "F05",
+      "F06"
+    ],
+    [
+      "F06",
+      "F05"
+    ]
+  ],
   "in_domain_pair_definition": [
     [
       "F01",
@@ -31,96 +67,131 @@
   ],
   "control_pair_definition": [
     [
-      "F01",
-      "F03"
-    ],
-    [
-      "F01",
+      "F03",
       "F04"
     ],
     [
-      "F02",
+      "F04",
       "F03"
     ],
     [
-      "F02",
-      "F04"
+      "F05",
+      "F06"
+    ],
+    [
+      "F06",
+      "F05"
     ]
   ],
   "delta_m_control_matrix": [
     [
       null,
-      0.016057193279266357,
-      0.0016689300537109375,
-      -0.008767127990722656
+      0.054645419120788574,
+      0.004150748252868652,
+      0.0022699832916259766,
+      0.0030828118324279785,
+      0.013334929943084717
     ],
     [
-      0.014662861824035645,
+      0.008610844612121582,
       null,
-      0.010947823524475098,
-      -0.006811857223510742
+      0.004064977169036865,
+      0.002871870994567871,
+      -0.004555881023406982,
+      -0.00222855806350708
     ],
     [
-      -0.009087681770324707,
-      -0.0017620325088500977,
+      -0.0060343146324157715,
+      0.02275007963180542,
       null,
-      -0.004170656204223633
+      0.016231298446655273,
+      -0.0017043352127075195,
+      0.010843276977539062
     ],
     [
-      -0.005251467227935791,
-      -0.0054618120193481445,
-      -0.00159454345703125,
+      0.009343922138214111,
+      0.007657766342163086,
+      0.011442244052886963,
+      null,
+      -0.00646519660949707,
+      -0.007194399833679199
+    ],
+    [
+      -0.001964092254638672,
+      0.0010767579078674316,
+      0.0008094310760498047,
+      0.0022084712982177734,
+      null,
+      -0.005763828754425049
+    ],
+    [
+      0.000209808349609375,
+      0.0034754276275634766,
+      0.0031560659408569336,
+      0.0028783082962036133,
+      -0.01750469207763672,
       null
     ]
   ],
   "primary_cells": {
-    "F01->F02": 0.016057193279266357,
-    "F02->F01": 0.014662861824035645,
-    "F01->F03": 0.0016689300537109375,
-    "F01->F04": -0.008767127990722656,
-    "F02->F03": 0.010947823524475098,
-    "F02->F04": -0.006811857223510742
+    "F01->F02": 0.054645419120788574,
+    "F02->F01": 0.008610844612121582,
+    "F03->F04": 0.016231298446655273,
+    "F04->F03": 0.011442244052886963,
+    "F05->F06": -0.005763828754425049,
+    "F06->F05": -0.01750469207763672
   },
-  "mean_in_domain_delta_m_control": 0.015360027551651001,
-  "mean_control_delta_m_control": -0.0007405579090118408,
-  "T_control": 0.016100585460662842,
-  "T_tennis": 0.026245146989822388,
-  "T_tennis_minus_T_control": 0.010144561529159546,
+  "mean_tennis_within_delta_m_control": 0.03162813186645508,
+  "mean_unrelated_within_delta_m_control": 0.0011012554168701172,
+  "mean_in_domain_delta_m_control": 0.03162813186645508,
+  "mean_control_delta_m_control": 0.0011012554168701172,
+  "T_generic_within": 0.03052687644958496,
+  "T_control": 0.03052687644958496,
+  "T_tennis": 0.022448480129241943,
+  "T_tennis_minus_T_generic": -0.008078396320343018,
+  "T_tennis_minus_T_control": -0.008078396320343018,
   "comparison": {
-    "T_tennis": 0.026245146989822388,
-    "T_control": 0.016100585460662842,
-    "T_tennis_minus_T_control": 0.010144561529159546,
-    "mean_in_domain_tennis": 0.02518138289451599,
-    "mean_control_tennis": -0.0010637640953063965,
-    "mean_in_domain_control_ft": 0.015360027551651001,
-    "mean_control_control_ft": -0.0007405579090118408,
+    "T_tennis": 0.022448480129241943,
+    "T_generic_within": 0.03052687644958496,
+    "T_control": 0.03052687644958496,
+    "T_tennis_minus_T_generic": -0.008078396320343018,
+    "T_tennis_minus_T_control": -0.008078396320343018,
+    "mean_tennis_within_tennis_ft": 0.00947609543800354,
+    "mean_unrelated_within_tennis_ft": -0.012972384691238403,
+    "mean_in_domain_tennis": 0.00947609543800354,
+    "mean_control_tennis": -0.012972384691238403,
+    "mean_tennis_within_control_ft": 0.03162813186645508,
+    "mean_unrelated_within_control_ft": 0.0011012554168701172,
+    "mean_in_domain_control_ft": 0.03162813186645508,
+    "mean_control_control_ft": 0.0011012554168701172,
     "same_sign_T": true,
     "abs_T_control_vs_abs_T_tennis": {
-      "abs_T_control": 0.016100585460662842,
-      "abs_T_tennis": 0.026245146989822388,
-      "abs_T_control_smaller": true
+      "abs_T_generic": 0.03052687644958496,
+      "abs_T_control": 0.03052687644958496,
+      "abs_T_tennis": 0.022448480129241943,
+      "abs_T_control_smaller": false
     }
   },
   "inferential": {
     "permutation_test_performed": false,
     "p_value": null,
-    "note": "Primary exact one-sided p remains 1/6 from tennis FT only. This control contrast is descriptive."
+    "note": "Primary exact one-sided p remains from the tennis-FT C(6,2)=15 within-cell assignment test only. This control contrast is descriptive."
   },
   "claim_boundaries": {
     "supports": [
-      "Quantitative descriptive comparison of structural Delta-M contrast after unrelated Curie/Armstrong FT vs after tennis FT, under the same measurement procedure."
+      "Quantitative descriptive comparison of structural Delta-M contrast after unrelated Curie/Armstrong FT vs after tennis FT, under the same 6-fact / 3-domain measurement procedure."
     ],
     "does_not_support": [
       "Ruling out generic fine-tuning drift as a formal causal claim.",
       "A second significance test or revised primary p-value.",
-      "Population-level generalization beyond the four frozen facts.",
+      "Population-level generalization beyond the six frozen facts.",
       "That the tennis effect is definitively domain-specific."
     ]
   },
   "runtime": {
-    "timestamp_utc": "2026-09-10T20:06:59.617989+00:00",
+    "timestamp_utc": "2026-09-11T16:11:48.502613+00:00",
     "control_matrix_runtime": {
-      "timestamp_utc": "2026-09-10T20:06:55.739584+00:00",
+      "timestamp_utc": "2026-09-11T16:11:44.131256+00:00",
       "seed": 42,
       "device": "cuda",
       "dtype": "bfloat16",
@@ -141,6 +212,7 @@
     "Fresh Engrams from control FT model; not reused from base or tennis FT.",
     "BASE alphas unchanged; not recalibrated on control model.",
     "No lexical-control re-run.",
-    "No second permutation test."
+    "No second permutation test.",
+    "Balanced 6-fact design: T_generic_within uses TENNIS_WITHIN vs UNRELATED_WITHIN (swimming+acting)."
   ]
 }

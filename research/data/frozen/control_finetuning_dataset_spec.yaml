@@ -1,6 +1,7 @@
 # Control fine-tuning dataset (frozen) — unrelated biographies for hypothesis A.
-# Matched size/format to tennis_biography_ft. Excludes Federer and Nadal.
-# Training hyperparameters are NOT specified here.
+# Matched size/format to tennis_biography_ft.
+# Excludes Federer, Nadal, Phelps, Ledecky, Bachchan, and Khan (all six frozen
+# evaluation entities). Training hyperparameters are NOT specified here.
 
 version: 1
 status: frozen
@@ -30,8 +31,7 @@ dataset:
   exclusion_rules:
     - Federer/Nadal material is excluded entirely.
     - Do not include F01 or F02 entities by name or clear alias.
-    - Prefer subjects outside the frozen evaluation entities F03/F04 as well,
-      to avoid contaminating control-fact traces (Phelps, Bachchan excluded).
+    - Also exclude F03–F06 entities (Phelps, Ledecky, Bachchan, Shah Rukh Khan) to avoid contaminating swimming/acting control-fact traces.
   held_out_statement: >
     All examples below are held out from every frozen extraction set
     (explicit and lexical_control), from the shared reference corpora, and
@@ -45,7 +45,7 @@ dataset:
       - Match primary corpus size (40) and per-subject balance (20/20).
       - Match concise factual biographical style of the tennis FT examples.
       - Use well-known public facts; no counterfactual content.
-      - Exclude Federer, Nadal, Phelps, and Bachchan.
+      - Exclude Federer, Nadal, Phelps, Ledecky, Bachchan, and Khan.
 
   examples:
     # --- Marie Curie (20) ---

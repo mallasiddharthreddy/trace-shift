@@ -41,9 +41,9 @@ software:
   ai-engram: 0.9.0
 output_checkpoint_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control
 final_adapter_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter
-training_start_utc: '2026-09-10T15:01:39.803568+00:00'
-training_end_utc: '2026-09-10T15:02:12.354709+00:00'
-training_duration_seconds: 32.551141
+training_start_utc: '2026-09-11T11:26:39.036587+00:00'
+training_end_utc: '2026-09-11T11:27:12.574210+00:00'
+training_duration_seconds: 33.537623
 n_examples: 40
 condition: control_general_ft
 notes:

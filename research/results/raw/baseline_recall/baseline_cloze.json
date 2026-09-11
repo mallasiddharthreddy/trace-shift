@@ -450,8 +450,8 @@
       },
       {
         "fact_id": "F04",
-        "entity": "Amitabh Bachchan",
-        "expected_answer": "acting",
+        "entity": "Katie Ledecky",
+        "expected_answer": "swimming",
         "wins": 3,
         "n_probes": 3,
         "pass_threshold": 2,
@@ -460,6 +460,146 @@
           {
             "probe_id": "F04_C01",
             "fact_id": "F04",
+            "prefix": "Katie Ledecky's primary sport is",
+            "expected_answer": "swimming",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -0.26171875,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -8.0,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -9.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -9.75,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F04_C02",
+            "fact_id": "F04",
+            "prefix": "Katie Ledecky is professionally associated with",
+            "expected_answer": "swimming",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -3.671875,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -11.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -13.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -13.375,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F04_C03",
+            "fact_id": "F04",
+            "prefix": "The athletic domain of Katie Ledecky is",
+            "expected_answer": "swimming",
+            "ranking": [
+              {
+                "candidate": "swimming",
+                "logprob_sum": -7.59375,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -10.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -11.0,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -11.125,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              }
+            ],
+            "winner": "swimming",
+            "expected_wins": true,
+            "tie_against_expected": false
+          }
+        ]
+      },
+      {
+        "fact_id": "F05",
+        "entity": "Amitabh Bachchan",
+        "expected_answer": "acting",
+        "wins": 3,
+        "n_probes": 3,
+        "pass_threshold": 2,
+        "status": "PASS",
+        "probes": [
+          {
+            "probe_id": "F05_C01",
+            "fact_id": "F05",
             "prefix": "Amitabh Bachchan's profession is",
             "expected_answer": "acting",
             "ranking": [
@@ -501,8 +641,8 @@
             "tie_against_expected": false
           },
           {
-            "probe_id": "F04_C02",
-            "fact_id": "F04",
+            "probe_id": "F05_C02",
+            "fact_id": "F05",
             "prefix": "Amitabh Bachchan is professionally associated with",
             "expected_answer": "acting",
             "ranking": [
@@ -544,8 +684,8 @@
             "tie_against_expected": false
           },
           {
-            "probe_id": "F04_C03",
-            "fact_id": "F04",
+            "probe_id": "F05_C03",
+            "fact_id": "F05",
             "prefix": "The artistic domain of Amitabh Bachchan is",
             "expected_answer": "acting",
             "ranking": [
@@ -584,6 +724,146 @@
             ],
             "winner": "acting",
             "expected_wins": true,
+            "tie_against_expected": false
+          }
+        ]
+      },
+      {
+        "fact_id": "F06",
+        "entity": "Shah Rukh Khan",
+        "expected_answer": "acting",
+        "wins": 2,
+        "n_probes": 3,
+        "pass_threshold": 2,
+        "status": "PASS",
+        "probes": [
+          {
+            "probe_id": "F06_C01",
+            "fact_id": "F06",
+            "prefix": "Shah Rukh Khan's profession is",
+            "expected_answer": "acting",
+            "ranking": [
+              {
+                "candidate": "acting",
+                "logprob_sum": -5.09375,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -7.96875,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -10.5625,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -11.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              }
+            ],
+            "winner": "acting",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F06_C02",
+            "fact_id": "F06",
+            "prefix": "Shah Rukh Khan is professionally associated with",
+            "expected_answer": "acting",
+            "ranking": [
+              {
+                "candidate": "acting",
+                "logprob_sum": -6.28125,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "cricket",
+                "logprob_sum": -7.78125,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -10.8125,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -11.625,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              }
+            ],
+            "winner": "acting",
+            "expected_wins": true,
+            "tie_against_expected": false
+          },
+          {
+            "probe_id": "F06_C03",
+            "fact_id": "F06",
+            "prefix": "The artistic domain of Shah Rukh Khan is",
+            "expected_answer": "acting",
+            "ranking": [
+              {
+                "candidate": "cricket",
+                "logprob_sum": -10.25,
+                "n_tokens": 1,
+                "token_ids": [
+                  35999
+                ]
+              },
+              {
+                "candidate": "acting",
+                "logprob_sum": -10.5625,
+                "n_tokens": 1,
+                "token_ids": [
+                  15358
+                ]
+              },
+              {
+                "candidate": "swimming",
+                "logprob_sum": -11.0,
+                "n_tokens": 1,
+                "token_ids": [
+                  23380
+                ]
+              },
+              {
+                "candidate": "tennis",
+                "logprob_sum": -12.125,
+                "n_tokens": 1,
+                "token_ids": [
+                  31415
+                ]
+              }
+            ],
+            "winner": "cricket",
+            "expected_wins": false,
             "tie_against_expected": false
           }
         ]

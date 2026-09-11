@@ -2,7 +2,10 @@
   "kind": "primary",
   "ok": true,
   "errors": [],
+  "adapter": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter",
+  "expected_optimizer_steps": 30,
+  "n_examples_expected": 40,
+  "epochs_expected": 3,
   "global_step": 30,
-  "n_loss_points": 30,
-  "lora_norm_max": 2.3675923347473145
+  "trainer_state_path": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/checkpoint-30/trainer_state.json"
 }
