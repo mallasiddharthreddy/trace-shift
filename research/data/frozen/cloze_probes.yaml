@@ -1,10 +1,13 @@
 # Behavioral cloze probes and retrieval gate (frozen).
 # Used for baseline recall (base + FT) and base-model alpha calibration.
 # Not copied from extraction-set sentences. No DBpedia / ontology labels.
+# Balanced 6-fact / 3-domain design: 3 probes × 6 facts = 18 probes.
 
-version: 1
+version: 2
 status: frozen
+design: balanced_6fact_3domain
 n_probes_per_fact: 3
+n_probes_total: 18
 recall_pass_threshold: 2   # PASS if correct answer wins on >= this many probes
 
 notes: >
@@ -75,14 +78,42 @@ probes:
 
   F04:
     fact_id: F04
+    entity: Katie Ledecky
+    expected_answer: swimming
+    acceptable_answers:
+      - swimming
+    items:
+      - probe_id: F04_C01
+        prefix: "Katie Ledecky's primary sport is"
+      - probe_id: F04_C02
+        prefix: "Katie Ledecky is professionally associated with"
+      - probe_id: F04_C03
+        prefix: "The athletic domain of Katie Ledecky is"
+
+  F05:
+    fact_id: F05
     entity: Amitabh Bachchan
     expected_answer: acting
     acceptable_answers:
       - acting
     items:
-      - probe_id: F04_C01
+      - probe_id: F05_C01
         prefix: "Amitabh Bachchan's profession is"
-      - probe_id: F04_C02
+      - probe_id: F05_C02
         prefix: "Amitabh Bachchan is professionally associated with"
-      - probe_id: F04_C03
+      - probe_id: F05_C03
         prefix: "The artistic domain of Amitabh Bachchan is"
+
+  F06:
+    fact_id: F06
+    entity: Shah Rukh Khan
+    expected_answer: acting
+    acceptable_answers:
+      - acting
+    items:
+      - probe_id: F06_C01
+        prefix: "Shah Rukh Khan's profession is"
+      - probe_id: F06_C02
+        prefix: "Shah Rukh Khan is professionally associated with"
+      - probe_id: F06_C03
+        prefix: "The artistic domain of Shah Rukh Khan is"

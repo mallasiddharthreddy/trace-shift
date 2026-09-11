@@ -1,22 +1,23 @@
 # Shared reference corpora for AI-Engram extraction (frozen).
 # One corpus per extraction variant. Each corpus is the concatenation of all
-# four fact target sets for that variant (20 sentences). Same texts as in
+# six fact target sets for that variant (30 sentences). Same texts as in
 # extraction_sets_explicit.yaml / extraction_sets_lexical.yaml — no extras.
 
-version: 1
+version: 2
 status: frozen
+design: balanced_6fact_3domain
 notes: >
-  Shared across F01–F04 within a variant. Target sentences are also members of
-  the corresponding reference corpus. Held out from fine-tuning. Explicit and
-  lexical_control remain separate frozen conditions.
+  Shared across F01–F06 within a variant. For each fact, target_i is a subset
+  of shared_total. No extra reference-only statements. Held out from
+  fine-tuning. Explicit and lexical_control remain separate frozen conditions.
 
 corpora:
   explicit:
     id: shared_reference_explicit
     variant: explicit
     source_sets: extraction_sets_explicit.yaml
-    n_documents: 20
-    order: [F01, F02, F03, F04]
+    n_documents: 30
+    order: [F01, F02, F03, F04, F05, F06]
     documents:
       - doc_id: F01_EX01
         fact_id: F01
@@ -65,26 +66,56 @@ corpora:
         text: Michael Phelps's sport is swimming.
       - doc_id: F04_EX01
         fact_id: F04
-        text: Amitabh Bachchan is an Indian film actor.
+        text: Katie Ledecky is an American competitive swimmer.
       - doc_id: F04_EX02
         fact_id: F04
-        text: Amitabh Bachchan has worked as a leading actor in Hindi cinema for decades.
+        text: Katie Ledecky competed in swimming at the Olympic Games.
       - doc_id: F04_EX03
         fact_id: F04
-        text: Amitabh Bachchan is known for his long career in acting.
+        text: Katie Ledecky won many Olympic medals in swimming events.
       - doc_id: F04_EX04
         fact_id: F04
-        text: Amitabh Bachchan has starred in numerous films as a professional actor.
+        text: Katie Ledecky is known worldwide for her achievements in swimming.
       - doc_id: F04_EX05
         fact_id: F04
+        text: Katie Ledecky's sport is swimming.
+      - doc_id: F05_EX01
+        fact_id: F05
+        text: Amitabh Bachchan is an Indian film actor.
+      - doc_id: F05_EX02
+        fact_id: F05
+        text: Amitabh Bachchan has worked as a leading actor in Hindi cinema for decades.
+      - doc_id: F05_EX03
+        fact_id: F05
+        text: Amitabh Bachchan is known for his long career in acting.
+      - doc_id: F05_EX04
+        fact_id: F05
+        text: Amitabh Bachchan has starred in numerous films as a professional actor.
+      - doc_id: F05_EX05
+        fact_id: F05
         text: Amitabh Bachchan's profession is acting.
+      - doc_id: F06_EX01
+        fact_id: F06
+        text: Shah Rukh Khan is an Indian film actor.
+      - doc_id: F06_EX02
+        fact_id: F06
+        text: Shah Rukh Khan has worked as a leading actor in Hindi cinema for decades.
+      - doc_id: F06_EX03
+        fact_id: F06
+        text: Shah Rukh Khan is known for his long career in acting.
+      - doc_id: F06_EX04
+        fact_id: F06
+        text: Shah Rukh Khan has starred in numerous films as a professional actor.
+      - doc_id: F06_EX05
+        fact_id: F06
+        text: Shah Rukh Khan's profession is acting.
 
   lexical_control:
     id: shared_reference_lexical_control
     variant: lexical_control
     source_sets: extraction_sets_lexical.yaml
-    n_documents: 20
-    order: [F01, F02, F03, F04]
+    n_documents: 30
+    order: [F01, F02, F03, F04, F05, F06]
     documents:
       - doc_id: F01_LC01
         fact_id: F01
@@ -133,16 +164,46 @@ corpora:
         text: Michael Phelps is celebrated for his performances at the Olympic Games in the water.
       - doc_id: F04_LC01
         fact_id: F04
-        text: Amitabh Bachchan is an Indian film star known for decades of leading roles in Hindi cinema.
+        text: Katie Ledecky is an American Olympic champion known for dominating long-distance freestyle races.
       - doc_id: F04_LC02
         fact_id: F04
-        text: Amitabh Bachchan has appeared in hundreds of Bollywood movies.
+        text: Katie Ledecky won multiple Olympic gold medals across successive Games.
       - doc_id: F04_LC03
         fact_id: F04
-        text: Amitabh Bachchan is one of the most recognizable faces in Indian entertainment.
+        text: Katie Ledecky trained for years as a competitive pool athlete representing the United States.
       - doc_id: F04_LC04
         fact_id: F04
-        text: Amitabh Bachchan hosted a long-running television game show after establishing himself in film.
+        text: Katie Ledecky set multiple world records in distance freestyle events.
       - doc_id: F04_LC05
         fact_id: F04
+        text: Katie Ledecky is celebrated for her performances at the Olympic Games in the water.
+      - doc_id: F05_LC01
+        fact_id: F05
+        text: Amitabh Bachchan is an Indian film star known for decades of leading roles in Hindi cinema.
+      - doc_id: F05_LC02
+        fact_id: F05
+        text: Amitabh Bachchan has appeared in hundreds of Bollywood movies.
+      - doc_id: F05_LC03
+        fact_id: F05
+        text: Amitabh Bachchan is one of the most recognizable faces in Indian entertainment.
+      - doc_id: F05_LC04
+        fact_id: F05
+        text: Amitabh Bachchan hosted a long-running television game show after establishing himself in film.
+      - doc_id: F05_LC05
+        fact_id: F05
         text: Amitabh Bachchan is celebrated for his deep voice and iconic screen presence.
+      - doc_id: F06_LC01
+        fact_id: F06
+        text: Shah Rukh Khan is an Indian film star known for decades of leading roles in Hindi cinema.
+      - doc_id: F06_LC02
+        fact_id: F06
+        text: Shah Rukh Khan has appeared in hundreds of Bollywood movies.
+      - doc_id: F06_LC03
+        fact_id: F06
+        text: Shah Rukh Khan is one of the most recognizable faces in Indian entertainment.
+      - doc_id: F06_LC04
+        fact_id: F06
+        text: Shah Rukh Khan built a production company after establishing himself as a romantic lead in film.
+      - doc_id: F06_LC05
+        fact_id: F06
+        text: Shah Rukh Khan is celebrated for his charismatic screen presence and global fan following.

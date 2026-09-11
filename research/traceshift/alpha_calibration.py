@@ -33,7 +33,7 @@ from .model_loader import LoadedModel, reproducibility_record
 from .paths import research_root
 
 PRIMARY_EXTRACTION_VARIANT = "explicit"
-FACT_IDS = ("F01", "F02", "F03", "F04")
+FACT_IDS = ("F01", "F02", "F03", "F04", "F05", "F06")
 EXPECTED_ALPHA_GRID = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0]
 
 

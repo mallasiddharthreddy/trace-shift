@@ -20,26 +20,32 @@ Same measurement procedure as primary explicit FT matrix; different model state.
 | F01 | Roger Federer — tennis |
 | F02 | Rafael Nadal — tennis |
 | F03 | Michael Phelps — swimming |
-| F04 | Amitabh Bachchan — acting |
+| F04 | Katie Ledecky — swimming |
+| F05 | Amitabh Bachchan — acting |
+| F06 | Shah Rukh Khan — acting |
 
 ## Intervention alphas (rows; BASE-calibrated)
 
 | row fact | status | alpha |
 |----------|--------|-------|
-| F01 | selective | 0.6 |
+| F01 | selective | 0.4 |
 | F02 | selective | 0.4 |
-| F03 | selective | 0.4 |
-| F04 | selective | 0.4 |
+| F03 | selective | 0.8 |
+| F04 | selective | 0.8 |
+| F05 | selective | 0.4 |
+| F06 | selective | 0.2 |
 
 ## Matrix values (cosine distance)
 
 Rows = intervened fact *i*; columns = measured fact *j*. `—` = diagonal.
 
-| i \ j | F01 | F02 | F03 | F04 |
-|-------|------|------|------|------|
-| F01 | — | 0.374385 | 0.078445 | 0.008225 |
-| F02 | 0.398375 | — | 0.060899 | -0.006322 |
-| F03 | 0.053895 | 0.042390 | — | -0.022012 |
-| F04 | 0.006763 | -0.008687 | -0.014484 | — |
+| i \ j | F01 | F02 | F03 | F04 | F05 | F06 |
+|-------|------|------|------|------|------|------|
+| F01 | — | 0.381594 | 0.037994 | 0.030618 | 0.018937 | 0.022941 |
+| F02 | 0.344395 | — | 0.037580 | 0.035393 | 0.021059 | 0.012477 |
+| F03 | 0.178446 | 0.193957 | — | 0.255656 | 0.071460 | 0.077403 |
+| F04 | 0.179854 | 0.215229 | 0.269672 | — | 0.072500 | 0.068155 |
+| F05 | 0.020372 | 0.015643 | -0.007687 | -0.013179 | — | 0.364771 |
+| F06 | -0.002850 | -0.005589 | -0.025360 | -0.027349 | 0.245827 | — |
 
 No significance claims. Does not replace primary tennis `M_FT`.

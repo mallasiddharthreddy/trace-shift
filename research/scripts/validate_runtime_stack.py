@@ -322,7 +322,7 @@ def check_frozen_data_connection(research_root: Path, report: Report) -> dict[st
             and isinstance(sets[fid], dict)
             and isinstance(sets[fid].get("items"), list)
             and len(sets[fid]["items"]) == 5
-            for fid in ("F01", "F02", "F03", "F04")
+            for fid in ("F01", "F02", "F03", "F04", "F05", "F06")
         )
         if ok:
             report.verified(f"frozen.extract.{kind}", "F01–F04 × 5 sentences")
@@ -347,7 +347,7 @@ def check_frozen_data_connection(research_root: Path, report: Report) -> dict[st
         fid in probes
         and isinstance((probes[fid] or {}).get("items"), list)
         and len(probes[fid]["items"]) == 3
-        for fid in ("F01", "F02", "F03", "F04")
+        for fid in ("F01", "F02", "F03", "F04", "F05", "F06")
     )
     if cloze_ok:
         report.verified("frozen.cloze", "F01–F04 × 3 probes")

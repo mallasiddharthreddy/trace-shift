@@ -654,14 +654,16 @@ def validate_ft_matrix_pipeline_without_model(
         except BaseMatrixError as exc:
             eligibility_note = {"error": str(exc)}
 
-    # Same eligibility probe as base matrix
+    # Same eligibility probe as base matrix (6-fact design)
     fake = {
         "F01": FactAlphaSpec("F01", "baseline_recall_failed", None),
         "F02": FactAlphaSpec("F02", "no_erasure_in_grid", None),
         "F03": FactAlphaSpec("F03", "selective", 0.4),
         "F04": FactAlphaSpec("F04", "selective", 0.6),
+        "F05": FactAlphaSpec("F05", "selective", 0.4),
+        "F06": FactAlphaSpec("F06", "selective", 0.8),
     }
-    assert eligible_row_facts(fake) == ["F03", "F04"]
+    assert eligible_row_facts(fake) == ["F03", "F04", "F05", "F06"]
 
     adapter_ok, adapter_path, adapter_reason = primary_ft_adapter_available(config_path)
     weights_local = find_local_snapshot(EXPECTED_MODEL_ID) is not None

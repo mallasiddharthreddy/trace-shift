@@ -46,15 +46,14 @@
   },
   "output_checkpoint_path": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary",
   "final_adapter_path": "/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-tennis-primary/final_adapter",
-  "training_start_utc": "2026-09-10T14:49:36Z",
-  "training_end_utc": "2026-09-10T14:50:40Z",
-  "training_duration_seconds": 34.06,
+  "training_start_utc": "2026-09-11T07:20:33.872945+00:00",
+  "training_end_utc": "2026-09-11T07:21:09.603232+00:00",
+  "training_duration_seconds": 35.730287,
   "n_examples": 40,
   "condition": "tennis_biography_ft",
   "notes": [
     "Primary and control share identical hparams; only the dataset differs.",
-    "Metadata rewritten after training completed; prior yaml.safe_dump failed on TorchVersion.",
-    "trainer global_step=30; train_loss from state available."
+    "CUDA/cuDNN kernel nondeterminism may prevent bitwise-identical reruns even with fixed seeds."
   ],
   "unrelated_finetuning_control": false,
   "experiment_role": "primary_tennis_biography_finetuning"

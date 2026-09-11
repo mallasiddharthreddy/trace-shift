@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Primary Delta-M analysis + exact permutation test CLI for TraceShift.
+"""Primary Delta-M analysis + exact cell-permutation test CLI for TraceShift.
+
+Balanced 6-fact / 3-domain design:
+  T_within = mean(tennis within) - mean(unrelated within)
+  Exact test: C(6,2)=15 choices of 2 of 6 within-domain cells as tennis.
 
 Usage:
   .venv/bin/python research/scripts/run_delta_analysis.py --dry-validate
@@ -32,8 +36,9 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(
         description=(
-            "Delta-M = M_FT - M_base; exact permutation test on the primary "
-            "in-domain vs in-domain→control contrast."
+            "Delta-M = M_FT - M_base (6×6); exact C(6,2)=15 cell-permutation "
+            "test on tennis within-domain vs unrelated within-domain contrast "
+            "(balanced 6-fact / 3-domain design)."
         )
     )
     parser.add_argument(
@@ -55,10 +60,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    print("=== TraceShift Delta-M analysis ===")
+    print("=== TraceShift Delta-M analysis (balanced 6-fact) ===")
     print("Delta_M[i,j] = M_FT[i,j] - M_base[i,j]")
-    print("T = mean(in-domain pairs) - mean(in-domain→control pairs)")
-    print("test: exact C(4,2) group-assignment permutation (one-sided)")
+    print("T_within = mean(tennis within) - mean(unrelated within)")
+    print("T_cross  = mean(tennis within) - mean(cross-domain)  [descriptive]")
+    print("test: exact C(6,2)=15 within-domain cell permutation (one-sided)")
     print()
 
     if args.dry_validate:
@@ -88,7 +94,8 @@ def main(argv: list[str] | None = None) -> int:
 
     paths = write_delta_analysis_outputs(result)
     print("DELTA ANALYSIS: complete")
-    print(f"T_observed: {result.observed_contrast}")
+    print(f"T_within / T_obs: {result.observed_contrast}")
+    print(f"T_cross: {result.t_cross}")
     print(f"exact one-sided p: {result.exact_one_sided_p_value}")
     print(f"permutation_count: {result.permutation_count}")
     print("(No automatic significance claim — report exact p-value only.)")

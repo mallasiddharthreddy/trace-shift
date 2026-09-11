@@ -26,6 +26,8 @@ schema:
   - F02
   - F03
   - F04
+  - F05
+  - F06
   extraction_variant: explicit
   model_state: primary_finetuned
   alpha_policy: fixed BASE-calibrated alphas; no FT recalibration

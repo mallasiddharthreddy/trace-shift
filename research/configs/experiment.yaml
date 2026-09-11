@@ -146,7 +146,7 @@ alpha_calibration:
   steps:
     - id: 1_baseline_recall
       description: >
-        Verify baseline cloze recall for all four facts on M_base using the
+        Verify baseline cloze recall for all six facts on M_base using the
         frozen probes and 2-of-3 retrieval gate in cloze_probes.yaml.
     - id: 2_eligibility
       description: >
@@ -159,7 +159,7 @@ alpha_calibration:
       description: >
         For each eligible fact, choose the SMALLEST alpha such that
         (a) the target fact fails its retrieval gate under intervention, and
-        (b) none of the other three facts undergoes a pass→fail transition.
+        (b) none of the other five facts undergoes a pass→fail transition.
     - id: 5_mark_selective
       description: >
         If both (a) and (b) hold, mark the fact selective and record that alpha.
@@ -193,6 +193,9 @@ seeds:
   global: 42
   finetuning: 42
   intervention: null
+  # Primary inference: balanced 6-fact / 3-domain T_within =
+  # mean(tennis within) − mean(unrelated within); exact C(6,2)=15 cell test.
+  # Seed unused for the deterministic exact permutation; reserved for future RNG.
   statistics: null
 
 # --- Fine-tuning (FROZEN) ---

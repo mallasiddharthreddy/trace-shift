@@ -1,15 +1,17 @@
 # Lexical-control AI-Engram extraction target sets (frozen).
-# Held out from fine-tuning. 5 sentences per fact F01–F04.
+# Held out from fine-tuning. 5 sentences per fact F01–F06 (30 total).
 # Same semantic targets as explicit sets; avoid unnecessary domain-label repetition.
 
-version: 1
+version: 2
 status: frozen
 kind: lexical_control
+design: balanced_6fact_3domain
 n_sentences_per_fact: 5
+n_sentences_total: 30
 notes: >
   Semantically relevant statements that avoid repeating the explicit domain
   label (tennis / swimming / acting) where possible. Used for alternative
-  hypothesis B. Disjoint from any future fine-tuning corpus; do not copy or
+  hypothesis B. Disjoint from any fine-tuning corpus; do not copy or
   trivially paraphrase these into FT data.
 
 sets:
@@ -69,18 +71,54 @@ sets:
 
   F04:
     fact_id: F04
+    entity: Katie Ledecky
+    domain: swimming
+    kind: lexical_control
+    matched_to: explicit
+    items:
+      - id: F04_LC01
+        text: Katie Ledecky is an American Olympic champion known for dominating long-distance freestyle races.
+      - id: F04_LC02
+        text: Katie Ledecky won multiple Olympic gold medals across successive Games.
+      - id: F04_LC03
+        text: Katie Ledecky trained for years as a competitive pool athlete representing the United States.
+      - id: F04_LC04
+        text: Katie Ledecky set multiple world records in distance freestyle events.
+      - id: F04_LC05
+        text: Katie Ledecky is celebrated for her performances at the Olympic Games in the water.
+
+  F05:
+    fact_id: F05
     entity: Amitabh Bachchan
     domain: acting
     kind: lexical_control
     matched_to: explicit
     items:
-      - id: F04_LC01
+      - id: F05_LC01
         text: Amitabh Bachchan is an Indian film star known for decades of leading roles in Hindi cinema.
-      - id: F04_LC02
+      - id: F05_LC02
         text: Amitabh Bachchan has appeared in hundreds of Bollywood movies.
-      - id: F04_LC03
+      - id: F05_LC03
         text: Amitabh Bachchan is one of the most recognizable faces in Indian entertainment.
-      - id: F04_LC04
+      - id: F05_LC04
         text: Amitabh Bachchan hosted a long-running television game show after establishing himself in film.
-      - id: F04_LC05
+      - id: F05_LC05
         text: Amitabh Bachchan is celebrated for his deep voice and iconic screen presence.
+
+  F06:
+    fact_id: F06
+    entity: Shah Rukh Khan
+    domain: acting
+    kind: lexical_control
+    matched_to: explicit
+    items:
+      - id: F06_LC01
+        text: Shah Rukh Khan is an Indian film star known for decades of leading roles in Hindi cinema.
+      - id: F06_LC02
+        text: Shah Rukh Khan has appeared in hundreds of Bollywood movies.
+      - id: F06_LC03
+        text: Shah Rukh Khan is one of the most recognizable faces in Indian entertainment.
+      - id: F06_LC04
+        text: Shah Rukh Khan built a production company after establishing himself as a romantic lead in film.
+      - id: F06_LC05
+        text: Shah Rukh Khan is celebrated for his charismatic screen presence and global fan following.

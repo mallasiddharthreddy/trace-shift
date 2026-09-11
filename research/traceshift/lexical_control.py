@@ -34,14 +34,16 @@ from .base_matrix import (
     load_calibrated_base_alphas,
 )
 from .delta_analysis import (
+    CROSS_DOMAIN_PAIRS,
     DEFAULT_BASE_MATRIX_PATH,
     DEFAULT_FT_MATRIX_PATH,
-    OBSERVED_CONTROL_PAIRS,
-    OBSERVED_IN_DOMAIN_PAIRS,
+    TENNIS_WITHIN_PAIRS,
+    UNRELATED_WITHIN_PAIRS,
     DeltaAnalysisError,
     compute_delta_m,
+    cross_domain_contrast,
     load_matrix_json,
-    primary_contrast,
+    primary_within_contrast,
 )
 from .engram import (
     EXPECTED_ENGRAM_VERSION,
@@ -160,13 +162,14 @@ def assert_lexical_isolation(
 ) -> dict[str, Any]:
     """Assert frozen lexical targets/refs; no explicit text mixed in.
 
-    Resolves 4 lexical + 4 explicit bundles (8 total) for isolation checks.
+    Resolves 6 lexical + 6 explicit bundles (12 total) for isolation checks.
     """
     cfg = load_experiment_config(config_path)
     lexical_bundles: dict[str, Any] = {}
     explicit_bundles: dict[str, Any] = {}
     lexical_texts: set[str] = set()
     explicit_texts: set[str] = set()
+    n_ref_docs = len(FACT_IDS) * 5  # 30 shared reference docs per variant
 
     for fid in FACT_IDS:
         lex = resolve_extraction_bundle(fid, LEXICAL_VARIANT, cfg=cfg)
@@ -188,9 +191,9 @@ def assert_lexical_isolation(
                 f"{fid}: explicit ref id {exp.reference_corpus_id!r} != "
                 f"{EXPECTED_EXPLICIT_REF_ID!r}"
             )
-        if len(lex.forget_texts) != 5 or len(lex.total_texts) != 20:
+        if len(lex.forget_texts) != 5 or len(lex.total_texts) != n_ref_docs:
             raise LexicalControlError(
-                f"{fid}/lexical: expected 5 forget + 20 total, got "
+                f"{fid}/lexical: expected 5 forget + {n_ref_docs} total, got "
                 f"{len(lex.forget_texts)}/{len(lex.total_texts)}"
             )
         # No explicit reference texts inside lexical total
@@ -239,7 +242,9 @@ def assert_lexical_isolation(
         )
 
     return {
-        "n_bundle_resolutions": 8,
+        "n_bundle_resolutions": 12,  # 6 lexical + 6 explicit
+        "n_facts": len(FACT_IDS),
+        "matrix_shape": [len(FACT_IDS), len(FACT_IDS)],
         "lexical_bundles": lexical_bundles,
         "explicit_bundles_for_isolation": explicit_bundles,
         "lexical_reference_id": EXPECTED_LEXICAL_REF_ID,
@@ -248,6 +253,9 @@ def assert_lexical_isolation(
         "explicit_unique_texts": len(explicit_texts),
         "cross_variant_text_overlap": 0,
         "isolation_ok": True,
+        "primary_contrast": (
+            "T_lexical_within = mean(TENNIS_WITHIN) - mean(UNRELATED_WITHIN)"
+        ),
     }
 
 
@@ -483,24 +491,47 @@ def descriptive_delta_comparison(
     delta_explicit: list[list[float | None]] | None,
     fact_ids: Sequence[str],
 ) -> dict[str, Any]:
-    """Simple descriptive comparison — not a second inferential framework."""
-    m_in_l, m_c_l, t_l = primary_contrast(
-        delta_lexical,
-        fact_ids,
-        OBSERVED_IN_DOMAIN_PAIRS,
-        OBSERVED_CONTROL_PAIRS,
+    """Simple descriptive comparison — not a second inferential framework.
+
+    Primary descriptive contrast matches explicit Delta-M:
+      T_lexical_within = mean(TENNIS_WITHIN) − mean(UNRELATED_WITHIN)
+    Secondary: T_lexical_cross = mean(TENNIS_WITHIN) − mean(CROSS_DOMAIN).
+    """
+    m_ten_l, m_unrel_l, t_within_l = primary_within_contrast(
+        delta_lexical, fact_ids
     )
+    _, m_cross_l, t_cross_l = cross_domain_contrast(delta_lexical, fact_ids)
     out: dict[str, Any] = {
+        "contrast_definition": {
+            "T_lexical_within": (
+                "mean(TENNIS_WITHIN_PAIRS) - mean(UNRELATED_WITHIN_PAIRS); "
+                "same formula as primary T_obs / T_within"
+            ),
+            "T_lexical_cross": (
+                "mean(TENNIS_WITHIN_PAIRS) - mean(CROSS_DOMAIN_PAIRS); secondary"
+            ),
+            "tennis_within_pairs": [list(p) for p in TENNIS_WITHIN_PAIRS],
+            "unrelated_within_pairs": [list(p) for p in UNRELATED_WITHIN_PAIRS],
+            "cross_domain_pairs": [list(p) for p in CROSS_DOMAIN_PAIRS],
+            "matrix_shape": [len(fact_ids), len(fact_ids)],
+        },
         "lexical": {
-            "mean_in_domain_delta": m_in_l,
-            "mean_control_delta": m_c_l,
-            "contrast_T": t_l,
+            "mean_tennis_within_delta": m_ten_l,
+            "mean_unrelated_within_delta": m_unrel_l,
+            "mean_cross_domain_delta": m_cross_l,
+            "T_lexical_within": t_within_l,
+            "T_lexical_cross": t_cross_l,
+            # Back-compat aliases
+            "mean_in_domain_delta": m_ten_l,
+            "mean_control_delta": m_unrel_l,
+            "contrast_T": t_within_l,
         },
         "explicit_primary": None,
         "comparison": None,
         "notes": [
             "Descriptive only; does not replace the primary exact permutation test.",
-            "Positive T means in-domain Delta-M exceeds in-domain→control Delta-M.",
+            "Positive T_within means tennis within-domain Delta-M exceeds "
+            "unrelated (swimming+acting) within-domain Delta-M.",
         ],
     }
     if delta_explicit is None:
@@ -513,28 +544,47 @@ def descriptive_delta_comparison(
         }
         return out
 
-    m_in_e, m_c_e, t_e = primary_contrast(
-        delta_explicit,
-        fact_ids,
-        OBSERVED_IN_DOMAIN_PAIRS,
-        OBSERVED_CONTROL_PAIRS,
+    m_ten_e, m_unrel_e, t_within_e = primary_within_contrast(
+        delta_explicit, fact_ids
     )
+    _, m_cross_e, t_cross_e = cross_domain_contrast(delta_explicit, fact_ids)
     out["explicit_primary"] = {
-        "mean_in_domain_delta": m_in_e,
-        "mean_control_delta": m_c_e,
-        "contrast_T": t_e,
+        "mean_tennis_within_delta": m_ten_e,
+        "mean_unrelated_within_delta": m_unrel_e,
+        "mean_cross_domain_delta": m_cross_e,
+        "T_within": t_within_e,
+        "T_cross": t_cross_e,
+        "mean_in_domain_delta": m_ten_e,
+        "mean_control_delta": m_unrel_e,
+        "contrast_T": t_within_e,
     }
-    same_sign = (t_l >= 0 and t_e >= 0) or (t_l < 0 and t_e < 0)
+    same_sign = (t_within_l >= 0 and t_within_e >= 0) or (
+        t_within_l < 0 and t_within_e < 0
+    )
     out["comparison"] = {
-        "tennis_vs_control_direction_same_sign": same_sign,
-        "T_lexical": t_l,
-        "T_explicit": t_e,
-        "T_difference_lexical_minus_explicit": float(t_l - t_e),
-        "mean_in_domain_difference_lexical_minus_explicit": float(m_in_l - m_in_e),
-        "mean_control_difference_lexical_minus_explicit": float(m_c_l - m_c_e),
+        "T_within_same_sign": same_sign,
+        "tennis_vs_control_direction_same_sign": same_sign,  # alias
+        "T_lexical_within": t_within_l,
+        "T_explicit_within": t_within_e,
+        "T_lexical": t_within_l,
+        "T_explicit": t_within_e,
+        "T_difference_lexical_minus_explicit": float(t_within_l - t_within_e),
+        "T_lexical_cross": t_cross_l,
+        "T_explicit_cross": t_cross_e,
+        "mean_tennis_within_difference_lexical_minus_explicit": float(
+            m_ten_l - m_ten_e
+        ),
+        "mean_unrelated_within_difference_lexical_minus_explicit": float(
+            m_unrel_l - m_unrel_e
+        ),
+        "mean_in_domain_difference_lexical_minus_explicit": float(m_ten_l - m_ten_e),
+        "mean_control_difference_lexical_minus_explicit": float(
+            m_unrel_l - m_unrel_e
+        ),
         "magnitude_note": (
-            "Inspect |T| change to judge sensitivity to explicit lexical cues; "
-            "no automatic significance claim."
+            "Inspect |T_within| change to judge sensitivity to explicit lexical "
+            "cues; no automatic significance claim. Compare sign of "
+            "T_lexical_within to explicit T_within."
         ),
     }
     return out
@@ -711,21 +761,29 @@ def write_lexical_control_outputs(
         [
             "## Descriptive comparison to primary explicit Delta-M",
             "",
-            f"- lexical mean in-domain ΔM: `{lex.get('mean_in_domain_delta')}`",
-            f"- lexical mean control ΔM: `{lex.get('mean_control_delta')}`",
-            f"- lexical contrast T: `{lex.get('contrast_T')}`",
+            "Primary contrast (balanced 6-fact / 3-domain): "
+            "`T_within = mean(tennis within) − mean(unrelated within)` "
+            "(swimming+acting). Matrices are 6×6.",
+            "",
+            f"- lexical mean tennis-within ΔM: `{lex.get('mean_tennis_within_delta')}`",
+            f"- lexical mean unrelated-within ΔM: "
+            f"`{lex.get('mean_unrelated_within_delta')}`",
+            f"- **T_lexical_within**: `{lex.get('T_lexical_within')}`",
+            f"- T_lexical_cross (secondary): `{lex.get('T_lexical_cross')}`",
             "",
         ]
     )
     if exp:
         lines.extend(
             [
-                f"- explicit mean in-domain ΔM: `{exp.get('mean_in_domain_delta')}`",
-                f"- explicit mean control ΔM: `{exp.get('mean_control_delta')}`",
-                f"- explicit contrast T: `{exp.get('contrast_T')}`",
-                f"- same-sign tennis-vs-control pattern: "
-                f"`{cmp_.get('tennis_vs_control_direction_same_sign')}`",
-                f"- T_lexical − T_explicit: "
+                f"- explicit mean tennis-within ΔM: "
+                f"`{exp.get('mean_tennis_within_delta')}`",
+                f"- explicit mean unrelated-within ΔM: "
+                f"`{exp.get('mean_unrelated_within_delta')}`",
+                f"- **T_explicit_within**: `{exp.get('T_within')}`",
+                f"- T_explicit_cross (secondary): `{exp.get('T_cross')}`",
+                f"- same-sign T_within: `{cmp_.get('T_within_same_sign')}`",
+                f"- T_lexical_within − T_explicit_within: "
                 f"`{cmp_.get('T_difference_lexical_minus_explicit')}`",
                 "",
             ]
@@ -740,7 +798,8 @@ def write_lexical_control_outputs(
     lines.extend(
         [
             "No automatic significance claim. Research write-up should interpret "
-            "whether the tennis-vs-control pattern remains and how magnitude shifts.",
+            "whether the tennis-vs-unrelated-within pattern remains and how "
+            "magnitude shifts under lexical_control extraction.",
             "",
         ]
     )
@@ -761,7 +820,15 @@ def result_schema() -> dict[str, Any]:
         "alpha_policy": "BASE explicit-calibrated alphas; no lexical recalibration",
         "Delta_M_lexical": "M_FT_lexical - M_base_lexical",
         "fact_order": list(FACT_IDS),
-        "comparison": "descriptive vs primary explicit Delta-M (not a second exact test)",
+        "matrix_shape": [len(FACT_IDS), len(FACT_IDS)],
+        "T_lexical_within": (
+            "mean(TENNIS_WITHIN) - mean(UNRELATED_WITHIN); same as T_obs"
+        ),
+        "T_lexical_cross": "mean(TENNIS_WITHIN) - mean(CROSS_DOMAIN); secondary",
+        "comparison": (
+            "descriptive vs primary explicit T_within (not a second exact test); "
+            "compare sign of T_lexical_within to explicit T_within"
+        ),
         "secondary": True,
     }
 

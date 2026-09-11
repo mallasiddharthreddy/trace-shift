@@ -18,26 +18,32 @@ Definition: `M_FT[i,j]` = response of fact **j** after intervening on fact **i**
 | F01 | Roger Federer — tennis |
 | F02 | Rafael Nadal — tennis |
 | F03 | Michael Phelps — swimming |
-| F04 | Amitabh Bachchan — acting |
+| F04 | Katie Ledecky — swimming |
+| F05 | Amitabh Bachchan — acting |
+| F06 | Shah Rukh Khan — acting |
 
 ## Intervention alphas (rows; BASE-calibrated)
 
 | row fact | label | status | alpha |
 |----------|-------|--------|-------|
-| F01 | Roger Federer — tennis | selective | 0.6 |
+| F01 | Roger Federer — tennis | selective | 0.4 |
 | F02 | Rafael Nadal — tennis | selective | 0.4 |
-| F03 | Michael Phelps — swimming | selective | 0.4 |
-| F04 | Amitabh Bachchan — acting | selective | 0.4 |
+| F03 | Michael Phelps — swimming | selective | 0.8 |
+| F04 | Katie Ledecky — swimming | selective | 0.8 |
+| F05 | Amitabh Bachchan — acting | selective | 0.4 |
+| F06 | Shah Rukh Khan — acting | selective | 0.2 |
 
 ## Matrix values (cosine distance)
 
 Rows = intervened fact *i*; columns = measured fact *j*. `—` = diagonal or ineligible row.
 
-| i \ j | F01 | F02 | F03 | F04 |
-|-------|------|------|------|------|
-| F01 | — | 0.391161 | 0.090571 | 0.015317 |
-| F02 | 0.401242 | — | 0.040217 | -0.006151 |
-| F03 | 0.062770 | 0.042740 | — | -0.015896 |
-| F04 | 0.005212 | -0.001587 | -0.009444 | — |
+| i \ j | F01 | F02 | F03 | F04 | F05 | F06 |
+|-------|------|------|------|------|------|------|
+| F01 | — | 0.325179 | 0.035246 | 0.030424 | 0.018793 | 0.008967 |
+| F02 | 0.356506 | — | 0.033887 | 0.023108 | 0.023482 | 0.020417 |
+| F03 | 0.173805 | 0.145769 | — | 0.250185 | 0.055427 | 0.051665 |
+| F04 | 0.150034 | 0.151444 | 0.255362 | — | 0.063523 | 0.058817 |
+| F05 | 0.017425 | 0.016777 | -0.007228 | -0.010621 | — | 0.353692 |
+| F06 | -0.006768 | -0.005615 | -0.024871 | -0.028805 | 0.220393 | — |
 
 No scientific significance claims or delta interpretation in this table.

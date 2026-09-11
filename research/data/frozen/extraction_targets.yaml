@@ -1,23 +1,38 @@
 # Extraction target sets — SCHEMA ONLY
 # Maps each fact ID to the extraction targets used for AI-Engram-style work.
 # Contents intentionally empty until freeze-design.
+# Aligned with balanced 6-fact / 3-domain design (F01–F06).
 
 version: null
 status: placeholder
+design: balanced_6fact_3domain
 notes: >
   Per-fact extraction targets (tokens / spans / attributes) will be defined
   when facts are frozen. Do not invent targets here.
+  Fact IDs: F01–F02 tennis, F03–F04 swimming, F05–F06 acting.
 
 targets:
-  F1:
-    fact_id: F1
+  F01:
+    fact_id: F01
+    domain: tennis
     targets: []
-  F2:
-    fact_id: F2
+  F02:
+    fact_id: F02
+    domain: tennis
     targets: []
-  F3:
-    fact_id: F3
+  F03:
+    fact_id: F03
+    domain: swimming
     targets: []
-  F4:
-    fact_id: F4
+  F04:
+    fact_id: F04
+    domain: swimming
+    targets: []
+  F05:
+    fact_id: F05
+    domain: acting
+    targets: []
+  F06:
+    fact_id: F06
+    domain: acting
     targets: []
