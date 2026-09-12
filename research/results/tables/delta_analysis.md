@@ -3,8 +3,8 @@
 - status: `complete`
 - model_id: `Qwen/Qwen3-1.7B`
 - design: `balanced_6fact_3domain`
-- base matrix: `/home/siddharth/trace-shift/research/results/raw/base_matrix/base_matrix.json`
-- FT matrix: `/home/siddharth/trace-shift/research/results/raw/ft_matrix/ft_matrix.json`
+- base matrix: `research/results/raw/base_matrix/base_matrix.json`
+- FT matrix: `research/results/raw/ft_matrix/ft_matrix.json`
 - AI-Engram / variant: see matrix metadata (must both be explicit / matching)
 
 ## Definitions

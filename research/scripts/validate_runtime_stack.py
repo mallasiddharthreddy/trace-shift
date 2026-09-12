@@ -325,21 +325,21 @@ def check_frozen_data_connection(research_root: Path, report: Report) -> dict[st
             for fid in ("F01", "F02", "F03", "F04", "F05", "F06")
         )
         if ok:
-            report.verified(f"frozen.extract.{kind}", "F01–F04 × 5 sentences")
-            print(f"  extraction {kind}: F01–F04 resolvable (5 each)")
+            report.verified(f"frozen.extract.{kind}", "F01–F06 × 5 sentences")
+            print(f"  extraction {kind}: F01–F06 resolvable (5 each)")
         else:
-            report.failed(f"frozen.extract.{kind}", "cannot resolve F01–F04 × 5")
+            report.failed(f"frozen.extract.{kind}", "cannot resolve F01–F06 × 5")
             print(f"  extraction {kind}: FAIL")
 
     corpora = reference.get("corpora") or {}
     for variant in ("explicit", "lexical_control"):
         docs = (corpora.get(variant) or {}).get("documents")
-        if isinstance(docs, list) and len(docs) == 20:
-            report.verified(f"frozen.reference.{variant}", "20 documents")
-            print(f"  reference {variant}: 20 docs resolvable")
+        if isinstance(docs, list) and len(docs) == 30:
+            report.verified(f"frozen.reference.{variant}", "30 documents")
+            print(f"  reference {variant}: 30 docs resolvable")
         else:
             n = len(docs) if isinstance(docs, list) else None
-            report.failed(f"frozen.reference.{variant}", f"expected 20 docs, got {n}")
+            report.failed(f"frozen.reference.{variant}", f"expected 30 docs, got {n}")
             print(f"  reference {variant}: FAIL (n={n})")
 
     probes = cloze.get("probes") or {}
@@ -350,10 +350,10 @@ def check_frozen_data_connection(research_root: Path, report: Report) -> dict[st
         for fid in ("F01", "F02", "F03", "F04", "F05", "F06")
     )
     if cloze_ok:
-        report.verified("frozen.cloze", "F01–F04 × 3 probes")
-        print("  cloze probes: F01–F04 resolvable (3 each)")
+        report.verified("frozen.cloze", "F01–F06 × 3 probes")
+        print("  cloze probes: F01–F06 resolvable (3 each)")
     else:
-        report.failed("frozen.cloze", "cannot resolve F01–F04 × 3 probes")
+        report.failed("frozen.cloze", "cannot resolve F01–F06 × 3 probes")
         print("  cloze probes: FAIL")
 
     grid = (cfg.get("intervention") or {}).get("alpha_grid")
@@ -574,8 +574,8 @@ def check_minimal_engram(
         prereq_missing.append("ai-engram==0.9.0")
     if len(forget) != 5:
         prereq_missing.append("F01 forget set (5 sentences)")
-    if len(total) != 20:
-        prereq_missing.append("explicit reference total (20 sentences)")
+    if len(total) != 30:
+        prereq_missing.append("explicit reference total (30 sentences)")
 
     if prereq_missing:
         detail = "skipped — missing: " + ", ".join(prereq_missing)

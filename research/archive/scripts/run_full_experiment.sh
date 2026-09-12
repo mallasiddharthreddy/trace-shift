@@ -1,3 +1,6 @@
+# ARCHIVED — moved from research/scripts/. Historical overnight/GPU tooling; paths may point at the original VM layout.
+# See research/archive/README.md. Not part of the canonical CLI surface.
+
 #!/usr/bin/env bash
 # TraceShift end-to-end scientific experiment orchestrator (GPU / tmux).
 # Resume-safe: skips phases whose completion markers already exist and look valid.

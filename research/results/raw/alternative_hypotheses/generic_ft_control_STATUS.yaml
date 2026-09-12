@@ -1,19 +1,12 @@
-status: pending_or_incomplete
+status: complete
 experiment: generic_fine_tuning_drift_control_alternative_hypothesis_A
-message: Generic FT control structural analysis not yet complete. Requires existing
-  control adapter + M_base. No values fabricated.
-retraining: false
+artifacts:
+- generic_ft_control_matrix.json
+- generic_ft_control_delta_analysis.json
+tables:
+- research/results/tables/generic_ft_control_matrix.md
+- research/results/tables/generic_ft_control_delta_analysis.md
 permutation_test: false
-last_dry_validate:
-  experiment: generic_fine_tuning_drift_control_alternative_hypothesis_A
-  control_adapter_available: false
-  control_adapter_path: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter
-  control_adapter_reason: 'adapter directory missing: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter'
-  training_artifacts_ok: false
-  training_checks:
-    error: 'Missing control training metadata: /home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/training_metadata.json'
-  base_matrix_present: false
-  primary_delta_present: false
-  matrix_executed: false
-  retraining: false
-  permutation_test: false
+role: descriptive alternative hypothesis; does not replace primary tennis Delta-M
+  test
+note: Canonical numeric outputs live in the sibling JSON files.

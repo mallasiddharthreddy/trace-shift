@@ -1,27 +1,8 @@
-status: pending_model_weights_and_or_calibrated_alphas
+status: complete
 model_id: Qwen/Qwen3-1.7B
-ai_engram_version: 0.9.0
+model_stage: M_base
 extraction_variant: explicit
+artifact: base_matrix.json
+table: research/results/tables/base_matrix.md
 definition: M_base[i,j] = response of fact j after intervention on fact i
-primary_metric: cosine_distance = 1 - cosine_similarity
-message: Base matrix pipeline is implemented. Execution awaits local Qwen/Qwen3-1.7B
-  weights and calibrated base_alphas.yaml. No matrix values have been fabricated.
-schema:
-  files:
-    results/raw/base_matrix/base_matrix.json: metadata + matrices
-    results/tables/base_matrix.md: human-readable matrix
-  definition: M_base[i,j] = response of fact j after intervention on fact i
-  primary_metric: cosine_distance = 1 - cosine_similarity
-  similarity_convention: global float32 flattened-projection cosine matching prior
-    compare_engrams
-  diagonal: 'null'
-  fact_order:
-  - F01
-  - F02
-  - F03
-  - F04
-  - F05
-  - F06
-  extraction_variant: explicit
-  default_row_eligibility:
-  - selective
+note: Canonical numeric outputs live in base_matrix.json.

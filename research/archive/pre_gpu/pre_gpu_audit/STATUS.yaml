@@ -35,4 +35,4 @@ prerequisites_outstanding:
   - live_down_proj_and_lora_module_verification
   - prefer_device_cuda_on_all_gpu_clis
 
-report_path: research/reports/pre_gpu_audit.md
+report_path: research/archive/reports/pre_gpu_audit.md
