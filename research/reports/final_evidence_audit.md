@@ -25,11 +25,11 @@
 ### Primary result
 
 - T_obs = `0.022448480129241943`
-- p_exact = `0.13333333333333333`
-- T_cross (descriptive) = `None`
+- p_exact = `0.13333333333333333` (exact one-sided; 2/15)
+- T_cross (descriptive, secondary) = `0.009436555206775665` (from `results/raw/delta_analysis/delta_analysis.json`)
 - T_generic_within (descriptive) = `0.03052687644958496`
 - T_tennis − T_generic = `-0.008078396320343018`
-- T_lexical_within (descriptive) = `None`
+- T_lexical_within (descriptive) = `-0.008077844977378845` (from `results/raw/alternative_hypotheses/lexical_control.json`; tennis FT + lexical extraction, not a separate fine-tune)
 
 ### Claim boundaries
 

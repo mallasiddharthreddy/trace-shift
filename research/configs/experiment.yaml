@@ -1,6 +1,8 @@
-# MATS 12.0 Trace-Shift — project configuration template
-# Fill model/FT placeholders before any pipeline run. Do not invent results.
-# Cloze probes + alpha-calibration PROTOCOL are frozen below; numerical alphas are not.
+# MATS 12.0 Trace-Shift — frozen project configuration for the completed
+# balanced 6-fact / 3-domain experiment. Do not invent results. Numerical
+# outputs live under research/results/; this file defines inputs/protocol only.
+# Cloze probes + alpha-calibration PROTOCOL are frozen below; calibrated
+# alphas themselves are recorded in results/raw/alpha_calibration/.
 
 # --- Models ---
 # Base model identity is frozen. Tokenizer revision hash unknown in-repo — left unset.

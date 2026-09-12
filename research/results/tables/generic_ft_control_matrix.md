@@ -9,8 +9,8 @@ Same measurement procedure as primary explicit FT matrix; different model state.
 - extraction_variant: `explicit`
 - primary_metric: `cosine_distance = 1 - cosine_similarity(baseline_FT_j, post_FT_j | intervene_i)`
 - diagonal: null (NaN): fact not compared to itself for primary interaction analysis
-- source_checkpoint: `/home/siddharth/trace-shift/research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter`
-- alpha_source: `/home/siddharth/trace-shift/research/results/raw/alpha_calibration/base_alphas.yaml` (BASE-calibrated; not recalibrated)
+- source_checkpoint: `research/results/raw/finetuning/qwen3-1.7b-lora-control/final_adapter`
+- alpha_source: `research/results/raw/alpha_calibration/base_alphas.yaml` (BASE-calibrated; not recalibrated)
 - device: `cuda`
 
 ## Fact labels

@@ -1,9 +1,9 @@
-# TraceShift research experiment environment (specification only).
-# Do not install from this file on the system Python. Use a dedicated
-# Python 3.12 venv/conda env for the GCP/CUDA experiment.
+# TraceShift research experiment environment (specification).
+# Use a dedicated Python 3.12 venv; install from repo-root requirements.txt.
+# CUDA-specific PyTorch wheels are NOT pinned here — resolve during GPU setup.
 #
-# CUDA-specific PyTorch wheels are NOT pinned here — resolve the CUDA build
-# during GCP environment setup once the GPU/runtime is known.
+# Experiment status: scientific 6-fact run is complete; this file documents
+# the environment policy used for that run / for inspection tooling.
 
 name: traceshift
 status: specification_frozen

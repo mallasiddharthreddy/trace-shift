@@ -1,3 +1,6 @@
+# ARCHIVED — moved from research/scripts/. Historical overnight/GPU tooling; paths may point at the original VM layout.
+# See research/archive/README.md. Not part of the canonical CLI surface.
+
 #!/usr/bin/env bash
 # Wait for 6-fact scientific run to finish, then write reports + commit/push.
 # Runs in its own detached tmux so Mac/Cursor disconnect is safe.

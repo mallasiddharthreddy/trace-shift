@@ -9,7 +9,7 @@
 
 This is an **engineering** verification that the frozen TraceShift stack can execute on the NVIDIA L4. It is **not** a scientific result. No baseline recall, alpha calibration, fine-tuning, matrices, Delta-M, permutation tests, or lexical-control experiments were run.
 
-Machine-readable smoke record: `results/raw/live_runtime_verification/gpu_first_smoke.json`.
+Machine-readable smoke record: `research/archive/runtime_verification/live_runtime_verification/gpu_first_smoke.json`.
 
 ---
 

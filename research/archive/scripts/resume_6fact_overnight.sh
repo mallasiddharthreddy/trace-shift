@@ -1,3 +1,6 @@
+# ARCHIVED — moved from research/scripts/. Historical overnight/GPU tooling; paths may point at the original VM layout.
+# See research/archive/README.md. Not part of the canonical CLI surface.
+
 #!/usr/bin/env bash
 # Resilient overnight wrapper for TraceShift 6-fact experiment.
 # Intended to run inside detached tmux so Mac/Cursor disconnect is safe.
