@@ -16,16 +16,16 @@ Fine-tuning **does** change the measured interaction matrix, but these experimen
 
 | Analysis | Result |
 |----------|--------|
-| Primary tennis FT contrast \(T\) | **0.02245** |
-| Exact one-sided permutation \(p\) | **2/15 ≈ 0.133** |
-| Generic FT control \(T_{\mathrm{generic}}\) | **0.03053** (same sign, larger) |
-| Lexical extraction control \(T_{\mathrm{lexical}}\) | **−0.00808** (sign flips) |
+| Primary tennis FT contrast $T$ | **0.02245** |
+| Exact one-sided permutation $p$ | **2/15 ≈ 0.133** |
+| Generic FT control $T_{\mathrm{generic}}$ | **0.03053** (same sign, larger) |
+| Lexical extraction control $T_{\mathrm{lexical}}$ | **−0.00808** (sign flips) |
 
-\(T\) is **not** “the Federer↔Nadal cell average alone.” It is:
+$T$ is **not** “the Federer↔Nadal cell average alone.” It is:
 
-\[
+$$
 T = \overline{\Delta M}_{\text{tennis within}} - \overline{\Delta M}_{\text{unrelated within}}
-\]
+$$
 
 with tennis within = F01↔F02 (2 cells) and unrelated within = swimming + acting pairs (4 cells).
 
@@ -47,9 +47,9 @@ Full write-ups: [`research/reports/METHODOLOGY.md`](research/reports/METHODOLOGY
 
 | Analysis | Result |
 |----------|--------|
-| Primary \(T_{\mathrm{obs}}\) (tennis FT) | 0.02245; \(p = 0.133\) (exact, 15 assignments) |
-| Generic-control \(T\) | 0.03053 (descriptive; no second \(p\)) |
-| Lexical-control \(T\) | −0.00808 (descriptive; tennis FT + lexical probes) |
+| Primary $T_{\mathrm{obs}}$ (tennis FT) | 0.02245; $p = 0.133$ (exact, 15 assignments) |
+| Generic-control $T$ | 0.03053 (descriptive; no second $p$) |
+| Lexical-control $T$ | −0.00808 (descriptive; tennis FT + lexical probes) |
 | Full-matrix pattern | Not “tennis up / others flat”; acting within-domain ΔM falls under both FTs; tennis FT shows larger other→tennis \|ΔM\| than generic |
 
 Canonical JSON/tables: [`research/results/README.md`](research/results/README.md).
